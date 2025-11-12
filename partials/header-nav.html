@@ -1,34 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-   
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/header-nav.css">
+  <head>
+    <meta charset="UTF-8" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/header-nav.css" />
     <title>Header Navigation</title>
-</head>
-<body>
-    <header>
-    <h1 class="logo">MIRAE</h1>
-    <div class="nav-bar">
-        <input type="search" placeholder="Search..." class="search-input"></input>
-        <nav id="nav-menu">
-            <button class="hamburger-menu" name="Menu" aria-controls="nav-menu" aria-expanded="false"><span class="material-symbols-outlined">
-dehaze
-            </span></button>
-        <ul>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="../account/login.html">Log in/Sign up</a></li>
-            <li><a href="/"><span class="material-symbols-outlined">
-shopping_cart
-</span></a></li>
-        </ul>
-    </div>
+    <script src="../components/header-nav.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-bar">
+        <a class="icon-btn home" href="/"
+          ><span class="material-symbols-outlined">home</span></a
+        >
+
+        <h1 class="logo gradient-text">MIRAE</h1>
+
+        <button
+          class="icon-btn hamburger"
+          aria-controls="mobile-nav"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined">dehaze</span>
+          <span class="sr-only">Menu</span>
+        </button>
+      </div>
+
+      <form class="search">
+        <input type="search" placeholder="Search…" />
+      </form>
     </header>
-</body>
+
+    <nav id="mobile-nav" class="nav-panel" aria-hidden="true">
+      <button class="close icon-btn" aria-label="Close menu">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <ul class="nav-links">
+        <li>
+          <a href="/cart.html"
+            ><span class="material-symbols-outlined">shopping_cart</span>Cart</a
+          >
+        </li>
+        <li><a href="/account/login.html">Log in / Register</a></li>
+        <li><a href="/about">For him</a></li>
+        <li><a href="/contact">For her</a></li>
+        <li><a href="/products">Sale</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </nav>
+  </body>
 </html>

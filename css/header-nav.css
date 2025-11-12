@@ -1,0 +1,74 @@
+@import "./variables.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: var(--color-background);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 16px;
+}
+
+.logo {
+  size: 32px;
+  font-family: var(--font-heading);
+  background: linear-gradient(90deg, #687a6f 0%, rgba(0, 0, 0, 0.8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  padding: 8px 0;
+}
+
+.search-input {
+  border-radius: 40px;
+  border: none;
+  max-width: 300px;
+  height: 30px;
+  width: 100%;
+  padding: 8px 16px;
+}
+
+ul {
+  list-style: none;
+  font-family: var(--font-heading);
+}
+
+ul a {
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  header {
+    flex-direction: column;
+  }
+
+  .nav-bar {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .logo {
+    size: 64px;
+  }
+
+  .search-input {
+    max-width: 400px;
+    height: 36px;
+  }
+
+  .hamburger-menu {
+    display: none;
+  }
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+  }
+}

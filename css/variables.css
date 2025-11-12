@@ -1,4 +1,4 @@
-Colors {
+:root {
   --color-primary: #687a6f;
   --color-secondary: #b3b1ac;
   --color-accent: #e5d1d0;
@@ -8,11 +8,9 @@ Colors {
   --color-font-light: #ffffff;
   --color-font-dark: #2b2b2b;
   --color-neutral: #687a6f;
-}
 
-Typography {
-  --font-heading: ;
-  --font-body: ;
+  --font-heading: "playfair display", serif;
+  --font-body: "inter", sans-serif;
   --font-size-hero: 64px;
   --font-weight-hero: bold;
   --font-height-hero: 110%;

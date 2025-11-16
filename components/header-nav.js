@@ -1,53 +1,52 @@
-const panel = document.getElementById("mobile-nav");
-const burger = document.querySelector(".hamburger");
-const closeBtn = panel.querySelector(".close");
-const firstLink = panel.querySelector(".nav-links a");
+document.addEventListener("DOMContentLoaded", initHeader);
 
-function openMenu() {
-  panel.classList.add("open");
-  panel.setAttribute("aria-hidden", "false");
-  burger.setAttribute("aria-expanded", "true");
-  document.body.classList.add("body-lock");
-  (firstLink ?? closeBtn).focus();
-}
-
-function closeMenu() {
-  panel.classList.remove("open");
-  panel.setAttribute("aria-hidden", "true");
-  burger.setAttribute("aria-expanded", "false");
-  document.body.classList.remove("body-lock");
-  burger.focus();
-}
-
-burger.addEventListener("click", () =>
-  panel.classList.contains("open") ? closeMenu() : openMenu()
-);
-closeBtn.addEventListener("click", closeMenu);
-
-panel.addEventListener("click", (e) => {
-  if (e.target === panel) closeMenu(); // click outside content area (if you add a backdrop)
-});
-panel
-  .querySelectorAll("a")
-  .forEach((a) => a.addEventListener("click", closeMenu));
-
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && panel.classList.contains("open")) closeMenu();
-});
-
-document.addEventListener("DOMContentLoaded", async () => {
+async function initHeader() {
   const mount = document.getElementById("site-header");
-  if (!mount) return;
+  if (!mount) return; // page has no header
 
-  try {
-    // root-relative so it works on /index.html, /product.html, etc.
-    const res = await fetch("/partials/header-nav.html");
-    if (!res.ok) throw new Error(`Failed to load header: ${res.status}`);
-    mount.innerHTML = await res.text();
-
-    // if you have any header init code (hamburger, accordion, etc.), call it here
-    // initHeaderNav?.();
-  } catch (err) {
-    console.error(err);
+  // 1) Inject the partial first
+  const res = await fetch("/partials/header-nav.html");
+  if (!res.ok) {
+    console.error("Header load failed:", res.status);
+    return;
   }
-});
+  mount.innerHTML = await res.text();
+
+  // 2) Now that the HTML exists, wire up behavior
+  wireHeader(mount);
+}
+
+function wireHeader(root) {
+  // query *inside* the injected header
+  const panel = document.getElementById("mobile-nav"); // if it's outside header
+  const burger = root.querySelector(".hamburger");
+  const closeBtn = root.querySelector(".close");
+  const firstlnk = panel?.querySelector(".nav-links a");
+
+  if (!panel || !burger) return; // graceful if markup changes
+
+  function openMenu() {
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    burger.setAttribute("aria-expanded", "true");
+    document.body.classList.add("body-lock");
+    (firstlnk ?? closeBtn)?.focus();
+  }
+
+  function closeMenu() {
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    burger.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("body-lock");
+    burger.focus();
+  }
+
+  burger.addEventListener("click", () => {
+    panel.classList.contains("open") ? closeMenu() : openMenu();
+  });
+  closeBtn?.addEventListener("click", closeMenu);
+  window.addEventListener(
+    "keydown",
+    (e) => e.key === "Escape" && panel.classList.contains("open") && closeMenu()
+  );
+}

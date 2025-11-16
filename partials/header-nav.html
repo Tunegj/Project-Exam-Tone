@@ -36,10 +36,36 @@
           <span class="sr-only">Menu</span>
         </button>
       </div>
+      <div class="header-desktop">
+        <div class="left-nav">
+          <a href="/index.html">Home</a>
+          <a href="contact.html">Contact</a>
+        </div>
 
-      <form class="search">
-        <input type="search" placeholder="Search…" />
-      </form>
+        <h1 class="logo gradient-text">MIRAE</h1>
+
+        <div class="right-nav">
+          <a href="/account/login.html">Log in/Register</a>
+          <a href="/cart.html"
+            ><span class="material-symbols-outlined">shopping_cart</span>
+            Cart</a
+          >
+        </div>
+
+        <form class="search">
+          <input type="search" placeholder="Search…" />
+        </form>
+
+        <!-- 2nd row: dropdown triggers (desktop) -->
+        <nav class="category-bar" aria-label="Categories">
+          <button class="dropdown-trigger" data-menu="her">
+            Categories <span>▾</span>
+          </button>
+          <button class="dropdown-trigger" data-menu="sale">
+            Sale <span>▾</span>
+          </button>
+        </nav>
+      </div>
     </header>
 
     <nav id="mobile-nav" class="nav-panel" aria-hidden="true">
@@ -53,9 +79,28 @@
           >
         </li>
         <li><a href="/account/login.html">Log in / Register</a></li>
-        <li><a href="/about">For him</a></li>
-        <li><a href="/contact">For her</a></li>
-        <li><a href="/products">Sale</a></li>
+        <li class="has-submenu">
+          <button
+            class="submenu-toggle"
+            aria-expanded="false"
+            aria-controls="submenu-categories"
+          >
+            Categories
+            <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul id="submenu-categories" class="submenu" hidden></ul>
+        </li>
+        <li class="has-submenu">
+          <button
+            class="submenu-toggle"
+            aria-expanded="false"
+            aria-controls="submenu-sale"
+          >
+            Sale
+            <span class="caret" aria-hidden="true">▾</span>
+          </button>
+          <ul id="submenu-sale" class="submenu" hidden></ul>
+        </li>
         <li><a href="/contact">Contact</a></li>
         <li><a href="/about">About</a></li>
       </ul>

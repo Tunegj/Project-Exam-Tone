@@ -91,6 +91,15 @@
 .nav-panel.open {
   transform: translateX(0);
 }
+.nav-panel {
+  /* ...existing... */
+  box-shadow: -16px 0 40px rgba(0, 0, 0, 0.08);
+}
+
+/* desktop is hidden by default (mobile-first) */
+.header-desktop {
+  display: none;
+}
 
 .nav-panel .close {
   align-self: flex-end;
@@ -112,37 +121,197 @@
   color: var(--color-font-dark);
 }
 
+.has-submenu {
+  margin-top: 4px;
+}
+.submenu-toggle {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  font: 600 16px/1.2 var(--font-body, "Inter", system-ui, sans-serif);
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.caret {
+  transition: transform 0.2s ease;
+}
+.submenu-toggle[aria-expanded="true"] .caret {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0 8px 14px;
+  display: grid;
+  gap: 8px;
+
+  /* animation trick */
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.22s ease;
+}
+.submenu a {
+  text-decoration: none;
+  color: #222;
+}
+.submenu a:hover {
+  text-decoration: underline;
+}
+
+/* JS will remove [hidden] and set max-height to content height when open */
+.submenu[hidden] {
+  display: grid; /* keep layout but collapsed */
+}
+
 /* scroll lock when open */
 .body-lock {
   overflow: hidden;
 }
 
-@media (min-width: 768px) {
-  header {
-    flex-direction: column;
-  }
-
-  .nav-bar {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .logo {
-    size: 64px;
-  }
-
-  .search-input {
-    max-width: 400px;
-    height: 36px;
-  }
-
-  .hamburger {
+@media (min-width: 1024px) {
+  /* hide mobile bar, show desktop grid */
+  .header-bar {
     display: none;
   }
+  .header-desktop {
+    display: grid;
+    /* 3 columns: left | middle | right */
+    grid-template-columns: 1fr min(820px, 70vw) 1fr;
+    /* 3 rows: top row (left|logo|right), search row centered, category row full width */
+    grid-template-areas:
+      "left   logo   right"
+      ".      search ."
+      "cats   cats   cats";
+    row-gap: 16px;
+    align-items: center;
+  }
 
-  ul {
+  /* place regions */
+  .left-nav {
+    grid-area: left;
     display: flex;
-    flex-direction: row;
-    gap: 24px;
+    gap: 32px;
+    justify-content: flex-start;
+  }
+  .right-nav {
+    grid-area: right;
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .logo {
+    grid-area: logo;
+    text-align: center;
+    font-size: 64px;
+    line-height: 1;
+  }
+  .search {
+    grid-area: search;
+  }
+  .category-bar {
+    grid-area: cats;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+  }
+
+  /* search pill centered under logo */
+  .search input {
+    max-width: 470px;
+    width: 100%;
+    height: 44px;
+    border-radius: 999px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  /* link + icon styling to match Figma’s light gray/green theme */
+  .left-nav a,
+  .right-nav a,
+  .category-bar button {
+    text-decoration: none;
+    color: var(--color-font-dark);
+    font: 500 16px/1.2 var(--font-body);
+  }
+
+  .material-symbols-outlined {
+    font-size: 24px;
+    vertical-align: -4px;
+  }
+
+  /* category triggers (for him/her/sale) */
+  .category-bar .dropdown-trigger {
+    background: none;
+    border: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 6px;
+  }
+
+  /* show desktop dropdowns on hover/focus (you can reuse your mobile lists) */
+  .category-bar {
+    position: relative;
+  }
+  .dropdown-panel {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    min-width: 260px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    padding: 12px;
+    display: none;
+    z-index: 10;
+  }
+  .dropdown-panel ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .dropdown-panel a {
+    color: #222;
+    text-decoration: none;
+  }
+  .dropdown-panel a:hover {
+    text-decoration: underline;
+  }
+
+  /* simple fade/slide */
+  @media (prefers-reduced-motion: no-preference) {
+    .dropdown-panel {
+      opacity: 0;
+      transition: opacity 0.16s ease, transform 0.16s ease;
+    }
+    .dropdown-panel.open {
+      display: block;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dropdown-panel.open {
+      display: block;
+    }
+  }
+
+  /* keep the off-canvas hidden on desktop */
+  .nav-panel {
+    display: none !important;
+  }
+  .hamburger,
+  .home.icon-btn {
+    display: none;
   }
 }

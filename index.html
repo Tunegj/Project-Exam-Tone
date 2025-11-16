@@ -3,7 +3,58 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/variables.css" />
+    <link rel="stylesheet" href="./css/header-nav.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="./components/header-nav.js" defer></script>
+    <script src="./js/index.js" defer></script>
     <title>Home</title>
   </head>
-  <body></body>
+  <body>
+    <header id="site-header"></header>
+    <main id="main" class="home" tabindex="-1">
+      <section id="banner" aria-labelledby="banner-title">
+        <h2 id="banner-title" class="visually-hidden">Latest products</h2>
+        <div class="carousel" data-carousel></div>
+        <div class="carousel-controls">
+          <button
+            class="carousel-btn previous"
+            type="button"
+            aria-label="Previous slide"
+            data-prev
+          >
+            ‹
+          </button>
+          <button
+            class="carousel-btn next"
+            type="button"
+            aria-label="Next slide"
+            data-next
+          >
+            ›
+          </button>
+        </div>
+        <div
+          class="carousel-pagination"
+          role="tablist"
+          aria-label="slides"
+          data-dots
+        ></div>
+      </section>
+      <section id="feed" aria-labelledby="feed-title">
+        <h2 id="feed-title">New Arrivals</h2>
+        <div class="grid" data-grid></div>
+      </section>
+    </main>
+  </body>
 </html>

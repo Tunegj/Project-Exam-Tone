@@ -34,3 +34,20 @@ panel
 window.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && panel.classList.contains("open")) closeMenu();
 });
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const mount = document.getElementById("site-header");
+  if (!mount) return;
+
+  try {
+    // root-relative so it works on /index.html, /product.html, etc.
+    const res = await fetch("/partials/header-nav.html");
+    if (!res.ok) throw new Error(`Failed to load header: ${res.status}`);
+    mount.innerHTML = await res.text();
+
+    // if you have any header init code (hamburger, accordion, etc.), call it here
+    // initHeaderNav?.();
+  } catch (err) {
+    console.error(err);
+  }
+});

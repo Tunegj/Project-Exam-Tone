@@ -43,7 +43,109 @@ function animateToSlide(trackIndex) {
   dom.track.style.transform = `translateX(-${trackIndex * 100}%)`;
 }
 
-// example usage
+// update dots to reflect current slide
+function getLogicalIndex() {
+  if (totalSlides === 0) return 0;
+
+  if (currentSlideIndex === 0) {
+    return totalSlides - 1;
+  }
+  if (currentSlideIndex === totalSlides + 1) {
+    return 0;
+  }
+  return currentSlideIndex - 1;
+}
+
+// highlight the active dot based on logical slide index
+function updateDots(logicalIndex) {
+  if (!dom.dots) return;
+
+  const buttons = dom.dots.querySelectorAll("[data-index]");
+  buttons.forEach((btn) => {
+    const idx = Number(btn.dataset.index);
+    const isActive = idx === logicalIndex;
+
+    btn.classList.toggle("dot--active", isActive);
+
+    btn.setAttribute("aria-current", isActive ? "true" : "false");
+  });
+}
+
+let autoPlayTimer = null;
+const AUTO_PLAY_INTERVAL = 4000;
+
+// auto-play functions
+function startAutoPlay() {
+  stopAutoPlay();
+
+  autoPlayTimer = setInterval(() => {
+    dom.next.click();
+  }, AUTO_PLAY_INTERVAL);
+}
+
+// stop auto-play
+function stopAutoPlay() {
+  if (autoPlayTimer !== null) {
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
+  }
+
+  //   restart auto-play after a delay
+  clearTimeout(stopAutoPlay.restartTimer);
+  stopAutoPlay.restartTimer = setTimeout(() => {
+    startAutoPlay();
+  }, AUTO_PLAY_INTERVAL);
+}
+
+// Swipe
+let startX = 0;
+let currentX = 0;
+let isSwiping = false;
+const SWIPE_THRESHOLD = 50;
+
+// touch event handlers
+function onTouchStart(event) {
+  stopAutoPlay(); //pause auto-play on touch
+
+  startX = event.touches[0].clientX;
+  currentX = startX;
+  isSwiping = true;
+
+  dom.track.style.transition = "none";
+}
+
+//
+function onTouchMove(event) {
+  if (!isSwiping) return;
+
+  currentX = event.touches[0].clientX;
+  const deltaX = currentX - startX;
+
+  const percent =
+    -currentSlideIndex * 100 + (deltaX / dom.carousel.offsetWidth) * 100;
+
+  dom.track.style.transform = `translateX(${percent}%)`;
+}
+
+// Swipe left - next, Swipe right - prev
+function onTouchEnd() {
+  if (!isSwiping) return;
+  isSwiping = false;
+
+  const deltaX = currentX - startX;
+
+  if (deltaX < -SWIPE_THRESHOLD) {
+    dom.next.click();
+  } else if (deltaX > SWIPE_THRESHOLD) {
+    dom.prev.click();
+  } else {
+    animateToSlide(currentSlideIndex);
+  }
+
+  setTimeout(startAutoPlay, 4000);
+}
+
+// main entry point
 (async function start() {
   try {
     const products = await getProducts();
@@ -80,7 +182,35 @@ function animateToSlide(trackIndex) {
     totalSlides = slides.length;
     currentSlideIndex = 0;
 
+    // --- generate dots ---
+    if (dom.dots) {
+      dom.dots.innerHTML = slides
+        .map(
+          (_product, i) => `
+            <button type="button" class="dot" data-index="${i}" aria-label="Go to slide ${
+            i + 1
+          }"></button>`
+        )
+        .join("");
+    }
+
+    // --- dots clickable ---
+    if (dom.dots) {
+      dom.dots.addEventListener("click", (event) => {
+        const btn = event.target.closest("[data-index]");
+        if (!btn) return;
+
+        const targetLogical = Number(btn.dataset.index);
+
+        currentSlideIndex = targetLogical + 1; // adjust for clone
+        animateToSlide(currentSlideIndex);
+        updateDots(targetLogical);
+      });
+    }
+
     jumpToSlide(1);
+    updateDots(0);
+    startAutoPlay();
 
     dom.next.addEventListener("click", () => {
       currentSlideIndex++;
@@ -96,11 +226,13 @@ function animateToSlide(trackIndex) {
           () => {
             currentSlideIndex = 1; // real first slide
             jumpToSlide(1);
+            updateDots(getLogicalIndex());
           },
           { once: true }
         );
       } else {
         animateToSlide(currentSlideIndex);
+        updateDots(getLogicalIndex());
       }
     });
 
@@ -116,11 +248,13 @@ function animateToSlide(trackIndex) {
           () => {
             currentSlideIndex = totalSlides; // real last slide
             jumpToSlide(totalSlides);
+            updateDots(getLogicalIndex());
           },
           { once: true }
         );
       } else {
         animateToSlide(currentSlideIndex);
+        updateDots(getLogicalIndex());
       }
     });
 
@@ -266,4 +400,22 @@ function cardHTML(p) {
     </a>
 </article>
     `;
+}
+
+// pause auto-play on hover/touch
+if (dom.carousel) {
+  dom.carousel.addEventListener("mouseenter", stopAutoPlay);
+  dom.carousel.addEventListener("mouseleave", startAutoPlay);
+}
+
+// pause auto-play on touch devices
+if (dom.carousel) {
+  dom.carousel.addEventListener("touchstart", stopAutoPlay, { passive: true });
+  dom.carousel.addEventListener("touchend", startAutoPlay, { passive: true });
+}
+
+if (dom.carousel) {
+  dom.carousel.addEventListener("touchstart", onTouchStart, { passive: true });
+  dom.carousel.addEventListener("touchmove", onTouchMove, { passive: true });
+  dom.carousel.addEventListener("touchend", onTouchEnd, { passive: true });
 }

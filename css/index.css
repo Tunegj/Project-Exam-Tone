@@ -16,6 +16,28 @@
   will-change: transform;
 }
 
+.carousel-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.carousel-pagination .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: #d0c9c2;
+  padding: 0;
+  cursor: pointer;
+}
+
+.carousel-pagination .dot--active {
+  width: 16px;
+  background: #687a6f; /* your primary */
+}
+
 .slide {
   min-width: 100%;
 }

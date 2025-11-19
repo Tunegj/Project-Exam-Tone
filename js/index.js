@@ -1,5 +1,8 @@
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
+import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
+import { getProducts } from "../api/products.js";
+
 // DOM elements
 const dom = {
   carousel: document.querySelector("[data-carousel]"),
@@ -15,20 +18,6 @@ const slider = {
   index: 0,
   total: 0,
 };
-
-// helper to fetch and return product array
-async function getProducts() {
-  // make http request
-  const res = await fetch(API_URL);
-
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
-  }
-
-  // parse json
-  const json = await res.json();
-  return json.data || []; // return the products array
-}
 
 let currentSlideIndex = 0;
 let totalSlides = 0;
@@ -114,7 +103,6 @@ function onTouchStart(event) {
   dom.track.style.transition = "none";
 }
 
-//
 function onTouchMove(event) {
   if (!isSwiping) return;
 
@@ -286,31 +274,6 @@ function wrapSliderIndex() {
   if (slider.total <= 0) return;
 
   slider.index = ((slider.index % slider.total) + slider.total) % slider.total;
-}
-
-// price helpers
-
-function finalPrice(p) {
-  return p?.discountedPrice ?? p?.price ?? 0;
-}
-
-function isOnSale(p) {
-  const price = p?.price ?? 0;
-  const discounted = p?.discountedPrice ?? price;
-  return discounted < price;
-}
-
-// format number as currency string
-function money(n) {
-  const v = Number(n || 0);
-  try {
-    return new Intl.NumberFormat(undefined, {
-      style: "currency",
-      currency: "USD",
-    }).format(v);
-  } catch {
-    return `$${v.toFixed(2)}`;
-  }
 }
 
 function esc(text) {

@@ -9,3 +9,23 @@
   padding: 0;
   margin: -1px;
 }
+
+.carousel__track {
+  display: flex;
+  transition: transform 0.35s ease;
+  will-change: transform;
+}
+
+.slide {
+  min-width: 100%;
+}
+
+.slide {
+  min-width: 100%; /* each slide takes full width */
+}
+
+/* Just so it doesn’t overflow the page vertically while testing */
+#banner {
+  overflow: hidden;
+  position: relative;
+}

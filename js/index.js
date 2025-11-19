@@ -3,10 +3,11 @@ const API_URL = "https://v2.api.noroff.dev/online-shop";
 // DOM elements
 const dom = {
   carousel: document.querySelector("[data-carousel]"),
-  productGrid: document.querySelector("[data-grid]"),
+  grid: document.querySelector("[data-grid]"),
   prev: document.querySelector("[data-prev]"),
   next: document.querySelector("[data-next]"),
   dots: document.querySelector("[data-dots]"),
+  track: null,
 };
 
 // state for slider
@@ -29,6 +30,19 @@ async function getProducts() {
   return json.data || []; // return the products array
 }
 
+let currentSlideIndex = 0;
+let totalSlides = 0;
+
+function jumpToSlide(trackIndex) {
+  dom.track.style.transition = "none";
+  dom.track.style.transform = `translateX(-${trackIndex * 100}%)`;
+}
+
+function animateToSlide(trackIndex) {
+  dom.track.style.transition = "transform 0.35s ease";
+  dom.track.style.transform = `translateX(-${trackIndex * 100}%)`;
+}
+
 // example usage
 (async function start() {
   try {
@@ -46,10 +60,69 @@ async function getProducts() {
     console.log("🧪 card HTML (first of 12):", cardHTML(gridItems[0]));
 
     if (dom.carousel) {
-      dom.carousel.innerHTML = slides
-        .map((product, index) => slideHTML(product, index))
-        .join("");
+      const track = document.createElement("div");
+      track.className = "carousel__track";
+
+      const first = slides[0];
+      const last = slides[slides.length - 1];
+
+      track.innerHTML =
+        slideHTML(last, -1) +
+        slides.map((p, i) => slideHTML(p, i)).join("") +
+        slideHTML(first, slides.length);
+
+      dom.carousel.innerHTML = "";
+      dom.carousel.appendChild(track);
+
+      dom.track = track;
     }
+
+    totalSlides = slides.length;
+    currentSlideIndex = 0;
+
+    jumpToSlide(1);
+
+    dom.next.addEventListener("click", () => {
+      currentSlideIndex++;
+
+      // If we slid into the clone FIRST
+      if (currentSlideIndex === totalSlides + 1) {
+        // animate into clone
+        animateToSlide(currentSlideIndex);
+
+        // AFTER animation ends, jump to real slide 0 instantly
+        dom.track.addEventListener(
+          "transitionend",
+          () => {
+            currentSlideIndex = 1; // real first slide
+            jumpToSlide(1);
+          },
+          { once: true }
+        );
+      } else {
+        animateToSlide(currentSlideIndex);
+      }
+    });
+
+    dom.prev.addEventListener("click", () => {
+      currentSlideIndex--;
+
+      // If we slid into the clone LAST
+      if (currentSlideIndex === 0) {
+        animateToSlide(0); // animate to clone last
+
+        dom.track.addEventListener(
+          "transitionend",
+          () => {
+            currentSlideIndex = totalSlides; // real last slide
+            jumpToSlide(totalSlides);
+          },
+          { once: true }
+        );
+      } else {
+        animateToSlide(currentSlideIndex);
+      }
+    });
 
     slider.total = slides.length;
     slider.index = 0;
@@ -72,28 +145,8 @@ async function getProducts() {
     if (dom.grid) {
       dom.grid.innerHTML = `<p role="alert">Could not load product grid.</p>`;
     }
-
-    setupSliderControls();
   }
 })();
-
-function setupSliderControls() {
-  if (dom.prev) {
-    dom.prev.addEventListener("click", () => {
-      slider.index -= 1;
-      wrapSliderIndex();
-      console.log("current slider index:", slider.index);
-    });
-  }
-}
-
-if (dom.next) {
-  dom.next.addEventListener("click", () => {
-    slider.index += 1;
-    wrapSliderIndex();
-    console.log("current slider index:", slider.index);
-  });
-}
 
 function wrapSliderIndex() {
   if (slider.total <= 0) return;

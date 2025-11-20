@@ -4,6 +4,7 @@ import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
 import { getProductById } from "./api/products.js";
 import { cardHTML } from "../components/product-card.js";
 import { addToCart } from "../utils/cart.js";
+import { updateCartCount } from "../utils/cart-ui.js";
 
 const dom = {
   image: document.querySelector("[data-product-image]"),
@@ -183,6 +184,16 @@ function renderSimilarProducts(similarProducts) {
   list.innerHTML = similarProducts.map((p) => cardHTML(p)).join("");
 }
 
+function setupAddToCart(product) {
+  if (!dom.addToCartBtn) return;
+
+  dom.addToCartBtn.addEventListener("click", () => {
+    addToCart(product);
+    updateCartCount();
+    alert(`Added "${product.title}" to your cart`);
+  });
+}
+
 (async function startProductPage() {
   try {
     const id = getProductIdFromUrl();
@@ -201,10 +212,12 @@ function renderSimilarProducts(similarProducts) {
 
     renderProduct(product);
     renderReviews(product);
+    setupAddToCart(product);
 
     const similar = getSimilarProducts(product, allProducts, 4);
     renderSimilarProducts(similar);
   } catch (error) {
     console.error("❌ Could not load product:", error);
   }
+  updateCartCount();
 })();

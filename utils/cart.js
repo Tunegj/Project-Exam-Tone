@@ -12,6 +12,11 @@ export function loadCart() {
   }
 }
 
+export function saveCart(cart) {
+  const json = JSON.stringify(cart);
+  localStorage.setItem(CART_KEY, json);
+}
+
 export function addToCart(product) {
   const cart = loadCart();
 

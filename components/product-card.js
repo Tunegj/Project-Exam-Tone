@@ -1,4 +1,4 @@
-import { finalPrice, isOnSale, money } from "../utils/price-helpers";
+import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
 
 export function esc(text) {
   return String(text ?? "").replace(
@@ -15,23 +15,23 @@ export function esc(text) {
 }
 
 // HTML generators
-function productLink(p) {
+export function productLink(p) {
   // consistent product detail link
   return `/product.html?id=${encodeURIComponent(p?.id ?? "")}`;
 }
 
 // image helpers
-function imageUrl(p) {
+export function imageUrl(p) {
   return p?.image?.url || "https://via.placeholder.com/800x500?text=No+image";
 }
 
 // alt text helper
-function imageAlt(p) {
+export function imageAlt(p) {
   return p?.image?.alt || p?.title || "Product image";
 }
 
 // generate HTML snippets
-function slideHTML(p, index = 0) {
+export function slideHTML(p, index = 0) {
   const priceNow = money(finalPrice(p));
   const priceOld = isOnSale(p) ? money(p.price) : "";
 
@@ -59,7 +59,7 @@ function slideHTML(p, index = 0) {
 }
 
 // product card for grid
-function cardHTML(p) {
+export function cardHTML(p) {
   const priceNow = money(finalPrice(p));
   const priceOld = isOnSale(p) ? money(p.price) : "";
 

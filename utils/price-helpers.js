@@ -1,17 +1,17 @@
 // price helpers
 
-function finalPrice(p) {
+export function finalPrice(p) {
   return p?.discountedPrice ?? p?.price ?? 0;
 }
 
-function isOnSale(p) {
+export function isOnSale(p) {
   const price = p?.price ?? 0;
   const discounted = p?.discountedPrice ?? price;
   return discounted < price;
 }
 
 // format number as currency string
-function money(n) {
+export function money(n) {
   const v = Number(n || 0);
   try {
     return new Intl.NumberFormat(undefined, {

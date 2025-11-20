@@ -1,8 +1,9 @@
 const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
 
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
-import { getProductById } from "../api/products.js";
+import { getProductById } from "./api/products.js";
 import { cardHTML } from "../components/product-card.js";
+import { addToCart } from "../utils/cart.js";
 
 const dom = {
   image: document.querySelector("[data-product-image]"),
@@ -14,7 +15,55 @@ const dom = {
   addToCartBtn: document.querySelector("[data-add-to-cart]"),
   similarList: document.querySelector("[data-similar-list]"),
   similarEmpty: document.querySelector("[data-similar-empty]"),
+  reviewsList: document.querySelector("[data-reviews-list]"),
+  reviewsEmpty: document.querySelector("[data-reviews-empty]"),
 };
+
+function renderStars(value) {
+  const rating = Number(value) || 0;
+  const max = 5;
+  let html = "";
+
+  for (let i = 1; i <= max; i++) {
+    html += `<span aria-hidden="true">${i <= rating ? "★" : "☆"}</span>`;
+  }
+
+  return html;
+}
+
+function renderReviews(product) {
+  const list = dom.reviewsList;
+  const empty = dom.reviewsEmpty;
+
+  if (!list || !empty) return;
+
+  const reviews = Array.isArray(product.reviews) ? product.reviews : [];
+
+  if (reviews.length === 0) {
+    list.innerHTML = "";
+    empty.hidden = false;
+    return;
+  }
+
+  empty.hidden = true;
+
+  list.innerHTML = reviews
+    .map((review) => {
+      const username = review.username || "Anonymous";
+      const description = review.description || "";
+      const rating = Number(review.rating) || 0;
+
+      return `
+      <article class="review">
+        <header class="review__header">
+          <h3 class="review__user">${username}</h3>
+          <p class="review__rating" arial-label="Rated ${rating} out of 5">
+            ${renderStars(rating)}
+          </p>
+      </article>`;
+    })
+    .join("");
+}
 
 function renderProduct(product) {
   if (!product) return;
@@ -56,7 +105,8 @@ function renderProduct(product) {
 
   if (dom.rating) {
     const rating = product.rating ?? 0;
-    dom.rating.textContent = `★ ${rating}/5`;
+    dom.rating.innerHTML = renderStars(rating);
+    dom.rating.setAttribute("aria-label", `Rating ${rating} out of 5`);
   }
 
   if (dom.addToCartBtn) {
@@ -67,7 +117,8 @@ function renderProduct(product) {
 
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+  const id = params.get("id");
+  return id ? id.trim() : null;
 }
 
 async function fetchAllProducts() {
@@ -149,6 +200,7 @@ function renderSimilarProducts(similarProducts) {
     console.log("🛍️ Loaded product:", product);
 
     renderProduct(product);
+    renderReviews(product);
 
     const similar = getSimilarProducts(product, allProducts, 4);
     renderSimilarProducts(similar);

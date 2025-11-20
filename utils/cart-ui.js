@@ -1,4 +1,4 @@
-import { getCartCount } from "./cart.js";
+import { getCartCount } from "./cart-helper.js";
 
 export function updateCartCount() {
   const cartCountEl = document.querySelector("[data-cart-count]");

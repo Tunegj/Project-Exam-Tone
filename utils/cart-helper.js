@@ -45,3 +45,29 @@ export function getCartCount() {
     return total + item.quantity;
   }, 0);
 }
+
+export function changeCartItemQuantity(id, delta) {
+  const cart = loadCart();
+
+  const item = cart.find((entry) => entry.id === id);
+  if (!item) return;
+
+  item.quantity += delta;
+
+  if (item.quantity <= 0) {
+    const filtered = cart.filter((entry) => entry.id !== id);
+    saveCart(filtered);
+  } else {
+    saveCart(cart);
+  }
+}
+
+export function removeCartItem(id) {
+  const cart = loadCart();
+  const filtered = cart.filter((entry) => entry.id !== id);
+  saveCart(filtered);
+}
+
+export function clearCart() {
+  saveCart([]);
+}

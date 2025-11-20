@@ -2,6 +2,7 @@ const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
 
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
 import { getProductById } from "../api/products.js";
+import { cardHTML } from "../components/product-card.js";
 
 const dom = {
   image: document.querySelector("[data-product-image]"),
@@ -13,29 +14,60 @@ const dom = {
   addToCartBtn: document.querySelector("[data-add-to-cart]"),
 };
 
-function getProductIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
-}
-
-async function fetchProductById(id) {
-  const url = `${PRODUCT_API_URL}/${id}`;
-
-  const res = await fetch(url);
-
-  if (!res.ok) {
-    throw new Error(`API error ${res.status} ${res.statusText}`);
-  }
-
-  const json = await res.json();
-
-  return json.data;
-}
 
 function renderProduct(product) {
     if (!product) return;
 
-    if(dom.title)
+    if(dom.title) {
+      dom.title.textContent = product.title ?? "Untitled Project";
+    }
+
+    if (dom.description) {
+      dom.description.textContent = product.description ?? "";
+    }
+
+    if (dom.image) {
+      const url =
+        product.image?.url ||
+        "https://via.placeholder.com/800x600?text=No+image";
+      const alt = product.image?alt || product.title || "Product Image";
+
+      dom.image.src = url;
+      dom.image.alt = alt;
+    }
+
+    const current = finalPrice(product);
+    const original = product.price ?? current;
+    const onSale = isOnSale(product);
+
+    if (dom.price) {
+      dom.price.textContent = money(current);
+    }
+
+    if (dom.oldPrice) {
+      if (onSale) {
+        dom.oldPrice.textContent = money(original);
+        dom.oldPrice.style.display = "";
+      } else {
+        dom.oldPrice.textContent = "";
+        dom.oldPrice.style.display= "none";
+      }
+    }
+
+    if (dom.rating) {
+      const rating = product.rating ?? 0;
+      dom.rating.textContent = `★ ${rating}/5`;
+    }
+
+    if (dom.addToCartBtn) {
+      dom.addToCartBtn.textContent ="Add to cart";
+      dom.addToCartBtn.disabled = false;
+    }
+}
+
+function getProductIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
 }
 
 async function fetchAllProducts() {
@@ -47,7 +79,7 @@ async function fetchAllProducts() {
 
   const json = await res.json();
 
-  return json.data;
+  return json.data || [];
 }
 
 function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {

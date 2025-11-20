@@ -1,8 +1,7 @@
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
-import { getProducts } from "../api/products.js";
-import { getProducts } from "../api/products.js";
+// import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
+import { getProducts } from "../js/api/products.js";
 import { cardHTML, slideHTML } from "../components/product-card.js";
 
 // DOM elements

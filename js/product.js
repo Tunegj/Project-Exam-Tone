@@ -12,57 +12,57 @@ const dom = {
   oldPrice: document.querySelector("[data-product-old-price]"),
   rating: document.querySelector("[data-product-rating]"),
   addToCartBtn: document.querySelector("[data-add-to-cart]"),
+  similarList: document.querySelector("[data-similar-list]"),
+  similarEmpty: document.querySelector("[data-similar-empty]"),
 };
 
-
 function renderProduct(product) {
-    if (!product) return;
+  if (!product) return;
 
-    if(dom.title) {
-      dom.title.textContent = product.title ?? "Untitled Project";
+  if (dom.title) {
+    dom.title.textContent = product.title ?? "Untitled product";
+  }
+
+  if (dom.description) {
+    dom.description.textContent = product.description ?? "";
+  }
+
+  if (dom.image) {
+    const url =
+      product.image?.url || "https://via.placeholder.com/800x600?text=No+image";
+    const alt = product.image?.alt || product.title || "Product Image";
+
+    dom.image.src = url;
+    dom.image.alt = alt;
+  }
+
+  const current = finalPrice(product);
+  const original = product.price ?? current;
+  const onSale = isOnSale(product);
+
+  if (dom.price) {
+    dom.price.textContent = money(current);
+  }
+
+  if (dom.oldPrice) {
+    if (onSale) {
+      dom.oldPrice.textContent = money(original);
+      dom.oldPrice.style.display = "";
+    } else {
+      dom.oldPrice.textContent = "";
+      dom.oldPrice.style.display = "none";
     }
+  }
 
-    if (dom.description) {
-      dom.description.textContent = product.description ?? "";
-    }
+  if (dom.rating) {
+    const rating = product.rating ?? 0;
+    dom.rating.textContent = `★ ${rating}/5`;
+  }
 
-    if (dom.image) {
-      const url =
-        product.image?.url ||
-        "https://via.placeholder.com/800x600?text=No+image";
-      const alt = product.image?alt || product.title || "Product Image";
-
-      dom.image.src = url;
-      dom.image.alt = alt;
-    }
-
-    const current = finalPrice(product);
-    const original = product.price ?? current;
-    const onSale = isOnSale(product);
-
-    if (dom.price) {
-      dom.price.textContent = money(current);
-    }
-
-    if (dom.oldPrice) {
-      if (onSale) {
-        dom.oldPrice.textContent = money(original);
-        dom.oldPrice.style.display = "";
-      } else {
-        dom.oldPrice.textContent = "";
-        dom.oldPrice.style.display= "none";
-      }
-    }
-
-    if (dom.rating) {
-      const rating = product.rating ?? 0;
-      dom.rating.textContent = `★ ${rating}/5`;
-    }
-
-    if (dom.addToCartBtn) {
-      dom.addToCartBtn.textContent ="Add to cart";
-      dom.addToCartBtn.disabled = false;
-    }
+  if (dom.addToCartBtn) {
+    dom.addToCartBtn.textContent = "Add to cart";
+    dom.addToCartBtn.disabled = false;
+  }
 }
 
 function getProductIdFromUrl() {
@@ -101,7 +101,7 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
 
       const sharedTagsCount = productTags.filter((tag) =>
         currentTags.includes(tag)
-      ).lenght;
+      ).length;
 
       return {
         ...product,
@@ -115,6 +115,23 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
   return scored.slice(0, maxItems);
 }
 
+function renderSimilarProducts(similarProducts) {
+  const list = dom.similarList;
+  const empty = dom.similarEmpty;
+
+  if (!list) return;
+
+  if (!similarProducts || similarProducts.length === 0) {
+    list.innerHTML = "";
+    if (empty) empty.hidden = false;
+    return;
+  }
+
+  if (empty) empty.hidden = true;
+
+  list.innerHTML = similarProducts.map((p) => cardHTML(p)).join("");
+}
+
 (async function startProductPage() {
   try {
     const id = getProductIdFromUrl();
@@ -124,9 +141,17 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
       return;
     }
 
-    const product = await fetchProductById(id);
+    const [product, allProducts] = await Promise.all([
+      getProductById(id),
+      fetchAllProducts(),
+    ]);
 
     console.log("🛍️ Loaded product:", product);
+
+    renderProduct(product);
+
+    const similar = getSimilarProducts(product, allProducts, 4);
+    renderSimilarProducts(similar);
   } catch (error) {
     console.error("❌ Could not load product:", error);
   }

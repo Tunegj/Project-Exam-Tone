@@ -2,36 +2,75 @@ export function isRequired(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-export function validateUserProfile() {
+export function isEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+export function isPostalCode(value) {
+  return /^[A-Za-z0-9 -]{3,10}$/.test(value);
+}
+
+export function isPhone(value) {
+  const trimmed = value.trim();
+  if (!trimmed) return true;
+  return /^[0-9+\-\s]{5,20}$/.test(trimmed);
+}
+
+/**
+ * Validate a user profile object.
+ *
+ * @param {Object} profile
+ * @returns {Object} errors - e.g. { firstName: "Please enter...", email: "Invalid..." }
+ */
+
+export function validateUserProfile(profile) {
+  const errors = {};
+
+  // firstName
   if (!isRequired(profile.firstName)) {
-    return "Please enter your first name";
+    errors.firstName = "Please enter your first name.";
   }
 
+  // lastName
   if (!isRequired(profile.lastName)) {
-    return "Please enter your last name";
+    errors.lastName = "Please enter your last name.";
   }
 
+  // email
   if (!isRequired(profile.email)) {
-    return "Please enter your email";
+    errors.email = "Please enter your email.";
+  } else if (!isEmail(profile.email)) {
+    errors.email = "Please enter a valid email address.";
   }
 
+  // phone (optional, but validate if present)
+  if (!isPhone(profile.phone)) {
+    errors.phone = "Please enter a valid phone number.";
+  }
+
+  // address1
   if (!isRequired(profile.address1)) {
-    return "Please enter your address";
+    errors.address1 = "Please enter your address.";
   }
 
+  // zip
   if (!isRequired(profile.zip)) {
-    return "Please enter your zip code";
+    errors.zip = "Please enter your zip code.";
+  } else if (!isPostalCode(profile.zip)) {
+    errors.zip = "Please enter a valid zip code.";
   }
 
+  // city
   if (!isRequired(profile.city)) {
-    return "Please enter your city";
+    errors.city = "Please enter your city.";
   }
 
+  // country
   if (!isRequired(profile.country)) {
-    return "Please enter your country";
+    errors.country = "Please enter your country.";
   }
 
-  return null;
+  return errors;
 }
 
 // function validateForm() {

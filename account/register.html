@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/variables.css" />
-    <link rel="stylesheet" href="./css/header-nav.css" />
-    <link rel="stylesheet" href="./css/product.css" />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/header-nav.css" />
+    <!-- <link rel="stylesheet" href="./css/product.css" /> -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,11 +16,11 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
       rel="stylesheet"
     />
-    <script src="./components/header-nav.js" defer></script>
-    <script type="module" src="./js/register.js" defer></script>
+    <script type="module" src="../js/register.js" defer></script>
     <title>Register user</title>
   </head>
   <body>
+    <header id="site-header"></header>
     <main class="register-page">
       <section class="register">
         <h1>Personal details</h1>
@@ -35,6 +35,11 @@
               data-register-first-name
               required
             />
+            <p
+              class="form-error"
+              data-register-error="firstName"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div>
@@ -45,6 +50,7 @@
               name="lastName"
               data-register-last-name
               required
+              data-register-error="lastName"
             />
           </div>
 
@@ -56,12 +62,19 @@
               name="email"
               data-register-email
               required
+              data-register-error="email"
             />
           </div>
 
           <div>
             <label for="phone">Phone number:</label>
-            <input type="tel" name="phone" id="phone" data-register-phone />
+            <input
+              type="tel"
+              name="phone"
+              id="phone"
+              data-register-phone
+              data-register-error="phone"
+            />
           </div>
 
           <div>
@@ -71,6 +84,7 @@
               id="address1"
               name="address1"
               data-register-address1
+              data-register-error="address1"
               required
             />
           </div>
@@ -93,6 +107,7 @@
                 id="zip"
                 name="zip"
                 data-register-zip
+                data-register-error="zip"
                 required
               />
             </label>
@@ -105,6 +120,7 @@
               id="city"
               name="city"
               data-register-city
+              data-register-error="city"
               required
             />
           </div>
@@ -116,6 +132,7 @@
               id="country"
               name="country"
               data-register-country
+              data-register-error="country"
               required
             />
           </div>

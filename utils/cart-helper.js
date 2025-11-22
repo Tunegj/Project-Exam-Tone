@@ -32,6 +32,7 @@ export function addToCart(product) {
       discountedPrice: product.discountedPrice,
       image: product.image,
       quantity: 1,
+      tags: product.tags || [],
     });
   }
 

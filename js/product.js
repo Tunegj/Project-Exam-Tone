@@ -139,13 +139,11 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
     ? currentProduct.tags
     : [];
 
-  if (currentTags.length === 0) {
-    return [];
-  }
+  const others = allProducts.filter((p) => p.id !== currentProduct.id);
 
-  const others = allProducts.filter(
-    (product) => product.id !== currentProduct.id
-  );
+  if (currentTags.length === 0) {
+    return others.slice(0, maxItems);
+  }
 
   const scored = others
     .map((product) => {
@@ -163,6 +161,10 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
 
     .filter((product) => product._similarityScore > 0)
     .sort((a, b) => b._similarityScore - a._similarityScore);
+
+  if (scored.length === 0) {
+    return others.slice(0, maxItems);
+  }
 
   return scored.slice(0, maxItems);
 }

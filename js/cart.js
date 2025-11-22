@@ -4,7 +4,8 @@ import {
   removeCartItem,
   clearCart,
 } from "../utils/cart-helper.js";
-
+import { getProducts } from "./api/products.js";
+import { cardHTML } from "../components/product-card.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { finalPrice, money } from "../utils/price-helpers.js";
 
@@ -15,6 +16,7 @@ const dom = {
   empty: document.querySelector("[data-cart-empty]"),
   total: document.querySelector("[data-cart-total]"),
   clearBtn: document.querySelector("[data-cart-clear]"),
+  recommendations: document.querySelector("[data-cart-recommendations]"),
 };
 
 console.log("🔧 Cart DOM hooks:", dom);
@@ -74,6 +76,34 @@ function cartItemHTML(item) {
   `;
 }
 
+function getRecommendations(cart, allProducts, max = 4) {
+  if (!Array.isArray(cart) || cart.length === 0) return [];
+  if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
+
+  const cartTags = new Set();
+
+  cart.forEach((item) => {
+    const fullProduct = allProducts.find((p) => p.id === item.id);
+    if (fullProduct && Array.isArray(fullProduct.tags)) {
+      fullProduct.tags.forEach((t) => cartTags.add(t));
+    }
+  });
+
+  if (cartTags.size === 0) return [];
+
+  const matches = allProducts
+    .filter((p) => {
+      // don’t recommend items already in the cart
+      if (cart.some((item) => item.id === p.id)) return false;
+      if (!Array.isArray(p.tags)) return false;
+
+      return p.tags.some((tag) => cartTags.has(tag));
+    })
+    .slice(0, max);
+
+  return matches;
+}
+
 function updateTotal(cart) {
   const total = cart.reduce((sum, item) => {
     const unitPrice = finalPrice(item);
@@ -89,7 +119,6 @@ function renderCart() {
   const cart = loadCart();
   console.log("🔎 Cart on cart page:", cart);
 
-  // You can keep this log for debugging, but DON'T return early anymore
   // if (!dom.list || !dom.empty) {
   //   console.warn("❗ Cart DOM elements missing", dom.list, dom.empty);
   //   return;
@@ -107,8 +136,25 @@ function renderCart() {
 
   dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
 
+  function renderRecommendations(cart, allProducts) {
+    if (!dom.recommendations) return;
+
+    const recs = getRecommendations(cart, allProducts);
+
+    if (!recs.length) {
+      dom.recommendations.innerHTML = "<p> No recommendations available</p>";
+      return;
+    }
+
+    dom.recommendations.innerHTML = recs.map((p) => cardHTML(p)).join("");
+  }
+
   updateTotal(cart);
   updateCartCount();
+
+  if (window._allProducts) {
+    renderRecommendations(cart, window._allProducts);
+  }
 }
 
 function handleListClick(event) {
@@ -138,13 +184,20 @@ function handleClearClick() {
   renderCart();
 }
 
-function startCartPage() {
+async function startCartPage() {
   if (dom.list) {
     dom.list.addEventListener("click", handleListClick);
   }
 
   if (dom.clearBtn) {
     dom.clearBtn.addEventListener("click", handleClearClick);
+  }
+
+  try {
+    window._allProducts = await getProducts();
+  } catch (err) {
+    console.error("error loading products:", err);
+    window._allProducts = [];
   }
 
   renderCart();

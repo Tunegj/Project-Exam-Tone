@@ -3,7 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/variables.css" />
+    <link rel="stylesheet" href="./css/header-nav.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="./components/header-nav.js" defer></script>
+    <script type="module" src="./js/checkout.js" defer></script>
     <title>Checkout</title>
   </head>
-  <body></body>
+  <body>
+    <header id="site-header"></header>
+    <main class="checkout-page">
+      <section class="checkout-payment">
+        <div class="payment-method">
+          <input type="radio" name="Visa/Mastercard" id="visa-mastercard" />
+          <input type="radio" name="American Express" id="american-exp" />
+          <input type="radio" name="Gift Card" id="gift-card" />
+        </div>
+        <div class="payment-details">
+          <input type="text" class="card-name" />
+          <input type="text" class="card-number" />
+          <input type="text" class="card-cvc" />
+          <input type="text" class="card-exp__month" />
+          <input type="text" class="card-exp__year" />
+        </div>
+        <div class="payment-billing" aria-labelledby="billing__title">
+          <h2 class="payment-billing__title" id="billing__title">
+            Billing address
+          </h2>
+          <input type="text" class="payment-billing__name" />
+          <input type="text" class="payment-billing__street" />
+          <input type="text" class="payment-billing__PO" />
+          <input type="text" class="payment-billing__country" />
+        </div>
+      </section>
+      <section class="checkout-delivery">
+        <div class="delivery-address">
+          <h2 class="delivery-address__title" id="delivery__title">
+            Delivery
+            <address></address>
+          </h2>
+          <input type="text" class="delivery-address__name" />
+          <input type="text" class="delivery-address__street" />
+          <input type="text" class="delivery-address__PO" />
+          <input type="text" class="delivery-address__country" />
+        </div>
+      </section>
+      <button type="submit" class="pay-btn"></button>
+    </main>
+  </body>
 </html>

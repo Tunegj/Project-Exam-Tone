@@ -51,8 +51,12 @@ export function slideHTML(p, index = 0) {
         <span class="slide__price">${priceNow}</span>
         ${priceOld ? `<span class="slide__price--old">${priceOld}</span>` : ""}
         </div>
-
+        <div class="slide__actions">
         <a class="product-button" href="${productLink(p)}">View Product</a>
+        <button type="button" class="slide__add-button" data-product-id="${esc(
+          p.id
+        )}">Add to Cart</button>
+        </div>
     </div>
     </article>
     `;

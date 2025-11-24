@@ -39,7 +39,6 @@ body {
   gap: 0.75rem;
 }
 
-/* outer beige band */
 .carousel {
   position: relative;
   overflow: hidden;
@@ -49,14 +48,12 @@ body {
   min-height: 240px;
 }
 
-/* JS builds this wrapper around slides */
 .carousel__track {
   display: flex;
   width: 100%;
   height: 100%;
 }
 
-/* ONE SLIDE – mobile: stack image and text */
 .slide {
   flex: 0 0 100%;
   box-sizing: border-box;
@@ -68,7 +65,6 @@ body {
   justify-content: center;
 }
 
-/* image */
 .slide__img {
   max-width: 220px;
   max-height: 220px;
@@ -79,11 +75,10 @@ body {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-/* text block */
 .slide__content {
   width: 100%;
   max-width: 22rem;
-  color: #fff;
+  color: #faf7f4;
   text-align: center;
 }
 
@@ -113,16 +108,37 @@ body {
   opacity: 0.8;
 }
 
-/* CTA in slide */
+.slide__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center; /* mobile: centered */
+}
+
+.slide__add-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.3rem;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--color-primary, #687a6f);
+  color: var(--color-font-light);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
 .product-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1.1rem;
-  border-radius: 999px;
-  border: 1px solid rgba(245, 228, 215, 0.6);
-  background-color: rgba(245, 228, 215, 0.16);
-  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #687a6f;
+  background-color: #faf7f4;
+  color: var(--color-font-dark);
   font-size: 0.85rem;
   text-decoration: none;
   backdrop-filter: blur(6px);
@@ -130,9 +146,22 @@ body {
     box-shadow 0.18s ease;
 }
 
+.slide__add-button:hover,
+.slide__add-button:focus-visible {
+  background-color: #faf7f4;
+  color: var(--color-font-dark);
+  border: 1px solid var(--color-primary);
+}
+
+.slide__add-button:focus-visible {
+  outline: 2px solid var(--color-accent, #e5d1d0);
+  outline-offset: 2px;
+}
+
 .product-button:hover,
 .product-button:focus-visible {
-  background-color: rgba(245, 228, 215, 0.28);
+  background-color: #687a6f;
+  color: var(--color-font-light, #ffffff);
   transform: translateY(-1px);
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
@@ -141,10 +170,6 @@ body {
   outline: 2px solid var(--color-accent, #e5d1d0);
   outline-offset: 2px;
 }
-
-/* -------------------------------------------------
-   CAROUSEL CONTROLS + DOTS
--------------------------------------------------- */
 
 .carousel-controls {
   position: absolute;
@@ -186,7 +211,6 @@ body {
   outline-offset: 2px;
 }
 
-/* dots */
 .carousel-pagination {
   margin-top: 0.5rem;
   display: flex;
@@ -217,10 +241,6 @@ body {
   outline-offset: 2px;
 }
 
-/* -------------------------------------------------
-   PRODUCT GRID (MOBILE FIRST)
--------------------------------------------------- */
-
 #feed {
   display: flex;
   flex-direction: column;
@@ -231,14 +251,12 @@ body {
   font-size: 1.25rem;
 }
 
-/* mobile: single column list */
 .grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
 }
 
-/* product card – matches cardHTML() */
 .product-card {
   background-color: #fff;
   border-radius: 1rem;
@@ -301,11 +319,6 @@ body {
   color: #555;
 }
 
-/* -------------------------------------------------
-   RESPONSIVE ENHANCEMENTS
--------------------------------------------------- */
-
-/* ≥ 600px: small tablets */
 @media (min-width: 600px) {
   .home {
     padding-inline: 1.5rem;
@@ -316,31 +329,27 @@ body {
   }
 }
 
-/* ≥ 768px: tablets – start preparing wider hero */
 @media (min-width: 768px) {
   .home {
     gap: 3rem;
   }
 }
 
-/* ≥ 1024px: desktop – hero like your Figma */
 @media (min-width: 1024px) {
   .home {
     padding-inline: 0;
   }
 
-  /* carousel gets more height and space */
   .carousel {
     min-height: 340px;
     padding: 2rem 0;
   }
 
-  /* slide becomes the centered white card */
   .slide {
     padding: 0;
-    max-width: 900px; /* width of the card */
-    margin-inline: auto; /* center horizontally */
-    background-color: #f8f4f2; /* card background */
+    max-width: 900px;
+    margin-inline: auto;
+    background-color: #f8f4f2;
     border-radius: 1rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
     display: grid;
@@ -375,7 +384,6 @@ body {
     align-self: flex-start;
   }
 
-  /* grid: auto-fit like your “Trending / New arrivals” rows */
   .grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;

@@ -31,6 +31,7 @@ const errorEls = {
   country: document.querySelector('[data-register-error="country"]'),
 };
 
+// Clears all field errors from the form
 function clearFieldErrors() {
   Object.values(errorEls).forEach((el) => {
     if (!el) return;
@@ -39,14 +40,14 @@ function clearFieldErrors() {
   });
 }
 
-function showFieldErrors(error) {
+// Shows field errors on the form and focuses the first errored field
+function showFieldErrors(errors) {
   clearFieldErrors();
 
-  const entries = Object.entries(error);
+  const entries = Object.entries(errors);
   if (entries.length === 0) return;
 
-  const [firstField] = entries;
-  const [firstFieldName] = firstField;
+  const [firstFieldName] = entries[0];
   const firstInput = dom[firstFieldName];
   if (firstInput && typeof firstInput.focus === "function") {
     firstInput.focus();

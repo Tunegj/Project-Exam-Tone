@@ -10,16 +10,30 @@
   --color-neutral: #687a6f;
 
   --font-heading: "playfair display", serif;
-  --font-body: "inter", sans-serif;
+  --font-body: inter, sans-serif;
+
+  /* font sizes -- desktop */
   --font-size-hero: 64px;
-  --font-weight-hero: bold;
-  --font-height-hero: 110%;
   --font-size-section-title: 40px;
-  --font-weight-section-title: semi-bold;
-  --font-height-section-title: 115%;
   --font-size-subheader: 28px;
-  --font-weight-subheader: regular;
-  --font-height-subheader: 120%;
   --font-size-body-small: 16px;
   --font-size-body-large: 18px;
+
+  /* font height */
+  --font-height-hero: 110%;
+  --font-height-section-title: 115%;
+  --font-height-subheader: 120%;
+
+  /* font sizes and weights -- mobile */
+  --font-size-hero-mobile: 32px;
+  --font-size-section-title-mobile: 24px;
+  --font-size-subheader-mobile: 20px;
+  --font-size-body-small-mobile: 14px;
+  --font-size-body-large-mobile: 16px;
+
+  /* font weight */
+
+  --font-weight-hero: bold;
+  --font-weight-section-title: semi-bold;
+  --font-weight-subheader: regular;
 }

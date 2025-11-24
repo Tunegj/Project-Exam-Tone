@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/reset.css" />
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="stylesheet" href="./css/variables.css" />
     <link rel="stylesheet" href="./css/header-nav.css" />
@@ -25,24 +26,25 @@
     <main id="main" class="home" tabindex="-1">
       <section id="banner" aria-labelledby="banner-title">
         <h2 id="banner-title" class="visually-hidden">Latest products</h2>
-        <div class="carousel" data-carousel></div>
-        <div class="carousel-controls">
-          <button
-            class="carousel-btn previous"
-            type="button"
-            aria-label="Previous slide"
-            data-prev
-          >
-            ‹
-          </button>
-          <button
-            class="carousel-btn next"
-            type="button"
-            aria-label="Next slide"
-            data-next
-          >
-            ›
-          </button>
+        <div class="carousel" data-carousel>
+          <div class="carousel-controls">
+            <button
+              class="carousel-btn previous"
+              type="button"
+              aria-label="Previous slide"
+              data-prev
+            >
+              ‹
+            </button>
+            <button
+              class="carousel-btn next"
+              type="button"
+              aria-label="Next slide"
+              data-next
+            >
+              ›
+            </button>
+          </div>
         </div>
         <div
           class="carousel-pagination"

@@ -65,27 +65,69 @@ function updateDots(logicalIndex) {
 let autoPlayTimer = null;
 const AUTO_PLAY_INTERVAL = 4000;
 
-// auto-play functions
+function goToNextSlide() {
+  if (!dom.track || totalSlides === 0) return;
+
+  currentSlideIndex++;
+
+  if (currentSlideIndex === totalSlides + 1) {
+    animateToSlide(currentSlideIndex);
+
+    dom.track.addEventListener(
+      "transitionend",
+      () => {
+        currentSlideIndex = 1;
+        jumpToSlide(1);
+        updateDots(getLogicalIndex());
+      },
+      { once: true }
+    );
+  } else {
+    animateToSlide(currentSlideIndex);
+    updateDots(getLogicalIndex());
+  }
+}
+
+function goToPrevSlide() {
+  if (!dom.track || totalSlides === 0) return;
+
+  currentSlideIndex--;
+
+  if (currentSlideIndex === 0) {
+    animateToSlide(0);
+
+    dom.track.addEventListener(
+      "transitionend",
+      () => {
+        currentSlideIndex = totalSlides;
+        jumpToSlide(totalSlides);
+        updateDots(getLogicalIndex());
+      },
+      { once: true }
+    );
+  } else {
+    animateToSlide(currentSlideIndex);
+    updateDots(getLogicalIndex());
+  }
+}
+
 function startAutoPlay() {
-  stopAutoPlay();
+  if (!dom.carousel || !dom.next) return;
+
+  if (autoPlayTimer !== null) {
+    clearInterval(autoPlayTimer);
+  }
 
   autoPlayTimer = setInterval(() => {
-    dom.next.click();
+    goToNextSlide();
   }, AUTO_PLAY_INTERVAL);
 }
 
-// stop auto-play
 function stopAutoPlay() {
   if (autoPlayTimer !== null) {
     clearInterval(autoPlayTimer);
     autoPlayTimer = null;
   }
-
-  //   clear timer and restart auto-play after a delay
-  clearTimeout(stopAutoPlay.restartTimer);
-  stopAutoPlay.restartTimer = setTimeout(() => {
-    startAutoPlay();
-  }, AUTO_PLAY_INTERVAL);
 }
 
 // Swipe
@@ -203,32 +245,19 @@ function onTouchEnd() {
 
     jumpToSlide(1);
     updateDots(0);
-    startAutoPlay();
 
     // --- add event listeners to prev/next buttons ---
     dom.next.addEventListener("click", () => {
-      currentSlideIndex++;
-
-      // If we slid into the clone FIRST
-      if (currentSlideIndex === totalSlides + 1) {
-        // animate into clone
-        animateToSlide(currentSlideIndex);
-
-        // AFTER animation ends, jump to real slide 0 instantly
-        dom.track.addEventListener(
-          "transitionend",
-          () => {
-            currentSlideIndex = 1; // real first slide
-            jumpToSlide(1);
-            updateDots(getLogicalIndex());
-          },
-          { once: true }
-        );
-      } else {
-        animateToSlide(currentSlideIndex);
-        updateDots(getLogicalIndex());
-      }
+      stopAutoPlay();
+      goToNextSlide();
     });
+
+    dom.prev.addEventListener("click", () => {
+      stopAutoPlay();
+      goToPrevSlide();
+    });
+
+    startAutoPlay();
 
     dom.prev.addEventListener("click", () => {
       currentSlideIndex--;

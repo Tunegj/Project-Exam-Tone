@@ -3,8 +3,9 @@ const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
 import { getProductById } from "./api/products.js";
 import { cardHTML } from "../components/product-card.js";
-import { addToCart } from "../utils/cart-helper.js";
+import { addToCart, loadCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
+import { isLoggedIn } from "../utils/auth.js";
 
 const dom = {
   image: document.querySelector("[data-product-image]"),
@@ -18,6 +19,7 @@ const dom = {
   similarEmpty: document.querySelector("[data-similar-empty]"),
   reviewsList: document.querySelector("[data-reviews-list]"),
   reviewsEmpty: document.querySelector("[data-reviews-empty]"),
+  root: document.querySelector("[data-product-root]"),
 };
 
 function renderStars(value) {

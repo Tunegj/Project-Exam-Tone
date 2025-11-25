@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/index.css" />
     <link rel="stylesheet" href="./css/variables.css" />
+    <link rel="stylesheet" href="./css/checkout.css" />
     <link rel="stylesheet" href="./css/header-nav.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,43 +22,156 @@
   </head>
   <body>
     <header id="site-header"></header>
-    <main class="checkout-page">
-      <section class="checkout-payment">
-        <div class="payment-method">
-          <input type="radio" name="Visa/Mastercard" id="visa-mastercard" />
-          <input type="radio" name="American Express" id="american-exp" />
-          <input type="radio" name="Gift Card" id="gift-card" />
-        </div>
-        <div class="payment-details">
-          <input type="text" class="card-name" />
-          <input type="text" class="card-number" />
-          <input type="text" class="card-cvc" />
-          <input type="text" class="card-exp__month" />
-          <input type="text" class="card-exp__year" />
-        </div>
-        <div class="payment-billing" aria-labelledby="billing__title">
-          <h2 class="payment-billing__title" id="billing__title">
-            Billing address
-          </h2>
-          <input type="text" class="payment-billing__name" />
-          <input type="text" class="payment-billing__street" />
-          <input type="text" class="payment-billing__PO" />
-          <input type="text" class="payment-billing__country" />
-        </div>
-      </section>
-      <section class="checkout-delivery">
-        <div class="delivery-address">
-          <h2 class="delivery-address__title" id="delivery__title">
-            Delivery
-            <address></address>
-          </h2>
-          <input type="text" class="delivery-address__name" />
-          <input type="text" class="delivery-address__street" />
-          <input type="text" class="delivery-address__PO" />
-          <input type="text" class="delivery-address__country" />
-        </div>
-      </section>
-      <button type="submit" class="pay-btn"></button>
+    <main class="checkout-page" aria-labelledby="checkout-heading">
+      <h1 id="checkout-heading" class="checkout-page__title">Checkout</h1>
+        <div class="checkout-page__layout">
+          <form class="checkout-form" data-checkout-form novalidate aria-describedby="checkout-help">
+            <p id="checkout-help" class="checkout-page__help">Please confirm your details and payment method before placing your order.</p>
+            <section class="checkout-delivery" aria-labelledby="delivery__title">
+              <h2 class="checkout-section__title" id="delivery__title">Delivery details</h2>
+              <div class="form-field">
+                <label for="checkout-first-name">First name:</label>
+                <input type="text" name="firstName" id="checkout-first-name" class="delivery-address__name" autocomplete="given-name" data-checkout-first-name>
+                <p class="form-error" data-error-for="firstName"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-last-name">Last name:</label>
+                <input type="text" id="checkout-last-name" name="lastName" autocomplete="family-name" class="delivery-address__name" data-checkout-last-name>
+                <p class="form-error" data-error-for="lastName"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-email">Email:</label>
+                <input type="email" id="checkout-email" name="email" autocomplete="email" class="delivery-address__email" data-checkout-email>
+                <p class="form-error" data-error-for="email"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-phone">Phone:</label>
+                <input type="tel" id="checkout-phone" name="phone" autocomplete="tel" class="delivery-address__phone" data-checkout-phone>
+                <p class="form-error" data-error-for="phone"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-address1">Street address:</label>
+                <input type="text" id="checkout-address1" name="address1" autocomplete="address-line1" class="deliver-address__street" data-checkout-address1>
+                <p class="form-error" data-error-for="address1"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-address2">Address 2 (optional):</label>
+                <input type="text" id="checkout-address2" name="address2" autocomplete="address-line2" class="deliver-address__street2" data-checkout-address2>
+                <p class="form-error" data-error-for="address2"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-zip">Postal code:</label>
+                <input type="text" id="checkout-zip" name="zip" autocomplete="postal-code" class="delivery-address__PO" data-checkout-zip>
+                <p class="form-error" data-error-for="zip"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-city">City:</label>
+                <input type="text" name="city" id="checkout-city" autocomplete="address-level2" class="delivery-address__city" data-checkout-city>
+                <p class="form-error" data-error-for="city"></p>
+              </div>
+
+              <div class="form-field">
+                <label for="checkout-country">Country:</label>
+                <input type="text" id="checkout-country" name="country" autocomplete="country-name" class="delivery-address__country" data-checkout-country>
+                <p class="form-error" data-error-for="country"></p>
+              </div>
+              <div class="form-field">
+                <label for="checkout-notes">Order notes (optional):</label>
+                <textarea name="notes" id="checkout-notes" class="checkout-notes" rows="3" placeholder="Add delivery instructions or notes for us"></textarea>
+                </label>
+              </div>
+            </section>
+
+            <section class="checkout-payment" aria-labelledby="payment__title">
+              <h2 class="checkout-section__title" id="payment__title">Payment</h2>
+
+              <div class="payment-method">
+                <div class="form-field form-field--inline">
+                  <input type="radio" id="visa-mastercard" name="paymentMethod" value="visa-mastercard" checked>
+                  <label for="visa-mastercard">Visa / Mastercard</label>
+                </div>
+
+                <div class="form-field form-field--inline">
+                  <input type="radio" id="american-exp" name="paymentMethod" value="american-express">
+                  <label for="american-exp">American Express</label>
+                </div>
+
+                <div class="form-field form-field--inline">
+                  <input type="radio" name="paymentMethod" id="gift-card" value="gift-card">
+                  <label for="gift-card">Gift card</label>
+                </div>
+              </div>
+
+              <div class="payment-details">
+                <div class="form-field">
+                  <label for="card-name">Name of cardholder:</label>
+                  <input type="text" id="card-name" name="cardName" class="card-name" autocomplete="cc-name">
+                </div>
+
+                <div class="form-field">
+                  <label for="card-number">Card number:</label>
+                  <input type="text" name="cardNumber" id="card-number" class="card-number" autocomplete="cc-number">
+                </div>
+
+                <div class="form-field">
+                  <label for="card-cvc">CVC:</label>
+                  <input type="text" id="card-cvc" class="card-cvc" name="cardCvc" autocomplete="cc-csc">
+                </div>
+
+                <div class="payment-details__row">
+                  <div class="form-field">
+                    <label for="card-exp">Expiry date:</label>
+                    <input type="text" id="card-exp" name="cardExpMonth" class="card-exp__month" autocomplete="cc-exp-month" placeholder="MM">
+                    <input type="text" id="card-exp" name="cardExpYear" class="card-exp__year" autocomplete="cc-exp-year" placeholder="YY">
+                  </div>
+                </div>
+              </div>
+
+              <div class="payment-billing" aria-labelledby="billing__title">
+                <h2 class="payment-billing__title" id="billing__title">Billing address</h2>
+
+                <div class="form-field form-field--inline">
+                  <input type="checkbox" name="billingSameAsDelivery" id="billing-same-as-delivery" checked>
+                  <label for="billing-same-as-delivery">Same as delivery address</label>
+                </div>
+
+                <div class="payment-billing__fields">
+                  <input type="text" class="payment-billing__name" name="billingName" placeholder="Name (optional)">
+                  <input type="text" name="billingStreet" class="payment-billing__street" placeholder="Street address (optional)">
+                  <input type="text" name="billingPO" class="payment-billing__PO" placeholder="Postal code (optional)">
+                  <input type="text" name="billingCountry" class="payment-billing__country" placeholder="Country (optional)">
+                </div>
+              </div>
+            </section>
+            <button type="submit" class="pay-btn">Place order</button>
+          </form>
+
+          <aside class="checkout-summary" aria-label="Order summary">
+            <h2 class="checkout-summary__title">Order summary</h2>
+            <ul class="checkout-summary__list" data-checkout-items></ul>
+
+            <dl class="checkout-summary__totals">
+              <div class="checkout-summary__row">
+                <dt>Subtotal:</dt>
+                <dd data-checkout-subtotal></dd>
+              </div>
+              <div class="checkout-summary__row">
+                <dt>Shipping:</dt>
+                <dd data-checkout-shipping></dd>
+              </div>
+              <div class="checkout-summary__row checkout-summary__row--total">
+                <dt>Total:</dt>
+                <dd data-checkout-total></dd>
+              </div>
+            </dl>
+          </aside>
     </main>
   </body>
 </html>

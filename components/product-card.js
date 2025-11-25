@@ -53,9 +53,14 @@ export function slideHTML(p, index = 0) {
         </div>
         <div class="slide__actions">
         <a class="product-button" href="${productLink(p)}">View Product</a>
-        <button type="button" class="slide__add-button" data-product-id="${esc(
-          p.id
-        )}">Add to Cart</button>
+        <button
+          type="button"
+          class="slide__add-button"
+          data-add-to-cart
+          data-product-id="${esc(p.id)}"
+          >
+        Add to cart
+        </button>
         </div>
     </div>
     </article>

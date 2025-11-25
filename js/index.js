@@ -1,8 +1,8 @@
-const API_URL = "https://v2.api.noroff.dev/online-shop";
-
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
 import { getProducts } from "./api/products.js";
 import { cardHTML, slideHTML } from "../components/product-card.js";
+import { addToCart, loadCart } from "../utils/cart-helper.js";
+import { updateCartCount } from "../utils/cart-ui.js";
 
 // DOM elements
 const dom = {
@@ -23,6 +23,8 @@ const slider = {
 let currentSlideIndex = 0;
 let totalSlides = 0;
 
+let productsCache = [];
+
 function jumpToSlide(trackIndex) {
   dom.track.style.transition = "none";
   dom.track.style.transform = `translateX(-${trackIndex * 100}%)`;
@@ -33,7 +35,6 @@ function animateToSlide(trackIndex) {
   dom.track.style.transform = `translateX(-${trackIndex * 100}%)`;
 }
 
-// update dots to reflect current slide
 function getLogicalIndex() {
   if (totalSlides === 0) return 0;
 
@@ -80,7 +81,7 @@ function stopAutoPlay() {
     autoPlayTimer = null;
   }
 
-  //   restart auto-play after a delay
+  //   clear timer and restart auto-play after a delay
   clearTimeout(stopAutoPlay.restartTimer);
   stopAutoPlay.restartTimer = setTimeout(() => {
     startAutoPlay();
@@ -139,6 +140,8 @@ function onTouchEnd() {
   try {
     const products = await getProducts();
 
+    productsCache = products;
+
     const latest3 = products.slice(-3);
     const latest12 = products.slice(-12);
 
@@ -150,6 +153,7 @@ function onTouchEnd() {
     console.log("🧪 slide HTML (first of 3):", slideHTML(slides[0], 0));
     console.log("🧪 card HTML (first of 12):", cardHTML(gridItems[0]));
 
+    // --- generate slides with infinite loop ---
     if (dom.carousel) {
       const track = document.createElement("div");
       track.className = "carousel__track";
@@ -171,7 +175,7 @@ function onTouchEnd() {
     totalSlides = slides.length;
     currentSlideIndex = 0;
 
-    // --- generate dots ---
+    // --- generate dots for each real slide ---
     if (dom.dots) {
       dom.dots.innerHTML = slides
         .map(
@@ -183,7 +187,7 @@ function onTouchEnd() {
         .join("");
     }
 
-    // --- dots clickable ---
+    // --- make dots clickable ---
     if (dom.dots) {
       dom.dots.addEventListener("click", (event) => {
         const btn = event.target.closest("[data-index]");
@@ -201,6 +205,7 @@ function onTouchEnd() {
     updateDots(0);
     startAutoPlay();
 
+    // --- add event listeners to prev/next buttons ---
     dom.next.addEventListener("click", () => {
       currentSlideIndex++;
 
@@ -258,6 +263,9 @@ function onTouchEnd() {
         .map((product) => cardHTML(product))
         .join("");
     }
+
+    initCarouselAddToCart();
+    updateCartCount(loadCart());
   } catch (error) {
     console.error("could not organize products:", error);
 
@@ -275,6 +283,51 @@ function wrapSliderIndex() {
   if (slider.total <= 0) return;
 
   slider.index = ((slider.index % slider.total) + slider.total) % slider.total;
+}
+
+function findProductById(id) {
+  if (!id || !productsCache) return null;
+  return productsCache.find((p) => p.id === id);
+}
+
+function initCarouselAddToCart() {
+  if (!dom.carousel) return;
+
+  dom.carousel.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-add-to-cart]");
+    if (!button) return;
+
+    const productId = button.dataset.productId;
+    if (!productId) return;
+
+    const product = findProductById(productId);
+    if (!product) {
+      console.error("Could not find product with ID:", productId);
+      return;
+    }
+
+    button.disabled = true;
+    const originalLabel = button.textContent;
+    button.textContent = "Adding...";
+
+    try {
+      addToCart(product, 1);
+      updateCartCount(loadCart());
+
+      button.textContent = "Added!";
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = originalLabel;
+      }, 1000);
+    } catch (error) {
+      console.error("Could not add to cart:", error);
+      button.textContent = "Error";
+      setTimeout(() => {
+        button.disabled = false;
+        button.textContent = originalLabel;
+      }, 1000);
+    }
+  });
 }
 
 // pause auto-play on hover/touch

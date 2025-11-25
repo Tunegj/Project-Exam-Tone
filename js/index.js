@@ -166,8 +166,8 @@ function onTouchEnd() {
         slides.map((p, i) => slideHTML(p, i)).join("") +
         slideHTML(first, slides.length);
 
-      dom.carousel.innerHTML = "";
-      dom.carousel.appendChild(track);
+      const firstElement = dom.carousel.firstElementChild;
+      dom.carousel.insertBefore(track, firstElement);
 
       dom.track = track;
     }

@@ -1,5 +1,3 @@
-@import url("variables.css");
-
 .visually-hidden {
   position: absolute !important;
   height: 1px;
@@ -319,6 +317,13 @@ body {
   color: #555;
 }
 
+.slide__img--rotated {
+  transform: rotate(90deg);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 @media (min-width: 600px) {
   .home {
     padding-inline: 1.5rem;
@@ -341,31 +346,35 @@ body {
   }
 
   .carousel {
-    min-height: 340px;
-    padding: 2rem 0;
+    min-height: 360px;
   }
 
   .slide {
-    padding: 0;
-    max-width: 900px;
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    min-height: 360px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2.25rem;
+    padding: 2.5rem 3rem;
     margin-inline: auto;
-    background-color: #f8f4f2;
+    background-color: transparent;
     border-radius: 1rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); /* img | text */
-    align-items: center;
-    column-gap: 2.25rem;
   }
 
   .slide__img {
-    max-width: 280px;
-    max-height: 280px;
-    margin-left: 2rem;
+    flex: 0 0 auto;
+    max-width: 340px;
+    max-height: 340px;
+    margin: 0;
   }
 
   .slide__content {
-    max-width: 24rem;
+    flex: 1 1 0;
+    max-width: 26rem;
     text-align: left;
     color: #333;
   }
@@ -380,6 +389,9 @@ body {
     margin-bottom: 1.1rem;
   }
 
+  .slide__actions {
+    justify-content: flex-start; /* desktop: left aligned */
+  }
   .product-button {
     align-self: flex-start;
   }

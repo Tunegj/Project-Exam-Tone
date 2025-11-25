@@ -35,13 +35,18 @@ export function slideHTML(p, index = 0) {
   const priceNow = money(finalPrice(p));
   const priceOld = isOnSale(p) ? money(p.price) : "";
 
+  const rotateClass =
+    p.id === "f99cafd2-bd40-4694-8b33-a6052f36b435"
+      ? "slide__img--rotated"
+      : "";
+
   return `
     <article class="slide" role="group" aria-roledescription="slide" aria-label="${
       index + 1
     } of 3">
-        <img class="slide__img" src="${esc(imageUrl(p))}" alt="${esc(
-    imageAlt(p)
-  )}"
+        <img class="slide__img ${rotateClass}" src="${esc(
+    imageUrl(p)
+  )}" alt="${esc(imageAlt(p))}"
         loading="lazy">
 
     <div class="slide__content">

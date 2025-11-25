@@ -44,11 +44,12 @@ export function slideHTML(p, index = 0) {
     <article class="slide" role="group" aria-roledescription="slide" aria-label="${
       index + 1
     } of 3">
+    <div class="slide__image-wrap">
         <img class="slide__img ${rotateClass}" src="${esc(
     imageUrl(p)
   )}" alt="${esc(imageAlt(p))}"
         loading="lazy">
-
+    </div>
     <div class="slide__content">
         <h3 class="slide__title">${esc(p.title)}</h3>
         

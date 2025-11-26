@@ -23,7 +23,14 @@
   <body>
     <header id="site-header"></header>
     <main id="main" class="product-page" tabindex="-1">
-      <section class="product-hero" aria-labelledby="product-title">
+      <p class="product-page__status" data-product-loading>Loading product...</p>
+      <p class="product-page__status product-page__status--error" data-product-error>Sorry, we could not load this product. Please try again</p>
+      <article data-product-content-hidden></article>
+    <section
+        class="product-hero"
+        aria-labelledby="product-title"
+        data-product-root
+      >
         <div class="product-hero__layout">
           <div class="product-media">
             <img class="product-media__img" src="" alt="" data-product-image />
@@ -46,6 +53,7 @@
                 <span data-product-rating></span>
               </div>
             </div>
+            <div class="product-tags" data-product-tags></div>
             <button class="product-add-btn" type="button" data-add-to-cart>
               Add to cart
             </button>
@@ -54,11 +62,14 @@
       </section>
 
       <section class="product-reviews" aria-labelledby="reviews-heading">
+        <div class="product-reviews__header">
         <h2 id="reviews-heading">Reviews</h2>
+        <span class="product-reviews__count" data-reviews-count></span>
+        </div>
         <p data-reviews-empty>
           No reviews yet. Be the first to review this product
         </p>
-        <div data-reviews-list class="product-reviews__list"></div>
+        <ul data-reviews-list class="product-reviews__list"></ul>
       </section>
 
       <section class="similar-products">
@@ -66,18 +77,19 @@
           <h2 class="similar-products__title">Similar products</h2>
         </div>
 
-        <!-- This container will be filled by JS -->
+      
         <div
           data-similar-list
           class="similar-products__grid"
           id="similar-products"
         >
-          <!-- JS will inject cards here -->
+       
         </div>
         <p class="similar-products__empty" data-similar-empty hidden>
           No similar products found.
         </p>
       </section>
+      </article>
     </main>
   </body>
 </html>

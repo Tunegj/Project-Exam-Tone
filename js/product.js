@@ -63,6 +63,8 @@ function renderReviews(product) {
           <p class="review__rating" arial-label="Rated ${rating} out of 5">
             ${renderStars(rating)}
           </p>
+        </header>
+        <p class="review__description">${description}</p>
       </article>`;
     })
     .join("");
@@ -113,8 +115,17 @@ function renderProduct(product) {
   }
 
   if (dom.addToCartBtn) {
-    dom.addToCartBtn.textContent = "Add to cart";
-    dom.addToCartBtn.disabled = false;
+    if (isLoggedIn()) {
+      dom.addToCartBtn.textContent = "Add to cart";
+      dom.addToCartBtn.disabled = false;
+      dom.addToCartBtn.hidden = false;
+      dom.addToCartBtn.dataset.loginRequired = "false";
+    } else {
+      dom.addToCartBtn.textContent = "Log in to shop";
+      dom.addToCartBtn.disabled = false;
+      dom.addToCartBtn.hidden = false;
+      dom.addToCartBtn.dataset.loginRequired = "true";
+    }
   }
 }
 
@@ -192,9 +203,32 @@ function setupAddToCart(product) {
   if (!dom.addToCartBtn) return;
 
   dom.addToCartBtn.addEventListener("click", () => {
-    addToCart(product);
-    updateCartCount();
-    alert(`Added "${product.title}" to your cart`);
+    if (!isLoggedIn()) {
+      window.location.href = "../account/login.html";
+      return;
+    }
+
+    dom.addToCartBtn.disabled = true;
+    const originalLabel = dom.addToCartBtn.textContent;
+    dom.addToCartBtn.textContent = "Adding...";
+
+    try {
+      addToCart(product, 1);
+      updateCartCount(loadCart());
+
+      dom.addToCartBtn.textContent = "Added!";
+      setTimeout(() => {
+        dom.addToCartBtn.disabled = false;
+        dom.addToCartBtn.textContent = originalLabel;
+      }, 1000);
+    } catch (error) {
+      console.error("Could not add to cart:", error);
+      dom.addToCartBtn.textContent = "Error";
+      setTimeout(() => {
+        dom.addToCartBtn.disabled = false;
+        dom.addToCartBtn.textContent = originalLabel;
+      }, 1000);
+    }
   });
 }
 

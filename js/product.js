@@ -1,7 +1,7 @@
 const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
 
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
-import { getProductById } from "./api/products.js";
+import { getProductById } from "../api/products.js";
 import { cardHTML } from "../components/product-card.js";
 import { addToCart, loadCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
@@ -29,6 +29,9 @@ const dom = {
   tags: document.querySelector("[data-product-tags]"),
 
   root: document.querySelector("[data-product-root]"),
+
+  shareBtn: document.querySelector("[data-share-product]"),
+  shareStatus: document.querySelector("[data-share-status]"),
 };
 
 // Sets the page state: loading, error, or content
@@ -262,6 +265,47 @@ function setupAddToCart(product) {
   });
 }
 
+function buildProductUrl(productId) {
+  const url = new URL(window.location.href);
+  url.searchParams.set("id", productId);
+  return url.toString();
+}
+
+function setupShareLink(product) {
+  if (!dom.shareBtn) return;
+
+  const productId = product.id;
+  const shareUrl = buildProductUrl(productId);
+  const shareTitle = product.title || "MIRAE product";
+
+  dom.shareBtn.addEventListener("click", async () => {
+    if (dom.shareStatus) dom.shareStatus.textContent = "";
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: shareTitle,
+          url: shareUrl,
+        });
+        dom.shareStatus.textContent = "Shared!";
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        dom.shareStatus.textContent = "Link copied to clipboard!";
+        return;
+      }
+
+      window.prompt("Copy this link to share:", shareUrl);
+      dom.shareStatus.textContent = "Copy the link above!";
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      dom.shareStatus.textContent = "Could not share the link.";
+    }
+  });
+}
+
 // Main entry point
 (async function startProductPage() {
   setPageState({ isLoading: true, isError: false });
@@ -284,6 +328,7 @@ function setupAddToCart(product) {
     renderProduct(product);
     renderReviews(product);
     setupAddToCart(product);
+    setupShareLink(product);
 
     const similar = getSimilarProducts(product, allProducts, 4);
     renderSimilarProducts(similar);

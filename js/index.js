@@ -1,5 +1,5 @@
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
-import { getProducts } from "./api/products.js";
+import { getProducts } from "../api/products.js";
 import { cardHTML, slideHTML } from "../components/product-card.js";
 import { addToCart, loadCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";

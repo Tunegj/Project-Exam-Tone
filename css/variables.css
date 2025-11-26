@@ -93,9 +93,10 @@
   /* shadows */
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
   --shadow-soft-hover: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 18px 45px rgba(0, 0, 0, 0.06);
 
   /* focus outlines */
-  --focus-ring-color: rgba(104, 122, 111, 0.6); /* primary with alpha */
+  --focus-ring-color: rgba(104, 122, 111, 0.6);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
 

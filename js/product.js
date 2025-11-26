@@ -89,7 +89,7 @@ function renderReviews(product) {
       <article class="review">
         <header class="review__header">
           <h3 class="review__user">${username}</h3>
-          <p class="review__rating" arial-label="Rated ${rating} out of 5">
+          <p class="review__rating" aria-label="Rated ${rating} out of 5">
             ${renderStars(rating)}
           </p>
         </header>

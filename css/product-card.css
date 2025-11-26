@@ -1,0 +1,63 @@
+.product-card {
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.product-card:hover,
+.product-card:focus-within {
+  box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-3px);
+}
+
+.card-link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: var(--color-bg-section);
+}
+
+.card__body {
+  padding: 0.85rem 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.card__title {
+  font-size: var(--font-size-body-sm-mobile);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-main);
+}
+
+.card__prices {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.card__price {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.card__price--old {
+  font-size: var(--font-size-caption);
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.card__rating {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+}

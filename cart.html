@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/variables.css" />
-    <link rel="stylesheet" href="./css/header-nav.css" />
-    <link rel="stylesheet" href="./css/product.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-      rel="stylesheet"
-    />
-    <script src="./components/header-nav.js" defer></script>
-    <script type="module" src="./js/cart.js" defer></script>
-    <title>Product</title>
-  </head>
-  <body>
-    <header id="site-header"></header>
-    <main class="cart-page">
-      <section class="cart-page__content">
-        <h1 class="cart-page__title">Cart</h1>
 
-        <p data-cart-empty class="cart-empty">Your cart is empty</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/variables.css" />
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/header-nav.css" />
+  <link rel="stylesheet" href="./css/product-card.css" />
+  <link rel="stylesheet" href="./css/cart.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet" />
+  <script src="./components/header-nav.js" defer></script>
+  <script type="module" src="./js/cart.js" defer></script>
+  <title>Cart</title>
+</head>
 
-        <section data-cart-list class="cart-list"></section>
-      </section>
+<body>
+  <header id="site-header"></header>
+  <main class="cart-page">
+    <section class="cart-page__content">
+      <h1 class="cart-page__title">Cart</h1>
 
-      <aside class="cart-summary" aria-label="Cart summary">
-        <p class="cart-summary__total-label">
-          Total:
-          <span data-cart-total class="cart-summary__total-amount">0</span>
-        </p>
+      <p class="cart-page__message" data-cart-message aria-live="polite"></p>
+      <p data-cart-empty class="cart-empty">Your cart is empty</p>
 
-        <button type="button" data-cart-clear class="cart-summary__clear">
-          Clear cart
-        </button>
-        <a
-          href="/checkout.html"
-          data-cart-checkout
-          class="cart-summary__checkout"
-          >Procedd to checkout</a
-        >
-      </aside>
+      <section data-cart-list class="cart-list"></section>
+    </section>
 
-      <section class="cart-recommendations">
-        <h2 class="cart-recommendations__title">Others also bought</h2>
-        <div data-cart-recommendations class="cart-recommendations__list"></div>
-      </section>
-    </main>
-    <script type="module" src="./js/cart.js"></script>
-  </body>
+    <aside class="cart-summary" aria-label="Cart summary">
+      <p class="cart-summary__total-label">
+        Total:
+        <span data-cart-total class="cart-summary__total-amount">0</span>
+      </p>
+
+      <button type="button" data-cart-clear class="cart-summary__clear">
+        Clear cart
+      </button>
+      <a href="/checkout.html" data-cart-checkout class="cart-summary__checkout">Procedd to checkout</a>
+    </aside>
+
+    <section class="cart-recommendations">
+      <h2 class="cart-recommendations__title">Others also bought</h2>
+      <div data-cart-recommendations class="cart-recommendations__list"></div>
+    </section>
+  </main>
+</body>
+
 </html>

@@ -4,6 +4,7 @@
   box-sizing: border-box;
 }
 
-main {
-  background-color: #f5e4d7;
+html,
+body {
+  background-color: var(--color-bg-body);
 }

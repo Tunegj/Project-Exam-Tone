@@ -4,7 +4,7 @@ import {
   removeCartItem,
   clearCart,
 } from "../utils/cart-helper.js";
-import { getProducts } from "./api/products.js";
+import { getProducts } from "../api/products.js";
 import { cardHTML } from "../components/product-card.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { finalPrice, money } from "../utils/price-helpers.js";
@@ -17,6 +17,8 @@ const dom = {
   total: document.querySelector("[data-cart-total]"),
   clearBtn: document.querySelector("[data-cart-clear]"),
   recommendations: document.querySelector("[data-cart-recommendations]"),
+  message: document.querySelector("[data-cart-message]"),
+  summary: document.querySelector(".cart-summary"),
 };
 
 console.log("🔧 Cart DOM hooks:", dom);
@@ -76,6 +78,19 @@ function cartItemHTML(item) {
   `;
 }
 
+function setCartMessage(text) {
+  if (!dom.message) return;
+  dom.message.textContent = text || "";
+
+  if (text) {
+    setTimeout(() => {
+      if (dom.message.textContent === text) {
+        dom.message.textContent = "";
+      }
+    }, 3000);
+  }
+}
+
 function getRecommendations(cart, allProducts, max = 4) {
   if (!Array.isArray(cart) || cart.length === 0) return [];
   if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
@@ -129,12 +144,17 @@ function renderCart() {
     dom.empty.hidden = false;
     updateTotal(cart);
     updateCartCount();
+    setCartMessage("Your cart is empty.");
     return;
   }
 
-  dom.empty.hidden = true;
+  if (dom.empty) dom.empty.hidden = true;
+  if (dom.summary) dom.summary.classList.remove("cart-summary--disabled");
+  if (dom.clearBtn) dom.clearBtn.disabled = false;
 
-  dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
+  if (dom.list) {
+    dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
+  }
 
   function renderRecommendations(cart, allProducts) {
     if (!dom.recommendations) return;
@@ -162,18 +182,22 @@ function handleListClick(event) {
   if (!button) return;
 
   const action = button.dataset.cartAction;
-
   const itemEl = button.closest("[data-cart-item-id]");
   if (!itemEl) return;
 
   const id = itemEl.dataset.cartItemId;
+  const cartBefore = loadCart();
+  const item = cartBefore.find((entry) => entry.id === id);
 
   if (action === "increase") {
     changeCartItemQuantity(id, 1);
+    setCartMessage(`Increased quantity of ${item.title}.`);
   } else if (action === "decrease") {
     changeCartItemQuantity(id, -1);
+    setCartMessage(`Updated quantity of ${item.title}.`);
   } else if (action === "remove") {
     removeCartItem(id);
+    setCartMessage(`Removed ${item.title} from cart.`);
   }
 
   renderCart();

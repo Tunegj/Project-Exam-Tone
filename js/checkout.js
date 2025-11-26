@@ -13,7 +13,7 @@ const dom = {
   phone: document.querySelector("[data-checkout-phone]"),
   address1: document.querySelector("[data-checkout-address1]"),
   address2: document.querySelector("[data-checkout-address2]"),
-  postalCode: document.querySelector("[data-checkout-zip]"),
+  zip: document.querySelector("[data-checkout-zip]"),
   city: document.querySelector("[data-checkout-city]"),
   country: document.querySelector("[data-checkout-country]"),
 
@@ -23,6 +23,8 @@ const dom = {
   subtotal: document.querySelector("[data-checkout-subtotal]"),
   shipping: document.querySelector("[data-checkout-shipping]"),
   total: document.querySelector("[data-checkout-total]"),
+
+  status: document.querySelector("[data-checkout-status]"),
 };
 
 let lastTotals = {
@@ -44,6 +46,14 @@ let lastTotals = {
   attachFormHandler(cart);
 })();
 
+// Set a status message in the checkout form
+function setStatus(message, tone = "neutral") {
+  if (!dom.status) return;
+  dom.status.textContent = message || "";
+  dom.status.dataset.tone = tone || "neutral";
+}
+
+// Prefill the checkout form with user data if available
 function prefillUser(user) {
   if (!user) return;
 
@@ -58,6 +68,7 @@ function prefillUser(user) {
   if (dom.country) dom.country.value = user.country ?? "";
 }
 
+// Render the cart summary in the checkout page
 function renderCartSummary(cart) {
   if (!dom.items || !dom.subtotal || !dom.shipping || !dom.total) return;
 
@@ -99,6 +110,7 @@ function renderCartSummary(cart) {
   lastTotals = { subtotal, shipping, total };
 }
 
+// Handle the checkout form submission
 function attachFormHandler(cart) {
   dom.form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -122,6 +134,15 @@ function attachFormHandler(cart) {
     const hasErrors = Object.keys(errors).length > 0;
     if (hasErrors) {
       showFieldErrors(errors);
+      setStatus("Please fix the highlighted fields and try again.", "error");
+      return;
+    }
+
+    if (!cart || cart.length === 0) {
+      setStatus(
+        "Your cart is empty. Please add items before checking out.",
+        "error"
+      );
       return;
     }
 
@@ -129,10 +150,20 @@ function attachFormHandler(cart) {
 
     const order = buildOrderObject(profile, cart);
 
-    saveOrder(order);
+    try {
+      saveOrder(order);
+    } catch (error) {
+      console.error("Error saving order:", error);
+      setStatus(
+        "There was an error processing your order. Please try again.",
+        "error"
+      );
+      return;
+    }
 
     saveCart([]);
     updateCartCount([]);
+    setStatus("Order placed successfully!", "success");
 
     window.location.href = `/success.html?orderId=${encodeURIComponent(
       order.id
@@ -140,6 +171,7 @@ function attachFormHandler(cart) {
   });
 }
 
+// Clear all field error messages and invalid states
 function clearFieldErrors() {
   const errorEls = dom.form.querySelectorAll(".form-error");
   errorEls.forEach((el) => {
@@ -191,7 +223,7 @@ function buildOrderObject(profile, cart) {
     paymentMethodValue = paymentMethodInput.value || "unknown";
   }
 
-  const cardNumberInput = dom.form.elements("#card-number");
+  const cardNumberInput = dom.form.elements["cardNumber"];
   const cardNumber = (cardNumberInput?.value || "").replace(/\s+/g, "");
   const cardLast4 = cardNumber.slice(-4);
 
@@ -220,20 +252,30 @@ function buildOrderObject(profile, cart) {
   };
 }
 
+// Save the order to localStorage
 function saveOrder(order) {
   const ORDERS_KEY = "mirae_orders";
+  const raw = localStorage.getItem(ORDERS_KEY);
+
+  let existingOrders = raw ? JSON.parse(raw) : [];
+
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        existingOrders = parsed;
+      }
+    } catch (error) {
+      console.error("Failed to parse existing orders:", error);
+      existingOrders = [];
+    }
+  }
+
+  existingOrders.push(order);
 
   try {
-    const raw = localStorage.getItem(ORDERS_KEY);
-    const existingOrders = raw ? JSON.parse(raw) : [];
-
-    if (Array.isArray(existing)) {
-      existing.push(order);
-      localStorage.setItem(ORDERS_KEY, JSON.stringify(existing));
-    } else {
-      localStorage.setItem(ORDERS_KEY, JSON.stringify([order]));
-    }
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(existingOrders));
   } catch (error) {
-    console.error("Failed to save order:", error);
+    throw error;
   }
 }

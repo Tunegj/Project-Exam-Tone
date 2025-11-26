@@ -15,13 +15,38 @@ const dom = {
   oldPrice: document.querySelector("[data-product-old-price]"),
   rating: document.querySelector("[data-product-rating]"),
   addToCartBtn: document.querySelector("[data-add-to-cart]"),
-  similarList: document.querySelector("[data-similar-list]"),
-  similarEmpty: document.querySelector("[data-similar-empty]"),
+
+  loading: document.querySelector("[data-product-loading]"),
+  content: document.querySelector("[data-product-content]"),
+  error: document.querySelector("[data-product-error]"),
   reviewsList: document.querySelector("[data-reviews-list]"),
   reviewsEmpty: document.querySelector("[data-reviews-empty]"),
+  reviewsCount: document.querySelector("[data-reviews-count]"),
+
+  similarList: document.querySelector("[data-similar-list]"),
+  similarEmpty: document.querySelector("[data-similar-empty]"),
+
+  tags: document.querySelector("[data-product-tags]"),
+
   root: document.querySelector("[data-product-root]"),
 };
 
+// Sets the page state: loading, error, or content
+function setPageState({ isLoading = false, isError = false }) {
+  if (dom.loading) {
+    dom.loading.hidden = !isLoading;
+  }
+
+  if (dom.error) {
+    dom.error.hidden = !isError;
+  }
+
+  if (dom.content) {
+    dom.content.hidden = isLoading || isError;
+  }
+}
+
+// Renders star rating as HTML
 function renderStars(value) {
   const rating = Number(value) || 0;
   const max = 5;
@@ -34,6 +59,7 @@ function renderStars(value) {
   return html;
 }
 
+// Renders product reviews
 function renderReviews(product) {
   const list = dom.reviewsList;
   const empty = dom.reviewsEmpty;
@@ -70,6 +96,7 @@ function renderReviews(product) {
     .join("");
 }
 
+// Renders the main product details
 function renderProduct(product) {
   if (!product) return;
 
@@ -129,6 +156,7 @@ function renderProduct(product) {
   }
 }
 
+// URL/API helpers
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
@@ -147,6 +175,7 @@ async function fetchAllProducts() {
   return json.data || [];
 }
 
+// Finds similar products based on shared tags
 function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
   const currentTags = Array.isArray(currentProduct.tags)
     ? currentProduct.tags
@@ -199,6 +228,7 @@ function renderSimilarProducts(similarProducts) {
   list.innerHTML = similarProducts.map((p) => cardHTML(p)).join("");
 }
 
+// Add to cart wiring
 function setupAddToCart(product) {
   if (!dom.addToCartBtn) return;
 
@@ -232,7 +262,10 @@ function setupAddToCart(product) {
   });
 }
 
+// Main entry point
 (async function startProductPage() {
+  setPageState({ isLoading: true, isError: false });
+
   try {
     const id = getProductIdFromUrl();
 
@@ -254,8 +287,15 @@ function setupAddToCart(product) {
 
     const similar = getSimilarProducts(product, allProducts, 4);
     renderSimilarProducts(similar);
+
+    setPageState({ isLoading: false, isError: false });
   } catch (error) {
     console.error("❌ Could not load product:", error);
+
+    if (dom.error) {
+      dom.error.textContent = "Could not load product. Please try again later.";
+    }
+    setPageState({ isLoading: false, isError: true });
   }
   updateCartCount();
 })();

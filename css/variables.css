@@ -1,40 +1,112 @@
 :root {
-  --color-primary: #687a6f;
-  --color-secondary: #b3b1ac;
-  --color-accent: #e5d1d0;
-  --color-background: #f5e4d7;
-  --color-card: #faf7f4;
-  --color-section: #e9dbce;
-  --color-font-light: #ffffff;
-  --color-font-dark: #2b2b2b;
-  --color-neutral: #687a6f;
-  --color-error: #d39c9c;
+  /* Primary colors */
+  --color-primary-500: #687a6f;
+  --color-secondary-500: #b3b1ac;
+  --color-accent-500: #e5d1d0;
+  --color-bg-500: #f5e4d7;
+  --color-card-500: #faf7f4;
+  --color-section-500: #e9dbce;
 
-  --font-heading: "playfair display", serif;
-  --font-body: inter, sans-serif;
+  /* Neutral/ text */
+  --color-neutral-0: #ffffff;
+  --color-neutral-900: #2b2b2b;
 
-  /* font sizes -- desktop */
-  --font-size-hero: 64px;
-  --font-size-section-title: 40px;
-  --font-size-subheader: 28px;
-  --font-size-body-small: 16px;
-  --font-size-body-large: 18px;
+  /* Status colors */
+  --color-error-500: #d39c9c;
 
-  /* font height */
-  --font-height-hero: 110%;
-  --font-height-section-title: 115%;
-  --font-height-subheader: 120%;
+  --color-bg-body: var(--color-bg-500);
+  --color-bg-surface: var(--color-card-500);
+  --color-bg-section: var(--color-section-500);
+  --color-bg-header: var(--color-bg-500);
 
-  /* font sizes -- mobile */
-  --font-size-hero-mobile: 32px;
-  --font-size-section-title-mobile: 24px;
-  --font-size-subheader-mobile: 20px;
-  --font-size-body-small-mobile: 14px;
-  --font-size-body-large-mobile: 16px;
+  /* text colors */
+  --color-text-main: var(--color-neutral-900);
+  --color-text-muted: #6b6b6b;
+  --color-text-on-primary: var(--color-neutral-0);
+  --color-text-on-accent: var(--color-neutral-900);
 
-  /* font weight */
+  /* borders */
+  --color-border-soft: rgba(0, 0, 0, 0.06);
+  --color-border-strong: rgba(0, 0, 0, 0.12);
 
-  --font-weight-hero: bold;
-  --font-weight-section-title: semi-bold;
-  --font-weight-subheader: regular;
+  /* buttons */
+  --color-button-primary-bg: var(--color-primary-500);
+  --color-button-primary-text: var(--color-neutral-0);
+
+  --color-button-secondary-bg: var(--color-card-500);
+  --color-button-secondary-text: var(--color-primary-500);
+  --color-button-secondary-border: var(--color-primary-500);
+
+  /* tags */
+  --color-tag-bg: var(--color-accent-500);
+  --color-tag-text: var(--color-neutral-900);
+
+  /* error */
+  --color-error-bg: #fdecec;
+  --color-error-text: var(--color-error-500);
+
+  /* fonts */
+  --font-family-heading: "playfair display", serif;
+  --font-family-body: "inter", sans-serif;
+
+  /* font weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* font sizes */
+  --font-size-h1: 4rem; /* 64px */
+  --font-size-h2: 2.5rem; /* 40px */
+  --font-size-h3: 1.75rem; /* 28px */
+  --font-size-body-lg: 1.125rem; /* 18px */
+  --font-size-body-sm: 1rem; /* 16px */
+  --font-size-caption: 0.75rem; /* 12px */
+
+  /* line heights */
+  --line-height-tight: 1.1; /* hero headings */
+  --line-height-snug: 1.2; /* h2, h3 */
+  --line-height-regular: 1.4; /* body text */
+  --line-height-relaxed: 1.6; /* long text */
+
+  /* mobile */
+  --font-size-h1-mobile: 2rem; /* 32px */
+  --font-size-h2-mobile: 1.5rem; /* 24px */
+  --font-size-h3-mobile: 1.25rem; /* 20px */
+  --font-size-body-lg-mobile: 1rem; /* 16px */
+  --font-size-body-sm-mobile: 0.875rem; /* 14px */
+
+  /* spacing */
+  --space-2xs: 0.25rem; /* 4px */
+  --space-xs: 0.5rem; /* 8px */
+  --space-sm: 0.75rem; /* 12px */
+  --space-md: 1rem; /* 16px */
+  --space-lg: 1.5rem; /* 24px */
+  --space-xl: 2rem; /* 32px */
+  --space-2xl: 3rem; /* 48px */
+
+  /* border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+
+  /* shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-soft-hover: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+  /* focus outlines */
+  --focus-ring-color: rgba(104, 122, 111, 0.6); /* primary with alpha */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+
+  /* motion */
+  --transition-fast: 150ms ease-out;
+  --transition-normal: 200ms ease-out;
+  --transition-slow: 300ms ease-out;
+
+  /* aliases */
+  --color-primary: var(--color-primary-500);
+  --color-secondary: var(--color-secondary-500);
+  --color-accent: var(--color-accent-500);
+  --color-error: var(--color-error-500);
 }

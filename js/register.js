@@ -17,6 +17,8 @@ const dom = {
   postalCode: document.querySelector("[data-register-zip]"),
   city: document.querySelector("[data-register-city]"),
   country: document.querySelector("[data-register-country]"),
+  password: document.querySelector("[data-register-password]"),
+  confirmPassword: document.querySelector("[data-register-confirm-password]"),
   message: document.querySelector("[data-register-message]"),
 };
 
@@ -29,6 +31,10 @@ const errorEls = {
   postalCode: document.querySelector('[data-register-error="zip"]'),
   city: document.querySelector('[data-register-error="city"]'),
   country: document.querySelector('[data-register-error="country"]'),
+  password: document.querySelector('[data-register-error="password"]'),
+  confirmPassword: document.querySelector(
+    '[data-register-error="confirmPassword"]'
+  ),
 };
 
 function clearFieldErrors() {
@@ -102,6 +108,21 @@ function handleSubmit(event) {
 
   const error = validateUserProfile(profile);
 
+  const password = dom.password?.value || "";
+  const confirmPassword = dom.confirmPassword?.value || "";
+
+  if (!password) {
+    error.password = "Password is required";
+  } else if (password.length < 8) {
+    error.password = "Password must be at least 8 characters long";
+  }
+
+  if (!confirmPassword) {
+    error.confirmPassword = "Please confirm your password";
+  } else if (confirmPassword !== password) {
+    error.confirmPassword = "Passwords do not match";
+  }
+
   if (
     profile.email &&
     !profile.email.toLowerCase().endsWith("@stud.noroff.no")
@@ -111,12 +132,18 @@ function handleSubmit(event) {
 
   if (Object.keys(error).length > 0) {
     showFieldErrors(error);
-    showMessage("Please fix the errors below and try again", "error");
+    showMessage("Please fix the errora and try again", "error");
     return;
   }
 
   clearFieldErrors();
-  saveUser(profile);
+
+  const userToSave = {
+    ...profile,
+    password,
+  };
+
+  saveUser(userToSave);
   showMessage("Your details have been saved", "success");
 }
 

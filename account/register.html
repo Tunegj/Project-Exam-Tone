@@ -78,7 +78,17 @@
           <input type="text" id="country" name="country" data-register-country required />
           <p class="form-error" data-register-error="country" aria-live="polite"></p>
         </div>
+        <div>
+          <label for="password">Create password:</label>
+          <input type="password" id="password" name="password" data-register-password required />
+          <p class="form-error" data-register-error="password" aria-live="polite"></p>
+        </div>
 
+        <div>
+          <label for="confirmPassword">Repeat password:</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" data-register-confirm-password required />
+          <p class="form-error" data-register-error="confirmPassword" aria-live="polite"></p>
+        </div>
         <button type="submit">Create account</button>
         <button type="button">Continues as guest</button>
       </form>

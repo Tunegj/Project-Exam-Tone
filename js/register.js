@@ -52,7 +52,7 @@ function showFieldErrors(error) {
     firstInput.focus();
   }
 
-  entries.forEach(([firstFieldName, message]) => {
+  entries.forEach(([fieldName, message]) => {
     const el = errorEls[fieldName];
     if (!el) return;
     el.textContent = message;
@@ -101,6 +101,13 @@ function handleSubmit(event) {
   const profile = buildProfileFromForm();
 
   const error = validateUserProfile(profile);
+
+  if (
+    profile.email &&
+    !profile.email.toLowerCase().endsWith("@stud.noroff.no")
+  ) {
+    error.email = "Email must be a valid stud.noroff.no address";
+  }
 
   if (Object.keys(error).length > 0) {
     showFieldErrors(error);

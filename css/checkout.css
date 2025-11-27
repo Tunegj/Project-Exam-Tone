@@ -87,12 +87,6 @@
   gap: var(--space-xs);
 }
 
-.checkout-form [aria-invalid="true"] {
-  border-color: var(--color-accent-500, #e5d1d0);
-  background-color: rgba(228, 158, 158, 0.06); /* very soft red tint */
-  box-shadow: 0 0 0 1px rgba(228, 158, 158, 0.6);
-}
-
 .form-error {
   min-height: 1.1em;
   font-size: var(--font-size-caption);

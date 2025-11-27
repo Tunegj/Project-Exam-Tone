@@ -1,9 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Success</title>
-  </head>
-  <body></body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./css/variables.css" />
+  <link rel="stylesheet" href="./css/header-nav.css" />
+  <link rel="stylesheet" href="./css/success.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    rel="stylesheet" />
+  <script src="./components/header-nav.js" defer></script>
+  <script type="module" src="./js/success.js" defer></script>
+  <title>Order confirmed | MIRAE</title>
+</head>
+
+<body>
+  <header id="site-header"></header>
+  <main class="success-page" aria-labelledby="success-heading">
+    <section class="success-card">
+      <div class="success-card__icon" aria-hidden="true">
+        <span class="material-symbols-outlined">check_circle</span>
+      </div>
+
+      <h1 id="success-heading" class="success-card__title">
+        Thank you, <span data-customer-name></span> ✨
+      </h1>
+      <p class="success-card__status" data-success-status>
+        Your order is confirmed. A confirmation has been sent to
+        <span data-customer-email></span>.
+      </p>
+      <section class="success-meta" aria-label="Order details">
+        <dl class="success-meta__grid">
+          <div class="success-meta__row">
+            <dt>Order ID</dt>
+            <dd data-order-id>-</dd>
+          </div>
+          <div class="success-meta__row">
+            <dt>Date</dt>
+            <dd data-order-date>-</dd>
+          </div>
+          <div class="success-meta__row">
+            <dt>Email</dt>
+            <dd data-customer-email>-</dd>
+          </div>
+          <div class="success-meta__row">
+            <dt>Payment</dt>
+            <dd data-order-payment>-</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="success-items" aria-label="Items in your order">
+        <h2 class="success-items__title">Order summary</h2>
+        <ul class="success-items__list" data-success-list></ul>
+
+        <dl class="success-items__totals">
+          <div class="success-items__row">
+            <dt>Subtotal</dt>
+            <dd data-success-subtotal>-</dd>
+          </div>
+          <div class="success-items__row">
+            <dt>Shipping</dt>
+            <dd data-success-shipping>-</dd>
+          </div>
+          <div class="success-items__row success-items__row--total">
+            <dt>Total</dt>
+            <dd data-success-total>-</dd>
+          </div>
+        </dl>
+      </section>
+
+      <div class="success-actions">
+        <a href="./index.html" class="btn-secondary">Continue Shopping</a>
+        <button type="reset" class="btn-logout">Log Out</button>
+      </div>
+    </section>
+  </main>
+</body>
+
 </html>

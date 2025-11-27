@@ -13,9 +13,15 @@ const dom = {
   phone: document.querySelector("[data-checkout-phone]"),
   address1: document.querySelector("[data-checkout-address1]"),
   address2: document.querySelector("[data-checkout-address2]"),
-  zip: document.querySelector("[data-checkout-zip]"),
+  postalCode: document.querySelector("[data-checkout-zip]"),
   city: document.querySelector("[data-checkout-city]"),
   country: document.querySelector("[data-checkout-country]"),
+
+  billingSameAsDelivery: document.querySelector("#billing-same-as-delivery"),
+  billingName: document.querySelector("[name=billingName]"),
+  billingStreet: document.querySelector("[name=billingStreet]"),
+  billingPO: document.querySelector("[name=billingPO]"),
+  billingCountry: document.querySelector("[name=billingCountry]"),
 
   notes: document.querySelector("#checkout-notes"),
 
@@ -43,7 +49,11 @@ let lastTotals = {
 
   renderCartSummary(cart);
 
+  attachFieldListeners();
+
   attachFormHandler(cart);
+
+  setUpBillingSync();
 })();
 
 // Set a status message in the checkout form
@@ -110,6 +120,80 @@ function renderCartSummary(cart) {
   lastTotals = { subtotal, shipping, total };
 }
 
+function setUpBillingSync() {
+  if (!dom.billingSameAsDelivery) return;
+
+  const fields = [
+    dom.billingName,
+    dom.billingStreet,
+    dom.billingPO,
+    dom.billingCountry,
+  ];
+
+  const syncAndToggle = () => {
+    const isSame = dom.billingSameAsDelivery.checked;
+
+    if (isSame) {
+      if (dom.billingName) {
+        const fullName = `${dom.firstName.value || ""}  ${
+          dom.lastName.value || ""
+        }`.trim();
+        dom.billingName.value = fullName;
+      }
+
+      if (dom.billingStreet && dom.address1) {
+        dom.billingStreet.value = dom.address1.value;
+      }
+      if (dom.billingPO && dom.postalCode) {
+        dom.billingPO.value = dom.postalCode.value;
+      }
+
+      if (dom.billingCountry && dom.country) {
+        dom.billingCountry.value = dom.country.value;
+      }
+
+      fields.forEach((field) => {
+        if (!field) return;
+        field.setAttribute("disabled", "disabled");
+      });
+    } else {
+      fields.forEach((field) => {
+        if (!field) return;
+        field.removeAttribute("disabled");
+      });
+    }
+  };
+
+  syncAndToggle();
+
+  dom.billingSameAsDelivery.addEventListener("change", syncAndToggle);
+}
+
+function attachFieldListeners() {
+  if (!dom.form) return;
+
+  const inputs = dom.form.querySelectorAll("input, textarea");
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      const name = input.name;
+      if (!name) return;
+
+      const errorEl = dom.form.querySelector(`[data-error-for="${name}"]`);
+
+      if (errorEl) {
+        errorEl.textContent = "";
+      }
+
+      input.removeAttribute("aria-invalid");
+
+      if (dom.status && dom.status.dataset.tone === "error") {
+        setStatus("");
+      }
+    });
+  });
+}
+
 // Handle the checkout form submission
 function attachFormHandler(cart) {
   dom.form.addEventListener("submit", (event) => {
@@ -122,12 +206,13 @@ function attachFormHandler(cart) {
       phone: dom.phone?.value.trim() || "",
       address1: dom.address1?.value.trim() || "",
       address2: dom.address2?.value.trim() || "",
-      zip: dom.zip?.value.trim() || "",
+      postalCode: dom.postalCode?.value.trim() || "",
       city: dom.city?.value.trim() || "",
       country: dom.country?.value.trim() || "",
     };
 
     const errors = validateUserProfile(profile);
+    console.log("Validation errors:", errors);
 
     clearFieldErrors();
 
@@ -165,7 +250,7 @@ function attachFormHandler(cart) {
     updateCartCount([]);
     setStatus("Order placed successfully!", "success");
 
-    window.location.href = `/success.html?orderId=${encodeURIComponent(
+    window.location.href = `success.html?orderId=${encodeURIComponent(
       order.id
     )}`;
   });
@@ -216,7 +301,7 @@ function showFieldErrors(errors) {
 }
 
 function buildOrderObject(profile, cart) {
-  const paymentMethodInput = dom.form.elements["payment-method"];
+  const paymentMethodInput = dom.form.elements["paymentMethod"];
   let paymentMethodValue = "unknown";
 
   if (paymentMethodInput) {
@@ -257,7 +342,7 @@ function saveOrder(order) {
   const ORDERS_KEY = "mirae_orders";
   const raw = localStorage.getItem(ORDERS_KEY);
 
-  let existingOrders = raw ? JSON.parse(raw) : [];
+  let existingOrders = [];
 
   if (raw) {
     try {

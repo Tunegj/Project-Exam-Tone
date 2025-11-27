@@ -14,7 +14,7 @@ const dom = {
   phone: document.querySelector("[data-register-phone]"),
   address1: document.querySelector("[data-register-address1]"),
   address2: document.querySelector("[data-register-address2]"),
-  zip: document.querySelector("[data-register-zip]"),
+  postalCode: document.querySelector("[data-register-zip]"),
   city: document.querySelector("[data-register-city]"),
   country: document.querySelector("[data-register-country]"),
   message: document.querySelector("[data-register-message]"),
@@ -26,12 +26,11 @@ const errorEls = {
   email: document.querySelector('[data-register-error="email"]'),
   phone: document.querySelector('[data-register-error="phone"]'),
   address1: document.querySelector('[data-register-error="address1"]'),
-  zip: document.querySelector('[data-register-error="zip"]'),
+  postalCode: document.querySelector('[data-register-error="zip"]'),
   city: document.querySelector('[data-register-error="city"]'),
   country: document.querySelector('[data-register-error="country"]'),
 };
 
-// Clears all field errors from the form
 function clearFieldErrors() {
   Object.values(errorEls).forEach((el) => {
     if (!el) return;
@@ -40,14 +39,14 @@ function clearFieldErrors() {
   });
 }
 
-// Shows field errors on the form and focuses the first errored field
-function showFieldErrors(errors) {
+function showFieldErrors(error) {
   clearFieldErrors();
 
-  const entries = Object.entries(errors);
+  const entries = Object.entries(error);
   if (entries.length === 0) return;
 
-  const [firstFieldName] = entries[0];
+  const [firstField] = entries;
+  const [firstFieldName] = firstField;
   const firstInput = dom[firstFieldName];
   if (firstInput && typeof firstInput.focus === "function") {
     firstInput.focus();
@@ -75,7 +74,7 @@ function buildProfileFromForm() {
     phone: dom.phone.value.trim(),
     address1: dom.address1.value.trim(),
     address2: dom.address2.value.trim(),
-    zip: dom.zip.value.trim(),
+    postalCode: dom.postalCode.value.trim(),
     city: dom.city.value.trim(),
     country: dom.country.value.trim(),
   };
@@ -91,7 +90,7 @@ function prefillIfUserExists() {
   if (dom.phone) dom.phone.value = existing.phone || "";
   if (dom.address1) dom.address1.value = existing.address1 || "";
   if (dom.address2) dom.address2.value = existing.address2 || "";
-  if (dom.zip) dom.zip.value = existing.zip || "";
+  if (dom.postalCode) dom.postalCode.value = existing.postalCode || "";
   if (dom.city) dom.city.value = existing.city || "";
   if (dom.country) dom.country.value = existing.country || "";
 }

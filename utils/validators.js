@@ -54,10 +54,10 @@ export function validateUserProfile(profile) {
   }
 
   // zip
-  if (!isRequired(profile.zip)) {
-    errors.zip = "Please enter your zip code.";
-  } else if (!isPostalCode(profile.zip)) {
-    errors.zip = "Please enter a valid zip code.";
+  if (!isRequired(profile.postalCode)) {
+    errors.postalCode = "Please enter your zip code.";
+  } else if (!isPostalCode(profile.postalCode)) {
+    errors.postalCode = "Please enter a valid zip code.";
   }
 
   // city

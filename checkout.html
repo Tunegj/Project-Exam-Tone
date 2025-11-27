@@ -74,9 +74,9 @@
 
           <div class="form-field">
             <label for="checkout-zip">Postal code:</label>
-            <input type="text" id="checkout-zip" name="zip" autocomplete="postal-code" class="delivery-address__PO"
-              data-checkout-zip>
-            <p class="form-error" data-error-for="zip"></p>
+            <input type="text" id="checkout-zip" name="postalCode" autocomplete="postal-code"
+              class="delivery-address__PO" data-checkout-zip>
+            <p class="form-error" data-error-for="postalCode"></p>
           </div>
 
           <div class="form-field">
@@ -96,7 +96,6 @@
             <label for="checkout-notes">Order notes (optional):</label>
             <textarea name="notes" id="checkout-notes" class="checkout-notes" rows="3"
               placeholder="Add delivery instructions or notes for us"></textarea>
-            </label>
           </div>
         </section>
 
@@ -153,17 +152,15 @@
             <h2 class="payment-billing__title" id="billing__title">Billing address</h2>
 
             <div class="form-field form-field--inline">
-              <input type="checkbox" name="billingSameAsDelivery" id="billing-same-as-delivery" checked>
+              <input type="checkbox" name="billingSameAsDelivery" id="billing-same-as-delivery">
               <label for="billing-same-as-delivery">Same as delivery address</label>
             </div>
 
             <div class="payment-billing__fields">
-              <input type="text" class="payment-billing__name" name="billingName" placeholder="Name (optional)">
-              <input type="text" name="billingStreet" class="payment-billing__street"
-                placeholder="Street address (optional)">
-              <input type="text" name="billingPO" class="payment-billing__PO" placeholder="Postal code (optional)">
-              <input type="text" name="billingCountry" class="payment-billing__country"
-                placeholder="Country (optional)">
+              <input type="text" class="payment-billing__name" name="billingName" placeholder="Name">
+              <input type="text" name="billingStreet" class="payment-billing__street" placeholder="Street address">
+              <input type="text" name="billingPO" class="payment-billing__PO" placeholder="Postal code">
+              <input type="text" name="billingCountry" class="payment-billing__country" placeholder="Country">
             </div>
           </div>
         </section>

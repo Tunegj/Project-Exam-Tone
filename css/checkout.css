@@ -75,7 +75,8 @@
 }
 
 .form-field input:focus-visible,
-.form-field textarea:focus-visible {
+.form-field textarea:focus-visible,
+.payment-billing__fields input:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
@@ -84,6 +85,12 @@
   flex-direction: row;
   align-items: center;
   gap: var(--space-xs);
+}
+
+.checkout-form [aria-invalid="true"] {
+  border-color: var(--color-accent-500, #e5d1d0);
+  background-color: rgba(228, 158, 158, 0.06); /* very soft red tint */
+  box-shadow: 0 0 0 1px rgba(228, 158, 158, 0.6);
 }
 
 .form-error {
@@ -110,7 +117,8 @@
 }
 
 .card-exp__month,
-.card-exp__year {
+.card-exp__year,
+.card-cvc {
   width: 3.5rem;
 }
 
@@ -124,10 +132,16 @@
   margin-bottom: var(--space-xs);
 }
 
-.payment-billing__fields {
+.payment-billing__fields input {
   display: grid;
   gap: var(--space-xs);
   margin-top: var(--space-xs);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-sm-mobile);
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-soft);
+  background-color: var(--color-bg-body);
 }
 
 .pay-btn {

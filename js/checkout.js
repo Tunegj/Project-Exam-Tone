@@ -4,6 +4,8 @@ import { loadCart, saveCart } from "../utils/cart-helper.js";
 import { money, finalPrice } from "../utils/price-helpers.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 
+export const ORDERS_KEY = "mirae_orders";
+
 const dom = {
   form: document.querySelector("[data-checkout-form]"),
 
@@ -33,12 +35,23 @@ const dom = {
   status: document.querySelector("[data-checkout-status]"),
 };
 
+/**
+ * Snapshot of the last calculated totals for the checkout.
+ * Used when building the order object so the success page can display them
+ * @type {{subtotal: number, shipping: number, total: number}}
+ */
 let lastTotals = {
   subtotal: 0,
   shipping: 0,
   total: 0,
 };
 
+/**
+ * Entry point for the checkout page.
+ * Loads user and cart data, pre-fills the form, renders the cart summary,
+ * and wires up all event listeners.
+ * Immediately invoked when the script loads.
+ */
 (function startCheckout() {
   if (!dom.form) return;
 
@@ -56,14 +69,30 @@ let lastTotals = {
   setUpBillingSync();
 })();
 
-// Set a status message in the checkout form
+/**
+ * Set a status message in the checkout form (ex: errors/success)
+ * @param {string} message - The message text to display.
+ * @param {"neutral" |"error" | "success"} [tone="neutral"] - The tone/type of the message.
+ */
 function setStatus(message, tone = "neutral") {
   if (!dom.status) return;
   dom.status.textContent = message || "";
   dom.status.dataset.tone = tone || "neutral";
 }
 
-// Prefill the checkout form with user data if available
+/**
+ * Prefill the checkout form with user data if available.
+ * @param {Object|null} user - The user object containing profile data
+ * @param {string} [user.firstName]
+ * @param {string} [user.lastName]
+ * @param {string} [user.email]
+ * @param {string} [user.phone]
+ * @param {string} [user.address1]
+ * @param {string} [user.address2]
+ * @param {string} [user.postalCode]
+ * @param {string} [user.city]
+ * @param {string} [user.country]
+ */
 function prefillUser(user) {
   if (!user) return;
 
@@ -78,7 +107,11 @@ function prefillUser(user) {
   if (dom.country) dom.country.value = user.country ?? "";
 }
 
-// Render the cart summary in the checkout page
+/**
+ * Render the cart items and totals in the checkout summary section.
+ * Also updates the global `lastTotals` snapshot.
+ * @param {Array<Object>} cart - Array of cart items from storage
+ */
 function renderCartSummary(cart) {
   if (!dom.items || !dom.subtotal || !dom.shipping || !dom.total) return;
 
@@ -120,6 +153,11 @@ function renderCartSummary(cart) {
   lastTotals = { subtotal, shipping, total };
 }
 
+/**
+ * Keep the billing address fields in sync with delivery address
+ * when "Same as delivery" is checked.
+ * Also disables/enables the billing fields accordingly.
+ */
 function setUpBillingSync() {
   if (!dom.billingSameAsDelivery) return;
 
@@ -130,6 +168,10 @@ function setUpBillingSync() {
     dom.billingCountry,
   ];
 
+  /**
+   * Copy values from delivery to billing and toggle the disabled state
+   * based on the checkbox state.
+   */
   const syncAndToggle = () => {
     const isSame = dom.billingSameAsDelivery.checked;
 
@@ -144,6 +186,7 @@ function setUpBillingSync() {
       if (dom.billingStreet && dom.address1) {
         dom.billingStreet.value = dom.address1.value;
       }
+
       if (dom.billingPO && dom.postalCode) {
         dom.billingPO.value = dom.postalCode.value;
       }
@@ -169,6 +212,10 @@ function setUpBillingSync() {
   dom.billingSameAsDelivery.addEventListener("change", syncAndToggle);
 }
 
+/**
+ * Attach input listeners that clear individual field errors as the user types.
+ * Also clears the overall status message if it's an error.
+ */
 function attachFieldListeners() {
   if (!dom.form) return;
 
@@ -194,7 +241,12 @@ function attachFieldListeners() {
   });
 }
 
-// Handle the checkout form submission
+/**
+ * Attach the submit handler to the checkout form.
+ * Validates the profile, saves the user, builds and saves the order,
+ * clears the cart and redirects to the success page on success.
+ * @param {Array<Object>} cart - the current cart contents.
+ */
 function attachFormHandler(cart) {
   dom.form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -256,7 +308,10 @@ function attachFormHandler(cart) {
   });
 }
 
-// Clear all field error messages and invalid states
+/**
+ * Clear all inline field error messages and remove aria-invalid
+ * from any inputs that were previously marked as invalid.
+ */
 function clearFieldErrors() {
   const errorEls = dom.form.querySelectorAll(".form-error");
   errorEls.forEach((el) => {
@@ -271,9 +326,8 @@ function clearFieldErrors() {
 
 /**
  * Show error messages under the fields that failed validation.
- * @param {Object} errors - keys like "firstName", "email", etc.
+ * @param {Record<string, string>} errors - Map of field name --> error message
  */
-
 function showFieldErrors(errors) {
   let firstInvalidElement = null;
 
@@ -300,6 +354,13 @@ function showFieldErrors(errors) {
   }
 }
 
+/**
+ * Build a normalized order object from the profile and cart data.
+ * Uses the latest totals snapshot and includes minimal payment info.
+ * @param {Object} profile - The validated user profile data.
+ * @param {Array<Object>} cart - The cart items at time of checkout.
+ * @returns {Object} - A new order object ready to be saved.
+ */
 function buildOrderObject(profile, cart) {
   const paymentMethodInput = dom.form.elements["paymentMethod"];
   let paymentMethodValue = "unknown";
@@ -337,9 +398,13 @@ function buildOrderObject(profile, cart) {
   };
 }
 
-// Save the order to localStorage
+/**
+ * Append a new order to the existing orders in localStorage.
+ * Safely handles missing or invalid existing data.
+ * @param {Object} order - The order object produced by `buildOrderObject`.
+ * @throws {Error} Rethrows if `localStorage.setItem` fails.
+ */
 function saveOrder(order) {
-  const ORDERS_KEY = "mirae_orders";
   const raw = localStorage.getItem(ORDERS_KEY);
 
   let existingOrders = [];

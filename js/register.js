@@ -37,6 +37,9 @@ const errorEls = {
   ),
 };
 
+/**
+ * Clear all inline field error messages and reset their state.
+ */
 function clearFieldErrors() {
   Object.values(errorEls).forEach((el) => {
     if (!el) return;
@@ -45,6 +48,11 @@ function clearFieldErrors() {
   });
 }
 
+/**
+ * Display validation messages for one or more fields.
+ * Focuses the first invalid field for accessibility.
+ * @param {Record<string, string>} error - Map of field name --> error message.
+ */
 function showFieldErrors(error) {
   clearFieldErrors();
 
@@ -66,12 +74,21 @@ function showFieldErrors(error) {
   });
 }
 
+/**
+ * Show a global status message above/below the form.
+ * @param {string} text - The message text to show.
+ * @param {"info"|"error"|"success"} [type="info"] - Message type for styling.
+ */
 function showMessage(text, type = "info") {
   if (!dom.message) return;
   dom.message.textContent = text;
   dom.message.dataset.type = type;
 }
 
+/**
+ * Build a plain profile object form the current form values.
+ * @returns {Object} The user profile data from the form.
+ */
 function buildProfileFromForm() {
   return {
     firstName: dom.firstName.value.trim(),
@@ -86,6 +103,9 @@ function buildProfileFromForm() {
   };
 }
 
+/**
+ * If a user profile already exists, pre-fill the form with their data.
+ */
 function prefillIfUserExists() {
   const existing = loadUser();
   if (!existing) return;
@@ -101,6 +121,11 @@ function prefillIfUserExists() {
   if (dom.country) dom.country.value = existing.country || "";
 }
 
+/**
+ * Handle the register form submission:
+ * validates profile + password, shows errors, and saves the user on success.
+ * @param {SubmitEvent} event - The form submit event.
+ */
 function handleSubmit(event) {
   event.preventDefault();
 
@@ -111,6 +136,7 @@ function handleSubmit(event) {
   const password = dom.password?.value || "";
   const confirmPassword = dom.confirmPassword?.value || "";
 
+  // Password validation
   if (!password) {
     error.password = "Password is required";
   } else if (password.length < 8) {
@@ -123,6 +149,7 @@ function handleSubmit(event) {
     error.confirmPassword = "Passwords do not match";
   }
 
+  // Email domain validation
   if (
     profile.email &&
     !profile.email.toLowerCase().endsWith("@stud.noroff.no")
@@ -132,7 +159,7 @@ function handleSubmit(event) {
 
   if (Object.keys(error).length > 0) {
     showFieldErrors(error);
-    showMessage("Please fix the errora and try again", "error");
+    showMessage("Please fix the errors and try again", "error");
     return;
   }
 
@@ -147,6 +174,10 @@ function handleSubmit(event) {
   showMessage("Your details have been saved", "success");
 }
 
+/**
+ * Initialize the register page:
+ * pre-fills existing user data and sets up form submission handling.
+ */
 function startRegisterPage() {
   if (!dom.form) {
     console.warn("No [data-register-form] found on this page");

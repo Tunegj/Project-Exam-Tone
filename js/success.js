@@ -18,6 +18,12 @@ const dom = {
   logOutBtn: document.querySelector(".btn-logout"),
 };
 
+/**
+ * Main entry point for the success page.
+ * Reads the order ID from the URL, loads the order from localStorage,
+ * and renders the order details or an error message.
+ * Immediately invoked when the script loads.
+ */
 (function startSuccessPage() {
   const orderId = getOrderIdFromUrl();
 
@@ -41,11 +47,20 @@ const dom = {
   setupLogout();
 })();
 
+/**
+ * Extract the order ID from the current page URL.
+ * @returns {string|null} The order ID, or null if not found.
+ */
 function getOrderIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get("orderId");
 }
 
+/**
+ * Look up a single order by ID from localStorage.
+ * @param {string} id - The order ID to look for.
+ * @returns {Object|null} The matching order object, or null if not found.
+ */
 function loadOrder(id) {
   const raw = localStorage.getItem(ORDERS_KEY);
   if (!raw) return null;
@@ -60,6 +75,11 @@ function loadOrder(id) {
   }
 }
 
+/**
+ * Render an error state when the order cannot be loaded.
+ * Falls back to generic placeholder values for all UI fields.
+ * @param {string} message - The error message to display.
+ */
 function renderError(message) {
   if (dom.status) {
     dom.status.textContent = message;
@@ -87,6 +107,17 @@ function renderError(message) {
   if (dom.total) dom.total.textContent = money(0);
 }
 
+/**
+ * Render the full order details into the success page:
+ * customer info, order info, item list, and totals.
+ * @param {Object} order - The order object loaded from storage.
+ * @param {Object} order.customer - Customer information.
+ * @param {Object} order.payment - Payment information.
+ * @param {Object} order.totals - Order totals.
+ * @param {Array<Object>} order.items - List of ordered items.
+ * @param {string} order.createdAt - Order creation date.
+ * @param {string} order.id - Order ID.
+ */
 function renderOrder(order) {
   const { customer, payment, totals, items, createdAt, id } = order;
 
@@ -154,6 +185,11 @@ function renderOrder(order) {
   }
 }
 
+/**
+ * Return a human-readable payment method label based on its internal value.
+ * @param {string} method - The stored payment method identifier.
+ * @returns {string} - A formatted payment method label.
+ */
 function formatPaymentMethod(method) {
   switch (method) {
     case "visa-mastercard":
@@ -167,11 +203,15 @@ function formatPaymentMethod(method) {
   }
 }
 
+/**
+ * Wire up the logout button to clear the stored user
+ * and send the user back to the homepage.
+ */
 function setupLogout() {
   if (!dom.logOutBtn) return;
 
   dom.logOutBtn.addEventListener("click", () => {
     localStorage.removeItem("mirae-user");
-    window.location.href = "/index.html";
+    window.location.href = "index.html";
   });
 }

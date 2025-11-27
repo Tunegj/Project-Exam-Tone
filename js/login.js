@@ -1,6 +1,10 @@
 import { loadUser } from "../utils/user-helpers.js";
 import { isEmail } from "../utils/validators.js";
 
+/**
+ * DOM references used in the login page
+ * @type {Object}
+ */
 const dom = {
   form: document.querySelector("[data-login-form]"),
   email: document.querySelector("[data-login-email]"),
@@ -11,12 +15,22 @@ const dom = {
   message: document.querySelector("[data-login-message]"),
 };
 
+/**
+ * Set the global login message shown above/below the form.
+ * Used for success, error and neutral info messages.
+ * @param {string} text - The message text to show.
+ * @param {"info"|"error"|"success"} [type="info"] - Message type for styling.
+ */
 function setMessage(text, type = "info") {
   if (!dom.message) return;
   dom.message.textContent = text || "";
   dom.message.dataset.type = type;
 }
 
+/**
+ * Clear all inline filed errors and remove aria-invalid
+ * from the email and password fields.
+ */
 function clearFieldErrors() {
   if (dom.emailError) {
     dom.emailError.textContent = "";
@@ -37,6 +51,13 @@ function clearFieldErrors() {
   }
 }
 
+/**
+ * Show a validation error message for a specific field.
+ * Also marks the input as aria-invalid for accessibility.
+ *
+ * @param {"email"|"password"} field - Which field to show the error for.
+ * @param {string} message - The error message to display.
+ */
 function showFieldError(field, message) {
   if (field === "email" && dom.emailError) {
     dom.emailError.textContent = message;
@@ -54,6 +75,12 @@ function showFieldError(field, message) {
   }
 }
 
+/**
+ * Handle the login form submission.
+ * Validates input, checks stored user data, and redirects on success.
+ *
+ * @param {SubmitEvent} event - The form submission event.
+ */
 function handleSubmit(event) {
   event.preventDefault();
   clearFieldErrors();
@@ -64,6 +91,7 @@ function handleSubmit(event) {
 
   let hasError = false;
 
+  // Email validation
   if (!email) {
     showFieldError("email", "Email is required.");
     hasError = true;
@@ -75,6 +103,7 @@ function handleSubmit(event) {
     hasError = true;
   }
 
+  // Password validation
   if (!password) {
     showFieldError("password", "Please enter your password.");
     hasError = true;
@@ -87,6 +116,7 @@ function handleSubmit(event) {
 
   const user = loadUser();
 
+  //  Check stored user data
   if (
     !user ||
     !user.email ||
@@ -106,6 +136,9 @@ function handleSubmit(event) {
   }, 800);
 }
 
+/**
+ * Attach input event listeners to clear errors/messages on user input.
+ */
 function attachFieldListeners() {
   if (dom.email) {
     dom.email.addEventListener("input", () => {
@@ -126,6 +159,10 @@ function attachFieldListeners() {
   }
 }
 
+/**
+ * Entry point for the login page.
+ * Attaches listeners and enables the login form interaction.
+ */
 function startLoginPage() {
   if (!dom.form) {
     console.warn("No [data-login-form] found on the page.");

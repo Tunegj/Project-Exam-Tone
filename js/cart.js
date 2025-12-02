@@ -107,7 +107,7 @@ function cartItemHTML(item) {
         class="cart-item__remove"
         data-cart-action="remove"
         aria-label="Remove ${item.title} from cart"
-      >
+      > <span>Remove</span>
         ×
       </button>
     </article>

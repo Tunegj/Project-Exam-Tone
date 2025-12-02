@@ -16,9 +16,14 @@ export function loadAuthToken() {
 
 export function isLoggedIn() {
   const auth = loadAuthToken();
-  return Boolean(auth?.token);
+  return Boolean(auth?.accessToken || auth?.token);
 }
 
 export function logout() {
   localStorage.removeItem(AUTH_KEY);
+}
+
+export function getAuthToken() {
+  const auth = loadAuthToken();
+  return auth?.accessToken || auth?.token || null;
 }

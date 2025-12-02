@@ -1,5 +1,6 @@
 import { loadUser } from "../utils/user-helpers.js";
 import { isEmail } from "../utils/validators.js";
+import { saveAuthToken } from "../utils/auth.js";
 
 /**
  * DOM references used in the login page
@@ -128,6 +129,12 @@ function handleSubmit(event) {
     setMessage("Log in failed, please try again", "error");
     return;
   }
+
+  saveAuthToken({
+    accessToken: "local-login",
+    email: user.email,
+    name: user.name,
+  });
 
   setMessage("Login successful! Redirecting...", "success");
 

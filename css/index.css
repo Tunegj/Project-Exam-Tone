@@ -390,7 +390,7 @@ body {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 900px) {
   .home {
     gap: var(--space-xl);
   }
@@ -398,7 +398,7 @@ body {
 
 /* Desktop */
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
   .home {
     padding-inline: 0;
   }

@@ -3,6 +3,7 @@ import { getProducts } from "../api/products.js";
 import { cardHTML, slideHTML } from "../components/product-card.js";
 import { addToCart, loadCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
+import { isLoggedIn } from "../utils/auth.js";
 
 // DOM elements
 const dom = {
@@ -322,9 +323,21 @@ function findProductById(id) {
 function initCarouselAddToCart() {
   if (!dom.carousel) return;
 
+  const loggedIn = isLoggedIn();
+  const buttons = dom.carousel.querySelectorAll("[data-add-to-cart]");
+
+  buttons.forEach((btn) => {
+    btn.textContent = loggedIn ? "Add to Cart" : "Log in to shop";
+  });
+
   dom.carousel.addEventListener("click", (event) => {
     const button = event.target.closest("[data-add-to-cart]");
     if (!button) return;
+
+    if (!isLoggedIn()) {
+      window.location.href = "../account/login.html";
+      return;
+    }
 
     const productId = button.dataset.productId;
     if (!productId) return;

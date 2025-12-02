@@ -173,6 +173,31 @@ function renderReviews(product) {
 }
 
 /**
+ * Render product tags
+ *
+ * @param {Product} product - Product object with optional tags array
+ * @returns {void}
+ */
+
+function renderTags(product) {
+  if (!dom.tags) return;
+
+  const tags = Array.isArray(product.tags) ? product.tags : [];
+
+  if (tags.length === 0) {
+    dom.tags.innerHTML = "";
+    dom.tags.hidden = true;
+    return;
+  }
+
+  dom.tags.hidden = false;
+
+  dom.tags.innerHTML = tags
+    .map((tag) => `<span class="tag">${tag}</span>`)
+    .join("");
+}
+
+/**
  * Render the main product details section:
  * title, description, image, price, sale info, rating,
  * and the initial state of the Add to Cart button.
@@ -236,6 +261,8 @@ function renderProduct(product) {
       dom.addToCartBtn.dataset.loginRequired = "true";
     }
   }
+
+  renderTags(product);
 }
 
 /**
@@ -392,9 +419,9 @@ function buildProductUrl(productId) {
 
 /**
  * Wire up the product share button:
- * - Uses the Web Share API if available
- * - Falls back to clipboard copy
- * - Finally falls back to a prompt with the link
+ * - Tries Clipboard API in secure contexts
+ * - Falls back to a hidden textarea copy method
+ * - Last resort: prompt with URL to copy manually
  *
  * @param {Product} product - Product to share.
  * @returns {void}
@@ -404,35 +431,41 @@ function setupShareLink(product) {
 
   const productId = product.id;
   const shareUrl = buildProductUrl(productId);
-  const shareTitle = product.title || "MIRAE product";
 
   dom.shareBtn.addEventListener("click", async () => {
     if (dom.shareStatus) dom.shareStatus.textContent = "";
 
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: shareTitle,
-          url: shareUrl,
-        });
-        dom.shareStatus.textContent = "Shared!";
-        return;
-      }
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
+      if (navigator.clipboard && window.isSecureContext) {
         await navigator.clipboard.writeText(shareUrl);
-        dom.shareStatus.textContent = "Link copied to clipboard!";
+        if (dom.shareStatus)
+          dom.shareStatus.textContent = "Link copied to clipboard!";
         return;
       }
 
-      /**
-       * Last fallback: prompt with URL
-       */
-      window.prompt("Copy this link to share:", shareUrl);
-      dom.shareStatus.textContent = "Copy the link above!";
+      const textArea = document.createElement("textarea");
+      textArea.value = shareUrl;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "absolute";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+
+      const successful = document.execCommand("copy");
+      document.body.removeChild(textArea);
+
+      if (successful) {
+        if (dom.shareStatus)
+          dom.shareStatus.textContent = "Link copied to clipboard!";
+        return;
+      }
+
+      const _ = window.prompt("Copy this link to share:", shareUrl);
+      if (dom.shareStatus) dom.shareStatus.textContent = "Copy the link above!";
     } catch (error) {
-      console.error("Sharing failed:", error);
-      dom.shareStatus.textContent = "Could not share the link.";
+      console.error("Could not copy link:", error);
+      window.prompt("Copy this link to share:", shareUrl);
+      if (dom.shareStatus) dom.shareStatus.textContent = "Copy the link above!";
     }
   });
 }

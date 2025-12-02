@@ -9,7 +9,39 @@ import { cardHTML } from "../components/product-card.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { finalPrice, money } from "../utils/price-helpers.js";
 
-console.log("📦 cart page script is running");
+/**
+ * typedef {Object} CartProductImage
+ * @property {string} [url] - Image URL.
+ * @property {string} [alt] - Image alt text.
+ */
+
+/** * typedef {Object} CartProduct
+ * @property {string} id - Product ID.
+ * @property {string} title - Product title.
+ * @property {number} price - Base price of the product.
+ * @property {number} [discountedPrice] - Discounted price, if any.
+ * @property {CartProductImage} [image] - Product image.
+ * @property {Array<string>} [tags] - Tags associated with the product.
+ */
+
+/**
+ * typedef {CartProduct & {quantity: number}} CartItem
+ */
+
+/**
+ * typedef {Object} CartDomMap
+ * @property {HTMLElement||null} list - Element containing the list of cart items.
+ * @property {HTMLElement||null} empty - Element shown when the cart is empty.
+ * @property {HTMLElement||null} total - Element showing the cart total amount.
+ * @property {HTMLElement||null} clearBtn - Button to clear the cart.
+ * @property {HTMLElement||null} recommendations - Element containing product recommendations.
+ * @property {HTMLElement||null} message - Element for showing cart messages.
+ * @property {HTMLElement||null} summary - Cart summary section.
+ */
+
+/**
+ * @type {CartDomMap}
+ */
 
 const dom = {
   list: document.querySelector("[data-cart-list]"),
@@ -21,8 +53,12 @@ const dom = {
   summary: document.querySelector(".cart-summary"),
 };
 
-console.log("🔧 Cart DOM hooks:", dom);
-
+/**
+ * Generate the HTML string for a single cart item row.
+ *
+ * @param {CartItem} item - The cart item to render.
+ * @returns {string} - HTML string for the cart item.
+ */
 function cartItemHTML(item) {
   const unitPrice = finalPrice(item);
   const lineTotal = unitPrice * item.quantity;
@@ -78,6 +114,14 @@ function cartItemHTML(item) {
   `;
 }
 
+/**
+ * Set a temporary feedback message for cart actions.
+ *
+ * Clears itself after a short delay if the message hasn't changed.
+ *
+ * @param {string} text - The message text to show. Empty string clears immediately.
+ * @returns {void}
+ */
 function setCartMessage(text) {
   if (!dom.message) return;
   dom.message.textContent = text || "";
@@ -91,6 +135,15 @@ function setCartMessage(text) {
   }
 }
 
+/**
+ * Calculate product recommendations based on shared tags
+ * between items in the cart and the full product list.
+ *
+ * @param {CartItem[]} cart - The current cart items.
+ * @param {CartProduct[]} allProducts - The full list of products.
+ * @param {number} [max=4] - Maximum number of recommendations to return.
+ * @returns {CartProduct[]} - Array of recommended products.
+ */
 function getRecommendations(cart, allProducts, max = 4) {
   if (!Array.isArray(cart) || cart.length === 0) return [];
   if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
@@ -119,6 +172,33 @@ function getRecommendations(cart, allProducts, max = 4) {
   return matches;
 }
 
+/**
+ * Render the recommendation section using the current cart
+ * and the globally cached product list.
+ *
+ * @param {CartItem[]} cart - The current cart items.
+ * @param {CartProduct[]} allProducts - The full list of products.
+ * @returns {void}
+ */
+function renderRecommendations(cart, allProducts) {
+  if (!dom.recommendations) return;
+
+  const recs = getRecommendations(cart, allProducts);
+
+  if (!recs.length) {
+    dom.recommendations.innerHTML = "<p> No recommendations available</p>";
+    return;
+  }
+
+  dom.recommendations.innerHTML = recs.map((p) => cardHTML(p)).join("");
+}
+
+/**
+ * Update the cart total element based on the current cart contents.
+ *
+ * @param {CartItem[]} cart - The current cart items.
+ * @returns {void}
+ */
 function updateTotal(cart) {
   const total = cart.reduce((sum, item) => {
     const unitPrice = finalPrice(item);
@@ -130,6 +210,15 @@ function updateTotal(cart) {
   }
 }
 
+/**
+ * Render the full cart view:
+ * - Empty state
+ * - List of items
+ * - Summary totals
+ * - Recommendations (if products are loaded)
+ *
+ * @returns {void}
+ */
 function renderCart() {
   const cart = loadCart();
   console.log("🔎 Cart on cart page:", cart);
@@ -156,19 +245,6 @@ function renderCart() {
     dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
   }
 
-  function renderRecommendations(cart, allProducts) {
-    if (!dom.recommendations) return;
-
-    const recs = getRecommendations(cart, allProducts);
-
-    if (!recs.length) {
-      dom.recommendations.innerHTML = "<p> No recommendations available</p>";
-      return;
-    }
-
-    dom.recommendations.innerHTML = recs.map((p) => cardHTML(p)).join("");
-  }
-
   updateTotal(cart);
   updateCartCount();
 
@@ -177,6 +253,17 @@ function renderCart() {
   }
 }
 
+/**
+ * Handle all click eventes inside the cart list:
+ * - Increase quantity
+ * - Decrease quantity
+ * - Remove item
+ *
+ * Uses the event delegation on the list container.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
 function handleListClick(event) {
   const button = event.target.closest("[data-cart-action]");
   if (!button) return;
@@ -203,11 +290,24 @@ function handleListClick(event) {
   renderCart();
 }
 
+/**
+ * Clear the entire cart and re-render the view.
+ * @returns {void}
+ */
 function handleClearClick() {
   clearCart();
   renderCart();
 }
 
+/**
+ * Main entry point for the cart page.
+ *
+ * - Wires up event listeners.
+ * - Loads products for recommendations.
+ * - Renders the initial cart view.
+ *
+ * @returns {Promise<void>}
+ */
 async function startCartPage() {
   if (dom.list) {
     dom.list.addEventListener("click", handleListClick);
@@ -227,4 +327,5 @@ async function startCartPage() {
   renderCart();
 }
 
+// Immediately bootstrap the cart page on script load.
 startCartPage();

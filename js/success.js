@@ -1,7 +1,65 @@
 import { money, finalPrice } from "../utils/price-helpers.js";
 
+/**
+ * Local storage key where orders are saved.
+ * @type {string}
+ */
 const ORDERS_KEY = "mirae_orders";
 
+/**
+ * DOM references used in the success page
+ * @typedef {Object} OrderCustomer
+ * @property {string} [firstName] - Customer's first name.
+ * @property {string} [email] - Customer's email address.
+ */
+
+/** * @typedef {Object} OrderPayment
+ * @property {string} [method] - Payment method used.
+ * @property {string} [cardLast4] - Last 4 digits of the card used.
+ */
+
+/** * @typedef {Object} OrderTotals
+ * @property {number} [subtotal] - Subtotal amount before shipping.
+ * @property {number} [shipping] - Shipping cost.
+ * @property {number} [total] - Total amount.
+ */
+
+/**
+ * @typedef {Object} OrderItem
+ * @property {String} [title] - Product title.
+ * @property {number} [price] - Base price of the product.
+ * @property {number} [discountedPrice] - Discounted price, if any.
+ */
+
+/**
+ * @typedef {Object} Order
+ * @property {string} id - Unique order ID.
+ * @property {string} [createdAt] -ISO timestamp of when the order was created.
+ * @property {OrderCustomer} [customer] - Customer information.
+ * @property {OrderPayment} [payment] - Payment information.
+ * @property {OrderTotals} [totals] - Order totals.
+ * @property {Array<OrderItem>} [items] - List of ordered items.
+ */
+
+/**
+ * typedef {Object} SuccessDomMap
+ * @property {HTMLElement||null} status - Element showing the order status message.
+ * @property {HTMLElement||null} customerName - Element showing the customer's name.
+ * @property {NodeListOf<HTMLElement>} customerEmail - Elements showing the customer's email.
+ * @property {HTMLElement||null} orderId - Element showing the order ID.
+ * @property {HTMLElement||null} orderDate - Element showing the order date.
+ * @property {HTMLElement||null} orderPayment - Element showing the payment method.
+ * @property {HTMLElement||null} itemsList - Element containing the list of ordered items.
+ * @property {HTMLElement||null} subtotal - Element showing the subtotal amount.
+ * @property {HTMLElement||null} shipping - Element showing the shipping cost.
+ * @property {HTMLElement||null} total - Element showing the total amount.
+ * @property {HTMLElement||null} logOutBtn - Logout button element.
+ */
+
+/**
+ * DOM references used in the success page
+ * @type {SuccessDomMap}
+ */
 const dom = {
   status: document.querySelector("[data-success-status]"),
   customerName: document.querySelector("[data-customer-name]"),
@@ -20,8 +78,10 @@ const dom = {
 
 /**
  * Main entry point for the success page.
+ *
  * Reads the order ID from the URL, loads the order from localStorage,
  * and renders the order details or an error message.
+ *
  * Immediately invoked when the script loads.
  */
 (function startSuccessPage() {

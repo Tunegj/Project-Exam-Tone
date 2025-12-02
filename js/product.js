@@ -1,3 +1,7 @@
+/**
+ * Base URL for the Noroff online shop API
+ * @type {string}
+ */
 const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
 
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
@@ -7,6 +11,60 @@ import { addToCart, loadCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { isLoggedIn } from "../utils/auth.js";
 
+/**
+ * @typedef {Object} ProductImage
+ * @property {string} [url] - Image URL
+ * @property {string} [alt] - Alternative text for the image
+ */
+
+/**
+ * @typedef {Object} ProductReview
+ * @property {string} [username] - Reviewer's username
+ * @property {string} [description] - Review text
+ * @property {number} [rating] - Rating value (1-5)
+ */
+
+/**
+ * @typedef {Object} Product
+ * @property {string} id - Product ID
+ * @property {string} [title] - Product title
+ * @property {string} [description] - Product description
+ * @property {number} [price] - Base product price
+ * @property {number} [discountedPrice] - Discounted price if on sale
+ * @property {number} [rating] - Average product rating
+ * @property {ProductImage} [image] - Product image details
+ * @property {string[]} [tags] - Array of product tags
+ * @property {ProductReview[]} [reviews] - Array of product reviews
+ * @property {number} [quantity] - Optional quantity (if used in cart context)
+ */
+
+/**
+ * @typedef {Object} ProductDomMap
+ * @property {HTMLImageElement||null} image - Product image element
+ * @property {HTMLElement||null} title - Product title element
+ * @property {HTMLElement||null} description - Product description element
+ * @property {HTMLElement||null} price - Product price element
+ * @property {HTMLElement||null} oldPrice - Product old price element
+ * @property {HTMLElement||null} rating - Product rating element
+ * @property {HTMLButtonElement||null} addToCartBtn - Add to cart button element
+ * @property {HTMLElement||null} loading - Loading state element
+ * @property {HTMLElement||null} content - Content container element
+ * @property {HTMLElement||null} error - Error message element
+ * @property {HTMLElement||null} reviewsList - Reviews list container
+ * @property {HTMLElement||null} reviewsEmpty - Reviews empty state element
+ * @property {HTMLElement||null} reviewsCount - Reviews count element
+ * @property {HTMLElement||null} similarList - Similar products list container
+ * @property {HTMLElement||null} similarEmpty - Similar products empty state element
+ * @property {HTMLElement||null} tags - Product tags container
+ * @property {HTMLElement||null} root - Root element for the product page
+ * @property {HTMLButtonElement||null} shareBtn - Share product button
+ * @property {HTMLElement||null} shareStatus - Share status message element
+ */
+
+/**
+ * Cached DOM references for the product page
+ * @type {ProductDomMap}
+ */
 const dom = {
   image: document.querySelector("[data-product-image]"),
   title: document.querySelector("[data-product-title]"),
@@ -34,7 +92,12 @@ const dom = {
   shareStatus: document.querySelector("[data-share-status]"),
 };
 
-// Sets the page state: loading, error, or content
+/**
+ * Set the overall page state to loading / error / content.
+ *
+ * @param {{ isLoading?: boolean, isError?: boolean }} options - Page state flags
+ * @returns {void}
+ */
 function setPageState({ isLoading = false, isError = false }) {
   if (dom.loading) {
     dom.loading.hidden = !isLoading;
@@ -49,7 +112,12 @@ function setPageState({ isLoading = false, isError = false }) {
   }
 }
 
-// Renders star rating as HTML
+/**
+ * Render a star rating as HTML.
+ *
+ * @param {number|string} value - Rating value (1-5)
+ * @returns {string} HTML string representing the star rating
+ */
 function renderStars(value) {
   const rating = Number(value) || 0;
   const max = 5;
@@ -62,7 +130,12 @@ function renderStars(value) {
   return html;
 }
 
-// Renders product reviews
+/**
+ * Render the list of reviews for a product.
+ *
+ * @param {Product} product - Product object with optional reviews
+ * @returns {void}
+ */
 function renderReviews(product) {
   const list = dom.reviewsList;
   const empty = dom.reviewsEmpty;
@@ -99,7 +172,13 @@ function renderReviews(product) {
     .join("");
 }
 
-// Renders the main product details
+/**
+ * Render the main product details section:
+ * title, description, image, price, sale info, rating,
+ * and the initial state of the Add to Cart button.
+ * @param {Product} product - Product to render.
+ * @returns {void}
+ */
 function renderProduct(product) {
   if (!product) return;
 
@@ -159,13 +238,23 @@ function renderProduct(product) {
   }
 }
 
-// URL/API helpers
+/**
+ * Read the product ID from the current page URL.
+ *
+ * @returns {string||null} Product ID string, or null if missing.
+ */
 function getProductIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
   return id ? id.trim() : null;
 }
 
+/**
+ * Fetch all products from the API.
+ *
+ * @returns {Promise<Product[]>} Promise that resolves to a product array.
+ * @throws {Error} If the API request fails.
+ */
 async function fetchAllProducts() {
   const res = await fetch(PRODUCT_API_URL);
 
@@ -178,7 +267,16 @@ async function fetchAllProducts() {
   return json.data || [];
 }
 
-// Finds similar products based on shared tags
+/**
+ * Find similar products based on the shared tags with the current product.
+ *
+ * Falls back to a simple slice of "other" products if no tags match.
+ *
+ * @param {Product} currentProduct - The product being viewed.
+ * @param {Product[]} allProducts - All products from the API.
+ * @param {number} [maxItems=4] - Maximum number of similar products to return.
+ * @returns {Product[]} Array of similar products.
+ */
 function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
   const currentTags = Array.isArray(currentProduct.tags)
     ? currentProduct.tags
@@ -214,6 +312,12 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
   return scored.slice(0, maxItems);
 }
 
+/**
+ * Render the "similar products" list for the product page.
+ *
+ * @param {Product[]} similarProducts - Products to show as recommendations.
+ * @returns {void}
+ */
 function renderSimilarProducts(similarProducts) {
   const list = dom.similarList;
   const empty = dom.similarEmpty;
@@ -231,7 +335,15 @@ function renderSimilarProducts(similarProducts) {
   list.innerHTML = similarProducts.map((p) => cardHTML(p)).join("");
 }
 
-// Add to cart wiring
+/**
+ * Wire up the "Add to cart" button for the current product.
+ *
+ * - If the user is not logged in, redirects to login page.
+ * - Otherwise, add one unit to cart and show a short feedback state.
+ *
+ * @param {Product} product - Product to add to cart.
+ * @returns {void}
+ */
 function setupAddToCart(product) {
   if (!dom.addToCartBtn) return;
 
@@ -265,12 +377,28 @@ function setupAddToCart(product) {
   });
 }
 
+/**
+ * Build a shareable product URL for a given product ID,
+ * preserving the current origin and path.
+ *
+ * @param {string} productId - ID of the product to link to.
+ * @returns {string} Shareable URL for the product.
+ */
 function buildProductUrl(productId) {
   const url = new URL(window.location.href);
   url.searchParams.set("id", productId);
   return url.toString();
 }
 
+/**
+ * Wire up the product share button:
+ * - Uses the Web Share API if available
+ * - Falls back to clipboard copy
+ * - Finally falls back to a prompt with the link
+ *
+ * @param {Product} product - Product to share.
+ * @returns {void}
+ */
 function setupShareLink(product) {
   if (!dom.shareBtn) return;
 
@@ -297,6 +425,9 @@ function setupShareLink(product) {
         return;
       }
 
+      /**
+       * Last fallback: prompt with URL
+       */
       window.prompt("Copy this link to share:", shareUrl);
       dom.shareStatus.textContent = "Copy the link above!";
     } catch (error) {
@@ -306,7 +437,18 @@ function setupShareLink(product) {
   });
 }
 
-// Main entry point
+/**
+ * Main entry point for the product page.
+ *
+ * - Reads the product ID from the URL
+ * - Fetches product details and all products
+ * - Renders product, reviews, similar products
+ * - Sets up Add to Cart and Share button functionality
+ *
+ * Immediately invoked when the script loads.
+ *
+ * @returns {Promisevoid}
+ */
 (async function startProductPage() {
   setPageState({ isLoading: true, isError: false });
 

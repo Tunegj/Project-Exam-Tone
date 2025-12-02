@@ -219,13 +219,13 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: var(--radius-pill);
   border: none;
   background-color: rgba(0, 0, 0, 0.26);
   color: var(--color-neutral-0);
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
   transition: background-color var(--transition-fast),
@@ -254,55 +254,63 @@ body {
 .dot {
   width: 0.55rem;
   height: 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   border: none;
   background-color: rgba(0, 0, 0, 0.18);
   cursor: pointer;
   padding: 0;
-  transition: width 0.18s ease, background-color 0.18s ease,
-    transform 0.18s ease;
+  transition: width var(--transition-fast),
+    background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .dot--active {
-  background-color: var(--color-neutral-900);
+  background-color: var(--color-accent);
+  width: 0.9rem;
   transform: translateY(-1px);
 }
 
 .dot:focus-visible {
-  outline: 2px solid var(--color-neutral-900);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
+
+/* PRODUCT FEED
+-------------------------------- */
 
 #feed {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-md);
 }
 
 #feed-title {
-  font-size: 1.25rem;
-  padding: 0 1rem;
+  font-size: var(--font-size-h3-mobile);
+  padding: 0 var(--space-xs);
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
-  padding: 0 1rem;
+  gap: var(--space-md);
+  padding: var(--space-xs);
 }
+
+/* PRODUCT CARD
+----------------------------------- */
 
 .product-card {
   background-color: var(--color-bg-surface);
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
-  transition: transform 0.16s ease, box-shadow 0.16s ease;
+  transition: transform var(--transition-fast),
+    box-shadow var(--transition-fast);
 }
 
 .product-card:hover,
 .product-card:focus-within {
   transform: translateY(-3px);
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-soft-hover);
 }
 
 .card-link {
@@ -316,51 +324,65 @@ body {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  background-color: #f8f4f2;
+  background-color: var(--color-bg-section);
 }
 
 .card__body {
   padding: 0.85rem 0.9rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-xs);
 }
 
 .card__title {
-  font-size: 0.95rem;
-  font-weight: 500;
+  font-size: var(--font-size-body-sm-mobile);
+  font-weight: var(--font-weight-medium);
 }
 
 .card__prices {
   display: flex;
   align-items: baseline;
-  gap: 0.35rem;
+  gap: var(--space-xs);
 }
 
 .card__price {
-  font-weight: 600;
-  color: var(--color-primary, #687a6f);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
 }
 
 .card__price--old {
-  font-size: 0.8rem;
+  font-size: var(--font-size-caption);
   text-decoration: line-through;
-  color: #999;
+  color: var(--color-text-muted);
 }
 
 .card__rating {
-  font-size: 0.8rem;
-  color: #555;
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
 }
 
-/* .slide__img--rotated {
-  transform: rotate(90deg);
-  transform-origin: center center;
-} */
+/* MEDIA QUERIES
+-------------------------------- */
 
 @media (min-width: 600px) {
   .home {
-    padding-inline: 1.5rem;
+    padding-inline: var(--space-xl);
+  }
+
+  .carousel-controls {
+    padding: 0 var(--space-md);
+  }
+
+  .carousel-btn {
+    margin-inline: var(--space-sm);
+  }
+
+  #feed-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-inline: 0;
+    font-size: var(--font-size-h3);
   }
 
   .grid {
@@ -370,9 +392,11 @@ body {
 
 @media (min-width: 768px) {
   .home {
-    gap: 3rem;
+    gap: var(--space-xl);
   }
 }
+
+/* Desktop */
 
 @media (min-width: 1024px) {
   .home {
@@ -380,7 +404,19 @@ body {
   }
 
   .carousel {
-    min-height: 360px;
+    min-height: 500px;
+  }
+
+  .carousel-controls {
+    padding: 0 var(--space-xl);
+  }
+
+  .carousel-btn {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.75rem;
+    margin-inline: var(--space-md);
+    box-shadow: 0 8px 22px rgb(0, 0, 0, 0.2);
   }
 
   .slide__image-wrap {
@@ -388,19 +424,15 @@ body {
   }
 
   .slide {
-    flex: 0 0 100%;
-    box-sizing: border-box;
-    min-height: 360px;
-    display: flex;
+    min-height: 500px;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 2.25rem;
-    padding: 2.5rem 3rem;
+    gap: var(--space-xl);
+    padding: var(--space-xl) var(--space-2xl);
     margin-inline: auto;
     background-color: transparent;
-    border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+    border-radius: var(--radius-md);
   }
 
   .slide__img {
@@ -412,36 +444,41 @@ body {
 
   .slide__content {
     flex: 1 1 0;
-    max-width: 26rem;
+    max-width: 415px;
     text-align: left;
-    color: #333;
+    color: var(--color-text-main);
   }
 
   .slide__title {
-    font-size: 2rem;
-    margin-bottom: 0.85rem;
+    font-size: var(--font-size-h3);
+    margin-bottom: var(--space-sm);
   }
 
   .slide__prices {
     justify-content: flex-start;
-    margin-bottom: 1.1rem;
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-body-lg);
   }
 
   .slide__actions {
-    justify-content: flex-start; /* desktop: left aligned */
+    justify-content: flex-start;
   }
+
   .product-button {
     align-self: flex-start;
   }
 
   .grid {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
+    gap: var(--space-lg);
+    padding-inline: 0;
   }
 
-  #feed-title {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
+  .card__title {
+    font-size: var(--font-size-body-sm);
+  }
+
+  .card__price {
+    font-size: var(--font-size-body-sm);
   }
 }

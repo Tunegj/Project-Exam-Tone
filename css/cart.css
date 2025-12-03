@@ -163,7 +163,7 @@ main {
 ----------------------------------- */
 
 .cart-summary {
-  padding: var(--space-md);
+  padding: var(--space-lg);
   border-radius: var(--radius-md);
   background-color: var(--color-bg-surface);
   box-shadow: var(--shadow-card);
@@ -252,8 +252,9 @@ main {
 
 @media (min-width: 900px) {
   .cart-page {
-    grid-template-columns: 1.6fr 1fr;
-    gap: var(--space-lg);
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: flex-start;
   }
 
   .cart-page__title {
@@ -263,8 +264,9 @@ main {
   .cart-summary {
     position: sticky;
     top: var(--space-xl);
-    max-width: 320px;
-    margin-left: auto;
+    max-width: 100%;
+    height: 300px;
+    margin-left: 0;
   }
 
   .cart-recommendations__list {

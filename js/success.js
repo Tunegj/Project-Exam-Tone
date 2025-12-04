@@ -1,5 +1,5 @@
 import { money, finalPrice } from "../utils/price-helpers.js";
-
+import { logout } from "../utils/auth.js;";
 /**
  * Local storage key where orders are saved.
  * @type {string}
@@ -13,12 +13,12 @@ const ORDERS_KEY = "mirae_orders";
  * @property {string} [email] - Customer's email address.
  */
 
-/** * @typedef {Object} OrderPayment
+/**  @typedef {Object} OrderPayment
  * @property {string} [method] - Payment method used.
  * @property {string} [cardLast4] - Last 4 digits of the card used.
  */
 
-/** * @typedef {Object} OrderTotals
+/**  @typedef {Object} OrderTotals
  * @property {number} [subtotal] - Subtotal amount before shipping.
  * @property {number} [shipping] - Shipping cost.
  * @property {number} [total] - Total amount.
@@ -271,7 +271,8 @@ function setupLogout() {
   if (!dom.logOutBtn) return;
 
   dom.logOutBtn.addEventListener("click", () => {
+    logout();
     localStorage.removeItem("mirae-user");
-    window.location.href = "index.html";
+    window.location.href = "account/login.html";
   });
 }

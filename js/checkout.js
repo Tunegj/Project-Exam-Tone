@@ -3,7 +3,7 @@ import { validateUserProfile } from "../utils/validators.js";
 import { loadCart, saveCart } from "../utils/cart-helper.js";
 import { money, finalPrice } from "../utils/price-helpers.js";
 import { updateCartCount } from "../utils/cart-ui.js";
-
+import { isLoggedIn } from "../utils/auth.js";
 export const ORDERS_KEY = "mirae_orders";
 
 const dom = {
@@ -68,6 +68,10 @@ let lastTotals = {
 
   setUpBillingSync();
 })();
+
+if (!isLoggedIn()) {
+  window.location.href = "../account/login.html";
+}
 
 /**
  * Set a status message in the checkout form (ex: errors/success)
@@ -177,7 +181,7 @@ function setUpBillingSync() {
 
     if (isSame) {
       if (dom.billingName) {
-        const fullName = `${dom.firstName.value || ""}  ${
+        const fullName = `${dom.firstName.value || ""} ${
           dom.lastName.value || ""
         }`.trim();
         dom.billingName.value = fullName;
@@ -254,7 +258,7 @@ function attachFormHandler(cart) {
     const profile = {
       firstName: dom.firstName?.value.trim() || "",
       lastName: dom.lastName?.value.trim() || "",
-      email: dom.email?.value.trim() || "",
+      email: dom.email?.value.trim().toLowerCase() || "",
       phone: dom.phone?.value.trim() || "",
       address1: dom.address1?.value.trim() || "",
       address2: dom.address2?.value.trim() || "",
@@ -264,7 +268,6 @@ function attachFormHandler(cart) {
     };
 
     const errors = validateUserProfile(profile);
-    console.log("Validation errors:", errors);
 
     clearFieldErrors();
 

@@ -113,3 +113,24 @@
   box-shadow: none;
   transform: none;
 }
+
+.login-alt,
+.register-alt {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-body-sm-mobile);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.login-alt__link,
+.register-alt__link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-weight: var(--font-weight-medium);
+  text-underline-offset: 2px;
+}
+
+.login-alt__link:hover,
+.register-alt__link:hover {
+  color: var(--color-primary-500);
+}

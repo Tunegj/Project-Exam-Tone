@@ -157,6 +157,13 @@
   }
 
   .success-card__title {
-    font-size: var(--font-size-h1-desktop);
+    font-size: var(--font-size-h1);
+  }
+}
+
+@media (min-width: 1200px) {
+  .success-page {
+    max-width: 1200px;
+    padding-inline: 0;
   }
 }

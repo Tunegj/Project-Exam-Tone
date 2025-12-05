@@ -18,6 +18,60 @@
     <script type="module" src="./js/review.js" defer></script>
 </head>
 <header id="site-header"></header>
+<main id="main" class="page-review" tabindex="-1">
+    <section class="review-card" aria-labelledby="review-heading">
+        <header class="review-card__header">
+            <h1 id="review-heading" data-review-heading>Write a review</h1>
+            <p class="review-card__intro">Share your thoughts and rate the product</p>
+        </header>
+
+        <div class="review-message" data-review-message></div>
+
+        <form class="review-form" data-review-form novalidate>
+            <fieldset class="review-rating" aria-label="Rating out of 5">
+                <legend>Rating</legend>
+                <div class="stars" data-stars>
+                    <label class="star">
+                        <input type="radio" name="rating" value="1">
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">1 star</span>
+                    </label>
+                    <label class="star">
+                        <input type="radio" name="rating" value="2">
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">2 stars</span>
+                    </label>
+                    <label class="star">
+                        <input type="radio" name="rating" value="3">
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">3 stars</span>
+                    </label>
+                    <label class="star">
+                        <input type="radio" name="rating" value="4">
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">4 stars</span>
+                    </label>
+                    <label class="star">
+                        <input type="radio" name="rating" value="5">
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">5 stars</span>
+                    </label>
+                </div>
+                <p class="field-error" data-error-rating></p>
+            </fieldset>
+
+            <div class="review-field">
+                <label for="review-text">Your review</label>
+                <textarea name="review" id="review-text" rows="4" maxlength="400"
+                    placeholder="Write a short review (max 400 characters)..."></textarea>
+                <p class="field-help">Please keep it polite and constructive.</p>
+                <p class="field-error" data-error-text></p>
+            </div>
+
+            <button type="submit" class="review-submit">Submit review</button>
+        </form>
+    </section>
+</main>
 
 <body>
 

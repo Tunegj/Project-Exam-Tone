@@ -1,0 +1,162 @@
+.page-review {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md) var(--space-2xl);
+  display: flex;
+  justify-content: center;
+}
+
+.review-card {
+  width: 100%;
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.review-card__header h1 {
+  font-size: var(--font-size-h2-mobile);
+  color: var(--color-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.review-card__intro {
+  font-size: var(--font-size-body-sm-mobile);
+  color: var(--color-text-muted);
+}
+
+.review-message {
+  min-height: 1.5rem;
+  font-size: var(--font-size-body-sm-mobile);
+}
+
+.review-message[data-type="success"] {
+  color: var(--color-primary-500);
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.review-rating {
+  border: none;
+}
+
+.review-rating legend {
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-xs);
+}
+
+.stars {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.star {
+  position: relative;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.star input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.star--active span[aria-hidden="true"],
+.star:hover span[aria-hidden="true"] {
+  color: #f5b400;
+}
+
+.star:focus-within {
+  color: #f5b400;
+}
+
+.field-error {
+  min-height: 1.2rem;
+  font-size: var(--font-size-caption);
+  color: var(--color-error-500);
+}
+
+.review-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.review-field label {
+  font-weight: var(--font-weight-semibold);
+}
+
+.review-field textarea {
+  resize: vertical;
+  min-height: 120px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-body-sm-mobile);
+  background-color: var(--color-neutral-0);
+  color: var(--color-text-main);
+}
+
+.review-field textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+.field-help {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+}
+
+.review-submit {
+  align-self: flex-start;
+  padding: var(--space-xs) var(--space-lg);
+  border-radius: var(--radius-pill);
+  border: none;
+  background-color: var(--color-button-primary-bg);
+  color: var(--color-button-primary-text);
+  font-size: var(--font-size-body-sm-mobile);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+    transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.review-submit:hover,
+.review-submit:focus-visible {
+  background-color: var(--color-primary-500);
+  color: var(--color-text-on-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.review-submit:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.review-form[aria-disabled="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .review-card__header h1 {
+    font-size: var(--font-size-h2);
+  }
+
+  .review-card__intro {
+    font-size: var(--font-size-body-sm);
+  }
+}

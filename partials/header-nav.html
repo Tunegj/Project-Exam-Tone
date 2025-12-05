@@ -1,107 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- Mobile header -->
+<header class="site-header">
+  <div class="header-bar">
+    <a class="icon-btn home" href="/index.html"><span class="material-symbols-outlined">home</span></a>
 
-<head>
-  <meta charset="UTF-8" />
+    <a class="logo gradient-text" href="/index.html">MIRAE</a>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-    rel="stylesheet" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/header-nav.css" />
-  <title>Header Navigation</title>
-  <script type="module" src="../components/header-nav.js" defer></script>
-  <script type="module" src="../components/search.js" defer></script>
-</head>
+    <button class="icon-btn hamburger" aria-controls="mobile-nav" aria-expanded="false">
+      <span class="material-symbols-outlined">dehaze</span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
 
-<body>
-  <!-- Mobile header -->
-  <header class="site-header">
-    <div class="header-bar">
-      <a class="icon-btn home" href="/index.html"><span class="material-symbols-outlined">home</span></a>
+  <form class="search search--mobile" data-search-form role="search">
+    <input type="search" placeholder="Search products..." data-search-input aria-label="Search products"
+      autocomplete="off" />
+  </form>
 
-      <a class="logo gradient-text" href="/index.html">MIRAE</a>
-
-      <button class="icon-btn hamburger" aria-controls="mobile-nav" aria-expanded="false">
-        <span class="material-symbols-outlined">dehaze</span>
-        <span class="sr-only">Menu</span>
-      </button>
+  <!-- Desktop header -->
+  <div class="header-desktop">
+    <div class="left-nav">
+      <a href="/index.html">Home</a>
+      <a href="contact.html">Contact</a>
     </div>
 
-    <form class="search search--mobile" data-search-form role="search">
-      <input type="search" placeholder="Search products..." data-search-input aria-label="Search products"
+    <a class="logo gradient-text" href="/index.html">MIRAE</a>
+
+    <div class="right-nav">
+      <a href="/account/login.html" data-auth-link>Log in / Register</a>
+      <a href="/cart.html"><span class="material-symbols-outlined">shopping_cart</span>
+        <span class="header-cart__label">Cart</span>
+        <span class="header-cart__count" data-cart-count data-hide-when-empty aria-live="polite">0</span>
+      </a>
+    </div>
+
+    <form class="search search--desktop" data-search-form role="search">
+      <input type="search" placeholder="Search products…" data-search-input aria-label="Search products"
         autocomplete="off" />
     </form>
 
-    <!-- Desktop header -->
-    <div class="header-desktop">
-      <div class="left-nav">
-        <a href="/index.html">Home</a>
-        <a href="contact.html">Contact</a>
+    <section class="search-results" data-search-results hidden></section>
+
+    <!-- 2nd row: dropdown triggers (desktop) -->
+    <nav class="category-bar" aria-label="Categories">
+      <button class="dropdown-trigger" data-cat-trigger>
+        Categories <span>▾</span>
+      </button>
+
+      <a class="dropdown-link sale-link" href="/products.html?sale=true">
+        Sale
+      </a>
+
+      <div class="dropdown-panel" data-cat-panel>
+        <ul class="dropdown-list" data-cat-list></ul>
       </div>
+    </nav>
+  </div>
+</header>
 
-      <a class="logo gradient-text" href="/index.html">MIRAE</a>
+<nav id="mobile-nav" class="nav-panel" aria-hidden="true">
+  <button class="close icon-btn" aria-label="Close menu">
+    <span class="material-symbols-outlined">close</span>
+  </button>
 
-      <div class="right-nav">
-        <a href="/account/login.html">Log in/Register</a>
-        <a href="/cart.html"><span class="material-symbols-outlined">shopping_cart</span>
-          <span class="header-cart__label">Cart</span>
-          <span class="header-cart__count" data-cart-count>0</span>
-        </a>
-      </div>
+  <ul class="nav-links">
+    <li>
+      <a href="/cart.html"><span class="material-symbols-outlined">shopping_cart</span>Cart</a>
+    </li>
 
-      <form class="search search--desktop" data-search-form role="search">
-        <input type="search" placeholder="Search products…" data-search-input aria-label="Search products"
-          autocomplete="off" />
-      </form>
+    <li><a href="/account/login.html" data-auth-link="">Log in / Register</a></li>
 
-      <section class="search-results" data-search-results hidden></section>
+    <li class="has-submenu">
+      <button class="submenu-toggle" aria-expanded="false" aria-controls="submenu-categories">
+        Categories
+        <span class="caret" aria-hidden="true">▾</span>
+      </button>
+      <ul id="submenu-categories" class="submenu" hidden data-mobile-cat-list></ul>
+    </li>
 
-      <!-- 2nd row: dropdown triggers (desktop) -->
-      <nav class="category-bar" aria-label="Categories">
-        <button class="dropdown-trigger" data-cat-trigger>
-          Categories <span>▾</span>
-        </button>
-
-        <a class="dropdown-link sale-link" href="/products.html?sale=true">
-          Sale
-        </a>
-
-        <div class="dropdown-panel" data-cat-panel>
-          <ul class="dropdown-list" data-cat-list></ul>
-        </div>
-      </nav>
-    </div>
-  </header>
-
-  <nav id="mobile-nav" class="nav-panel" aria-hidden="true">
-    <button class="close icon-btn" aria-label="Close menu">
-      <span class="material-symbols-outlined">close</span>
-    </button>
-
-    <ul class="nav-links">
-      <li>
-        <a href="/cart.html"><span class="material-symbols-outlined">shopping_cart</span>Cart</a>
-      </li>
-
-      <li><a href="/account/login.html">Log in / Register</a></li>
-
-      <li class="has-submenu">
-        <button class="submenu-toggle" aria-expanded="false" aria-controls="submenu-categories">
-          Categories
-          <span class="caret" aria-hidden="true">▾</span>
-        </button>
-        <ul id="submenu-categories" class="submenu" hidden data-mobile-cat-list></ul>
-      </li>
-
-      <li><a href="/contact">Contact</a></li>
-      <li><a href="/about">About</a></li>
-    </ul>
-  </nav>
-</body>
-
-</html>
+    <li><a href="/contact">Contact</a></li>
+  </ul>
+</nav>

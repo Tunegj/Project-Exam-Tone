@@ -1,19 +1,23 @@
+/** Check that a field contains non-empty text */
 export function isRequired(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+/** Basic email validation */
 export function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+/** Postal code: must be 4 characters */
 export function isPostalCode(value) {
-  return /^[A-Za-z0-9 -]{3,10}$/.test(value);
+  return /^[0-9]{4}$/.test(value.trim());
 }
 
+/** Basic phone number validation */
 export function isPhone(value) {
   const trimmed = value.trim();
   if (!trimmed) return true;
-  return /^[0-9+\-\s]{5,20}$/.test(trimmed);
+  return /^[0-9+\-\s()]{5,20}$/.test(trimmed);
 }
 
 /**
@@ -72,47 +76,3 @@ export function validateUserProfile(profile) {
 
   return errors;
 }
-
-// function validateForm() {
-//   if (!dom.firstName.value.trim()) {
-//     showMessage("Please enter your first name.", "error");
-//     dom.firstName.focus();
-//     return false;
-//   }
-//   if (!dom.lastName.value.trim()) {
-//     showMessage("Please enter your last name.", "error");
-//     dom.lastName.focus();
-//     return false;
-//   }
-//   if (!dom.email.value.trim()) {
-//     showMessage("Please enter your email.", "error");
-//     dom.email.focus();
-//     return false;
-//   }
-
-//   if (!dom.address1.value.trim()) {
-//     showMessage("Please enter your address", "error");
-//     dom.address1.focus();
-//     return false;
-//   }
-
-//   if (!dom.zip.value.trim()) {
-//     showMessage("Please enter your zip code", "error");
-//     dom.zip.focus();
-//     return false;
-//   }
-
-//   if (!dom.city.value.trim()) {
-//     showMessage("Please enter your city", "error");
-//     dom.city.focus();
-//     return false;
-//   }
-
-//   if (!dom.country.value.trim()) {
-//     showMessage("Please enter your country", "error");
-//     dom.country.focus();
-//     return false;
-//   }
-
-//   return true;
-// }

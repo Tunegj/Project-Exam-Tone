@@ -1,24 +1,38 @@
 const API_URL = "https://v2.api.noroff.dev/online-shop";
 
-export async function getProducts() {
-  const res = await fetch(API_URL);
+/**
+ * Internal helper to fetch products from the API
+ * @param {string} url
+ * @returns {Promise<any>}
+ * @throws {Error} when response is not ok
+ */
+async function requestJson(url) {
+  const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
 
-  const json = await res.json();
+  return res.json();
+}
+
+/**
+ * Fetch all products from the API
+ * @returns {Promise<Array>} products
+ */
+export async function getProducts() {
+  const json = await requestJson(API_URL);
   return json.data || [];
 }
 
+/**
+ * Fetch a single product by its ID
+ * @param {string} id
+ * @returns {Promise<Object>} product
+ */
 export async function getProductById(id) {
-  const res = await fetch(`${API_URL}/${encodeURIComponent(id)}`);
-
-  if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
-  }
-
-  const json = await res.json();
+  const url = `${API_URL}/${encodeURIComponent(id)}`;
+  const json = await requestJson(url);
   return json.data;
 }
 

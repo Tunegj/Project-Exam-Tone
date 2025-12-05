@@ -1,5 +1,9 @@
 const CART_KEY = "mirae-cart";
 
+/**
+ * Load cart from local storage
+ * @returns {Array} Array of cart items
+ */
 export function loadCart() {
   try {
     const raw = localStorage.getItem(CART_KEY);
@@ -12,11 +16,23 @@ export function loadCart() {
   }
 }
 
+/**
+ * Save cart to local storage
+ * @param {Array} cart
+ */
 export function saveCart(cart) {
-  const json = JSON.stringify(cart);
-  localStorage.setItem(CART_KEY, json);
+  try {
+    const json = JSON.stringify(cart);
+    localStorage.setItem(CART_KEY, json);
+  } catch (error) {
+    console.error("Failed to save cart", error);
+  }
 }
 
+/**
+ * Add a product to the cart, or increase quantity if it already exists
+ * @param {Object} product - Prodcut from the API or product page
+ */
 export function addToCart(product) {
   const cart = loadCart();
 
@@ -39,17 +55,23 @@ export function addToCart(product) {
   saveCart(cart);
 }
 
+/**
+ * Get the total count of items in the cart
+ * @returns {number}
+ */
 export function getCartCount() {
   const cart = loadCart();
-
-  return cart.reduce((total, item) => {
-    return total + item.quantity;
-  }, 0);
+  return cart.reduce((total, item) => total + item.quantity, 0);
 }
 
+/**
+ * Change quantity of a cart item nu a delta.
+ * If quantity goes to 0 or below, remove the item from the cart.
+ * @param {string} id
+ * @param {number} delta
+ */
 export function changeCartItemQuantity(id, delta) {
   const cart = loadCart();
-
   const item = cart.find((entry) => entry.id === id);
   if (!item) return;
 
@@ -63,12 +85,19 @@ export function changeCartItemQuantity(id, delta) {
   }
 }
 
+/**
+ * Remove an item from the cart completely
+ * @param {string} id
+ */
 export function removeCartItem(id) {
   const cart = loadCart();
   const filtered = cart.filter((entry) => entry.id !== id);
   saveCart(filtered);
 }
 
+/**
+ * Clear the entire cart
+ */
 export function clearCart() {
   saveCart([]);
 }

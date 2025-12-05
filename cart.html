@@ -4,11 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./css/variables.css" />
-  <link rel="stylesheet" href="./css/base.css" />
-  <link rel="stylesheet" href="./css/header-nav.css" />
-  <link rel="stylesheet" href="./css/product-card.css" />
-  <link rel="stylesheet" href="./css/cart.css" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -16,13 +13,22 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet" />
+
+  <!-- Global + component styles -->
+  <link rel="stylesheet" href="./css/variables.css" />
+  <link rel="stylesheet" href="./css/base.css" />
+  <link rel="stylesheet" href="./css/header-nav.css" />
+  <link rel="stylesheet" href="./css/index.css" />
+
+  <!-- JS -->
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/cart.js" defer></script>
   <title>Cart</title>
 </head>
 
 <body>
-  <header id="site-header"></header>
+  <div id="site-header"></div>
+  <script type="module" src="./components/header-nav.js" defer></script>
   <main class="cart-page">
     <section class="cart-page__content">
       <h1 class="cart-page__title">Cart</h1>

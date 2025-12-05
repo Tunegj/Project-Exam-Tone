@@ -249,6 +249,16 @@ body {
   box-shadow: var(--shadow-soft);
 }
 
+.review-link {
+  text-decoration: none;
+  color: var(--color-error);
+}
+
+.review-link:hover {
+  text-decoration: underline;
+  color: var(--color-text-muted);
+}
+
 .review__header {
   display: flex;
   justify-content: space-between;

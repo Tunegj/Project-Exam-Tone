@@ -72,22 +72,17 @@ function renderDesktopDropdown(root, groups) {
   const list = root.querySelector("[data-cat-list]");
   if (!list) return;
 
-  list.innerHTML = Object.entries(groups)
-    .map(([group, tags]) => {
-      return `<li class="cat-group">
-          <strong>${group}</strong>
-          <ul>
-            ${tags
-              .map(
-                (tag) =>
-                  `<li><a href="/products.html?tag=${encodeURIComponent(
-                    tag
-                  )}">${tag}</a></li>`
-              )
-              .join("")}
-          </ul>
-        </li>`;
-    })
+  list.innerHTML = Object.keys(groups)
+    .map(
+      (group) => `
+        <li class="cat-group">
+          <a href="/products.html?group=${encodeURIComponent(
+            group.toLowerCase()
+          )}">
+            ${group}
+          </a>
+        </li>`
+    )
     .join("");
 }
 
@@ -95,24 +90,20 @@ function renderMobileDropdown(root, groups) {
   const mobileList = root.querySelector("[data-mobile-cat-list]");
   if (!mobileList) return;
 
-  mobileList.innerHTML = Object.entries(groups)
-    .map(([group, tags]) => {
-      return `<li class="mobile-cat-group"> <span class="mobile-cat-group-title">${group}</span>
-          <ul>
-            ${tags
-              .map(
-                (tag) =>
-                  `<li><a href="/products.html?tag=${encodeURIComponent(
-                    tag
-                  )}">${tag}</a></li>`
-              )
-              .join("")}
-          </ul>
-        </li>`;
-    })
+  mobileList.innerHTML = Object.keys(groups)
+    .map(
+      (group) => `
+        <li class="mobile-cat-group">
+          <a href="/products.html?group=${encodeURIComponent(
+            group.toLowerCase()
+          )}">
+            ${group}
+          </a>
+        </li>`
+    )
     .join("");
 
-  mobileList.hidden = "false";
+  mobileList.hidden = false;
 }
 
 function wireHeader(root) {

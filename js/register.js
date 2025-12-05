@@ -171,7 +171,10 @@ function handleSubmit(event) {
   };
 
   saveUser(userToSave);
-  showMessage("Your details have been saved", "success");
+  showMessage("Account created! Redirecting to login...", "success");
+  setTimeout(() => {
+    window.location.href = "../account/login.html";
+  }, 2000);
 }
 
 /**

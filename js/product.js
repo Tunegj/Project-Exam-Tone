@@ -80,6 +80,7 @@ const dom = {
   reviewsList: document.querySelector("[data-reviews-list]"),
   reviewsEmpty: document.querySelector("[data-reviews-empty]"),
   reviewsCount: document.querySelector("[data-reviews-count]"),
+  reviewLink: document.querySelector("[data-review-link]"),
 
   similarList: document.querySelector("[data-similar-list]"),
   similarEmpty: document.querySelector("[data-similar-empty]"),
@@ -260,6 +261,10 @@ function renderProduct(product) {
       dom.addToCartBtn.hidden = false;
       dom.addToCartBtn.dataset.loginRequired = "true";
     }
+  }
+
+  if (dom.reviewLink && product?.id) {
+    dom.reviewLink.href = `/review.html?id=${encodeURIComponent(product.id)}`;
   }
 
   renderTags(product);

@@ -4,8 +4,12 @@ import { loadCart, saveCart } from "../utils/cart-helper.js";
 import { money, finalPrice } from "../utils/price-helpers.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { isLoggedIn } from "../utils/auth.js";
+
 export const ORDERS_KEY = "mirae_orders";
 
+/**
+ * DOM references for the checkout page.
+ */
 const dom = {
   form: document.querySelector("[data-checkout-form]"),
 
@@ -47,30 +51,31 @@ let lastTotals = {
 };
 
 /**
+ * Guard: Redirect to login if user is not logged in.
+ * This check runs immediately when the script loads.
+ */
+if (!isLoggedIn()) {
+  window.location.href = "../account/login.html";
+} else {
+  startCheckout();
+}
+
+/**
  * Entry point for the checkout page.
  * Loads user and cart data, pre-fills the form, renders the cart summary,
  * and wires up all event listeners.
- * Immediately invoked when the script loads.
  */
-(function startCheckout() {
+function startCheckout() {
   if (!dom.form) return;
 
   const user = loadUser();
   const cart = loadCart() || [];
 
   prefillUser(user);
-
   renderCartSummary(cart);
-
   attachFieldListeners();
-
   attachFormHandler(cart);
-
   setUpBillingSync();
-})();
-
-if (!isLoggedIn()) {
-  window.location.href = "../account/login.html";
 }
 
 /**
@@ -252,6 +257,8 @@ function attachFieldListeners() {
  * @param {Array<Object>} cart - the current cart contents.
  */
 function attachFormHandler(cart) {
+  if (!dom.form) return;
+
   dom.form.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -302,7 +309,7 @@ function attachFormHandler(cart) {
     }
 
     saveCart([]);
-    updateCartCount([]);
+    updateCartCount();
     setStatus("Order placed successfully!", "success");
 
     window.location.href = `success.html?orderId=${encodeURIComponent(
@@ -316,6 +323,8 @@ function attachFormHandler(cart) {
  * from any inputs that were previously marked as invalid.
  */
 function clearFieldErrors() {
+  if (!dom.form) return;
+
   const errorEls = dom.form.querySelectorAll(".form-error");
   errorEls.forEach((el) => {
     el.textContent = "";
@@ -332,6 +341,8 @@ function clearFieldErrors() {
  * @param {Record<string, string>} errors - Map of field name --> error message
  */
 function showFieldErrors(errors) {
+  if (!dom.form) return;
+
   let firstInvalidElement = null;
 
   Object.entries(errors).forEach(([fieldName, message]) => {
@@ -342,6 +353,7 @@ function showFieldErrors(errors) {
       errorElement.textContent = message;
     }
 
+    /** @type {HTMLInputElement | HTMLTextAreaElement | undefined}*/
     const inputElement = dom[fieldName];
     if (inputElement) {
       inputElement.setAttribute("aria-invalid", "true");
@@ -365,7 +377,7 @@ function showFieldErrors(errors) {
  * @returns {Object} - A new order object ready to be saved.
  */
 function buildOrderObject(profile, cart) {
-  const paymentMethodInput = dom.form.elements["paymentMethod"];
+  const paymentMethodInput = dom.form?.elements["paymentMethod"];
   let paymentMethodValue = "unknown";
 
   if (paymentMethodInput) {
@@ -410,6 +422,7 @@ function buildOrderObject(profile, cart) {
 function saveOrder(order) {
   const raw = localStorage.getItem(ORDERS_KEY);
 
+  /** @type {Array<Object>} */
   let existingOrders = [];
 
   if (raw) {
@@ -426,9 +439,5 @@ function saveOrder(order) {
 
   existingOrders.push(order);
 
-  try {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(existingOrders));
-  } catch (error) {
-    throw error;
-  }
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(existingOrders));
 }

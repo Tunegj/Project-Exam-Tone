@@ -53,6 +53,11 @@ const dom = {
   summary: document.querySelector(".cart-summary"),
 };
 
+/**Cached list of all products (used for recommendations).
+ * @type {CartProduct[]}
+ */
+let allProducts = [];
+
 /**
  * Generate the HTML string for a single cart item row.
  *
@@ -109,8 +114,8 @@ function cartItemHTML(item) {
         class="cart-item__remove"
         data-cart-action="remove"
         aria-label="Remove ${item.title} from cart"
-      > <span>Remove</span>
-        ×
+      > <span>Remove from cart</span>
+        
       </button>
     </article>
   `;
@@ -142,13 +147,13 @@ function setCartMessage(text) {
  * between items in the cart and the full product list.
  *
  * @param {CartItem[]} cart - The current cart items.
- * @param {CartProduct[]} allProducts - The full list of products.
+ * @param {CartProduct[]} products - The full list of products.
  * @param {number} [max=4] - Maximum number of recommendations to return.
  * @returns {CartProduct[]} - Array of recommended products.
  */
-function getRecommendations(cart, allProducts, max = 4) {
+function getRecommendations(cart, products, max = 4) {
   if (!Array.isArray(cart) || cart.length === 0) return [];
-  if (!Array.isArray(allProducts) || allProducts.length === 0) return [];
+  if (!Array.isArray(products) || products.length === 0) return [];
 
   const cartTags = new Set();
 
@@ -179,16 +184,17 @@ function getRecommendations(cart, allProducts, max = 4) {
  * and the globally cached product list.
  *
  * @param {CartItem[]} cart - The current cart items.
- * @param {CartProduct[]} allProducts - The full list of products.
+ * @param {CartProduct[]} products - The full list of products.
  * @returns {void}
  */
-function renderRecommendations(cart, allProducts) {
+function renderRecommendations(cart, products) {
   if (!dom.recommendations) return;
 
-  const recs = getRecommendations(cart, allProducts);
+  const recs = getRecommendations(cart, products);
 
   if (!recs.length) {
-    dom.recommendations.innerHTML = "<p> No recommendations available</p>";
+    dom.recommendations.innerHTML =
+      '<p class="cart-recommendations__empty"> No recommendations available</p>';
     return;
   }
 
@@ -223,35 +229,48 @@ function updateTotal(cart) {
  */
 function renderCart() {
   const cart = loadCart();
-  console.log("🔎 Cart on cart page:", cart);
 
-  // if (!dom.list || !dom.empty) {
-  //   console.warn("❗ Cart DOM elements missing", dom.list, dom.empty);
-  //   return;
-  // }
+  if (!dom.list || !dom.empty) {
+    return;
+  }
 
   if (cart.length === 0) {
     dom.list.innerHTML = "";
     dom.empty.hidden = false;
+
+    if (dom.summary) {
+      dom.summary.classList.add("cart-summary--disabled");
+    }
+    if (dom.clearBtn) {
+      dom.clearBtn.disabled = true;
+    }
+    if (dom.recommendations) {
+      dom.recommendations.innerHTML = "";
+    }
+
     updateTotal(cart);
     updateCartCount();
     setCartMessage("Your cart is empty.");
     return;
   }
+  dom.empty.hidden = true;
 
-  if (dom.empty) dom.empty.hidden = true;
-  if (dom.summary) dom.summary.classList.remove("cart-summary--disabled");
-  if (dom.clearBtn) dom.clearBtn.disabled = false;
-
-  if (dom.list) {
-    dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
+  if (dom.summary) {
+    dom.summary.classList.remove("cart-summary--disabled");
   }
+  if (dom.clearBtn) {
+    dom.clearBtn.disabled = false;
+  }
+
+  dom.list.innerHTML = cart.map((item) => cartItemHTML(item)).join("");
 
   updateTotal(cart);
   updateCartCount();
 
-  if (window._allProducts) {
-    renderRecommendations(cart, window._allProducts);
+  if (allProducts.length) {
+    renderRecommendations(cart, allProducts);
+  } else if (dom.recommendations) {
+    dom.recommendations.innerHTML = "";
   }
 }
 
@@ -278,6 +297,11 @@ function handleListClick(event) {
   const cartBefore = loadCart();
   const item = cartBefore.find((entry) => entry.id === id);
 
+  if (!item) {
+    renderCart();
+    return;
+  }
+
   if (action === "increase") {
     changeCartItemQuantity(id, 1);
     setCartMessage(`Increased quantity of ${item.title}.`);
@@ -298,6 +322,7 @@ function handleListClick(event) {
  */
 function handleClearClick() {
   clearCart();
+  setCartMessage("Your cart has been cleared.");
   renderCart();
 }
 
@@ -320,10 +345,10 @@ async function startCartPage() {
   }
 
   try {
-    window._allProducts = await getProducts();
+    allProducts = await getProducts();
   } catch (err) {
     console.error("error loading products:", err);
-    window._allProducts = [];
+    allProducts = [];
   }
 
   renderCart();

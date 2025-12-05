@@ -116,7 +116,7 @@ function renderMobileDropdown(root, groups) {
 }
 
 function wireHeader(root) {
-  const panel = document.getElementById("#mobile-nav");
+  const panel = document.getElementById("mobile-nav");
   const burger = root.querySelector(".hamburger");
   const closeBtn = root.querySelector(".close");
   const firstLink = panel?.querySelector(".nav-links a");

@@ -18,6 +18,7 @@ const GROUP_TAGS = {
   beauty: ["beauty", "skincare", "makeup", "fragrance"],
   accessories: ["accessories", "jewelry", "watches", "bags"],
   tech: ["electronics", "computers", "audio", "gaming"],
+  fashion: ["clothing", "shoes", "apparel", "footwear"],
 };
 
 /**
@@ -27,6 +28,7 @@ const GROUP_LABELS = {
   beauty: "Beauty",
   accessories: "Accessories",
   tech: "Tech",
+  fashion: "Fashion",
   other: "Other",
 };
 

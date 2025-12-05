@@ -15,7 +15,7 @@ export function initSearch(root = document) {
       const query = input.value.trim();
       if (!query) return;
 
-      const url = new URL("/products.html", window.location.origin);
+      const url = new URL("/products-page.html", window.location.origin);
       url.searchParams.set("search", query);
       window.location.href = url.toString();
     });

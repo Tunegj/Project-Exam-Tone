@@ -1,13 +1,7 @@
-/**
- * Base URL for the Noroff online shop API
- * @type {string}
- */
-const PRODUCT_API_URL = "https://v2.api.noroff.dev/online-shop";
-
 import { finalPrice, isOnSale, money } from "../utils/price-helpers.js";
-import { getProductById } from "../api/products.js";
+import { getProductById, getProducts } from "../api/products.js";
 import { cardHTML } from "../components/product-card.js";
-import { addToCart, loadCart } from "../utils/cart-helper.js";
+import { addToCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { isLoggedIn } from "../utils/auth.js";
 
@@ -77,6 +71,7 @@ const dom = {
   loading: document.querySelector("[data-product-loading]"),
   content: document.querySelector("[data-product-content]"),
   error: document.querySelector("[data-product-error]"),
+
   reviewsList: document.querySelector("[data-reviews-list]"),
   reviewsEmpty: document.querySelector("[data-reviews-empty]"),
   reviewsCount: document.querySelector("[data-reviews-count]"),
@@ -140,12 +135,27 @@ function renderStars(value) {
 function renderReviews(product) {
   const list = dom.reviewsList;
   const empty = dom.reviewsEmpty;
+  const countEl = dom.reviewsCount;
+  const reviewLink = dom.reviewLink;
 
   if (!list || !empty) return;
 
   const reviews = Array.isArray(product.reviews) ? product.reviews : [];
+  const count = reviews.length;
+  const productId = product?.id;
 
-  if (reviews.length === 0) {
+  if (reviewLink && productId) {
+    reviewLink.href = `/review.html?id=${encodeURIComponent(productId)}`;
+  }
+
+  if (countEl) {
+    countEl.textContent =
+      count === 0
+        ? "No reviews yet"
+        : `${count} review${count === 1 ? "" : "s"}`;
+  }
+
+  if (count === 0) {
     list.innerHTML = "";
     empty.hidden = false;
     return;
@@ -171,6 +181,17 @@ function renderReviews(product) {
       </article>`;
     })
     .join("");
+
+  if (reviewLink && productId) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "review__cta-wrapper";
+
+    const ctaLink = reviewLink.cloneNode(true);
+    ctaLink.textContent = "Write a review →";
+
+    wrapper.appendChild(ctaLink);
+    list.after(wrapper);
+  }
 }
 
 /**
@@ -208,8 +229,10 @@ function renderTags(product) {
 function renderProduct(product) {
   if (!product) return;
 
+  const title = product.title ?? "Untitled product";
+
   if (dom.title) {
-    dom.title.textContent = product.title ?? "Untitled product";
+    dom.title.textContent = title;
   }
 
   if (dom.description) {
@@ -282,24 +305,6 @@ function getProductIdFromUrl() {
 }
 
 /**
- * Fetch all products from the API.
- *
- * @returns {Promise<Product[]>} Promise that resolves to a product array.
- * @throws {Error} If the API request fails.
- */
-async function fetchAllProducts() {
-  const res = await fetch(PRODUCT_API_URL);
-
-  if (!res.ok) {
-    throw new Error(`API error ${res.status} ${res.statusText}`);
-  }
-
-  const json = await res.json();
-
-  return json.data || [];
-}
-
-/**
  * Find similar products based on the shared tags with the current product.
  *
  * Falls back to a simple slice of "other" products if no tags match.
@@ -323,7 +328,6 @@ function getSimilarProducts(currentProduct, allProducts, maxItems = 4) {
   const scored = others
     .map((product) => {
       const productTags = Array.isArray(product.tags) ? product.tags : [];
-
       const sharedTagsCount = productTags.filter((tag) =>
         currentTags.includes(tag)
       ).length;
@@ -363,7 +367,6 @@ function renderSimilarProducts(similarProducts) {
   }
 
   if (empty) empty.hidden = true;
-
   list.innerHTML = similarProducts.map((p) => cardHTML(p)).join("");
 }
 
@@ -390,8 +393,8 @@ function setupAddToCart(product) {
     dom.addToCartBtn.textContent = "Adding...";
 
     try {
-      addToCart(product, 1);
-      updateCartCount(loadCart());
+      addToCart(product);
+      updateCartCount();
 
       dom.addToCartBtn.textContent = "Added!";
       setTimeout(() => {
@@ -408,7 +411,6 @@ function setupAddToCart(product) {
     }
   });
 }
-
 /**
  * Build a shareable product URL for a given product ID,
  * preserving the current origin and path.
@@ -432,10 +434,9 @@ function buildProductUrl(productId) {
  * @returns {void}
  */
 function setupShareLink(product) {
-  if (!dom.shareBtn) return;
+  if (!dom.shareBtn || !product?.id) return;
 
-  const productId = product.id;
-  const shareUrl = buildProductUrl(productId);
+  const shareUrl = buildProductUrl(product.id);
 
   dom.shareBtn.addEventListener("click", async () => {
     if (dom.shareStatus) dom.shareStatus.textContent = "";
@@ -465,7 +466,7 @@ function setupShareLink(product) {
         return;
       }
 
-      const _ = window.prompt("Copy this link to share:", shareUrl);
+      window.prompt("Copy this link to share:", shareUrl);
       if (dom.shareStatus) dom.shareStatus.textContent = "Copy the link above!";
     } catch (error) {
       console.error("Could not copy link:", error);
@@ -485,7 +486,7 @@ function setupShareLink(product) {
  *
  * Immediately invoked when the script loads.
  *
- * @returns {Promisevoid}
+ * @returns {Promise<void>}
  */
 (async function startProductPage() {
   setPageState({ isLoading: true, isError: false });
@@ -495,15 +496,18 @@ function setupShareLink(product) {
 
     if (!id) {
       console.error("No product ID found in URL");
+      if (dom.error) {
+        dom.error.textContent = "No product selected.";
+      }
+      setPageState({ isLoading: false, isError: true });
+      updateCartCount();
       return;
     }
 
     const [product, allProducts] = await Promise.all([
       getProductById(id),
-      fetchAllProducts(),
+      getProducts(),
     ]);
-
-    console.log("🛍️ Loaded product:", product);
 
     renderProduct(product);
     renderReviews(product);
@@ -515,7 +519,7 @@ function setupShareLink(product) {
 
     setPageState({ isLoading: false, isError: false });
   } catch (error) {
-    console.error("❌ Could not load product:", error);
+    console.error("Could not load product:", error);
 
     if (dom.error) {
       dom.error.textContent = "Could not load product. Please try again later.";

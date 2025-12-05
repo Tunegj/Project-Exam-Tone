@@ -133,7 +133,7 @@ function handleSubmit(event) {
   saveAuthToken({
     accessToken: "local-login",
     email: user.email,
-    name: user.name,
+    name: `${user.firstName} ${user.lastName}`.trim(),
   });
 
   setMessage("Login successful! Redirecting...", "success");

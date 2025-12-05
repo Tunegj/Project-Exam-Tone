@@ -81,6 +81,7 @@ function cartItemHTML(item) {
       <div class="cart-item__quantity">
         <button
           type="button"
+          aria-label="Decrease quantity of ${item.title}"
           class="cart-item__qty-btn"
           data-cart-action="decrease"
         >
@@ -91,6 +92,7 @@ function cartItemHTML(item) {
 
         <button
           type="button"
+          aria-label="Increase quantity of ${item.title}"
           class="cart-item__qty-btn"
           data-cart-action="increase"
         >

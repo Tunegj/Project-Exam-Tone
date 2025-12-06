@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/variables.css" />
-  <link rel="stylesheet" href="../css/base.css" />
-  <link rel="stylesheet" href="../css/header-nav.css" />
-  <link rel="stylesheet" href="../css/login.css" />
+  <meta name="description"
+    content="Log in to your MIRAE account to access your orders, manage your profile, and enjoy a personalized shopping experience." />
+
+  <title>Login | MIRAE</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -15,30 +17,45 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet" />
-  <script type="module" src="../components/header-nav.js"></script>
+
+  <!-- Global + component styles -->
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/header-nav.css" />
+  <link rel="stylesheet" href="../css/product-card.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+
+  <!-- JS -->
+  <script type="module" src="../components/header-nav.js" defer></script>
   <script type="module" src="../js/login.js" defer></script>
-  <title>Login</title>
 </head>
 
 <body>
   <header id="site-header"></header>
 
-  <main class="login-page">
+  <main id="main" class="login-page" aria-labelledby="login-heading" tabindex="-1">
     <section class="login">
-      <h1>Log In</h1>
+      <h1 id="login-heading">Log In</h1>
+
       <form data-login-form novalidate>
-        <div>
+        <div class="form-field">
           <label for="login-email">Email</label>
-          <input type="email" id="login-email" name="email" required data-login-email />
-          <p class="form-error" data-login-error="email" aria-live="polite"></p>
+          <input type="email" id="login-email" name="email" required data-login-email autocomplete="email"
+            aria-describedby="login-email-error" />
+          <p id="login-email-error" class="form-error" data-login-error="email" aria-live="polite"></p>
         </div>
-        <div>
+
+        <div class="form-field">
           <label for="login-password">Password</label>
-          <input type="password" id="login-password" name="password" required data-login-password />
-          <p class="form-error" data-login-error="password" aria-live="polite"></p>
+          <input type="password" id="login-password" name="password" required data-login-password
+            autocomplete="current-password" aria-describedby="login-password-error" />
+          <p id="login-password-error" class="form-error" data-login-error="password" aria-live="polite"></p>
         </div>
+
         <button type="submit">Log In</button>
+
         <p data-login-message class="register-message" aria-live="polite" role="status"></p>
+
         <p class="login-alt">
           Don't have an account?
           <a href="../account/register.html" class="login-alt__link">Sign up here</a>

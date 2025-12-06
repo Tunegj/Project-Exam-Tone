@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="../css/variables.css" />
-  <link rel="stylesheet" href="../css/base.css" />
-  <link rel="stylesheet" href="../css/header-nav.css" />
-  <link rel="stylesheet" href="../css/register.css" />
+  <meta name="description"
+    content="Create a new MIRAE account to start shopping, track your orders, and manage your profile." />
+
+  <title>Register | MIRAE</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet"
@@ -15,15 +17,25 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
     rel="stylesheet" />
+
+  <!-- Global + component styles -->
+  <link rel="stylesheet" href="../css/variables.css" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/header-nav.css" />
+  <link rel="stylesheet" href="../css/product-card.css" />
+  <link rel="stylesheet" href="../css/register.css" />
+
+  <!-- JS -->
+  <script type="module" src="../components/header-nav.js" defer></script>
   <script type="module" src="../js/register.js" defer></script>
-  <title>Register user</title>
 </head>
 
 <body>
   <header id="site-header"></header>
-  <main class="register-page">
+
+  <main id="main" class="register-page" aria-labelledby="register-heading" tabindex="-1">
     <section class="register">
-      <h1>Personal details</h1>
+      <h1 id="register-heading">Personal details</h1>
 
       <form data-register-form>
         <div>

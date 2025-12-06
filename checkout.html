@@ -4,7 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Complete your purchase on MIRAE. Enter your delivery details and payment information to place your order." />
 
+  <title>Checkout | MIRAE</title>
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,54 +27,58 @@
   <!-- JS -->
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/checkout.js" defer></script>
-  <title>Checkout</title>
 </head>
 
 <body>
   <div id="site-header"></div>
-  <script type="module" src="./components/header-nav.js" defer></script>
-  <main class="checkout-page" aria-labelledby="checkout-heading">
+
+  <main id="main" class="checkout-page" aria-labelledby="checkout-heading" tabindex="-1">
     <h1 id="checkout-heading" class="checkout-page__title">Checkout</h1>
+
     <div class="checkout-page__layout">
       <form class="checkout-form" data-checkout-form novalidate aria-describedby="checkout-help">
         <p id="checkout-help" class="checkout-page__help">Please confirm your details and payment method before placing
           your order.</p>
-        <p class="checkout-page__status" data-checkout-status aria-live="polite"></p>
+
+        <p class="checkout-page__status" data-checkout-status aria-live="polite" role="status"></p>
+
+        <!-- Delivery details -->
         <section class="checkout-delivery" aria-labelledby="delivery__title">
           <h2 class="checkout-section__title" id="delivery__title">Delivery details</h2>
+
           <div class="form-field">
             <label for="checkout-first-name">First name:</label>
             <input type="text" name="firstName" id="checkout-first-name" class="delivery-address__name"
-              autocomplete="given-name" data-checkout-first-name>
-            <p class="form-error" data-error-for="firstName" aria-live="assertive"></p>
+              autocomplete="given-name" data-checkout-first-name aria-describedby="error-firstName">
+            <p id="error-firstName" class="form-error" data-error-for="firstName" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
             <label for="checkout-last-name">Last name:</label>
             <input type="text" id="checkout-last-name" name="lastName" autocomplete="family-name"
-              class="delivery-address__name" data-checkout-last-name>
-            <p class="form-error" data-error-for="lastName" aria-live="assertive"></p>
+              class="delivery-address__name" data-checkout-last-name aria-describedby="error-lastName">
+            <p id="error-lastName" class="form-error" data-error-for="lastName" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
             <label for="checkout-email">Email:</label>
             <input type="email" id="checkout-email" name="email" autocomplete="email" class="delivery-address__email"
-              data-checkout-email>
-            <p class="form-error" data-error-for="email" aria-live="assertive"></p>
+              data-checkout-email aria-describedby="error-email">
+            <p id="error-email" class="form-error" data-error-for="email" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
             <label for="checkout-phone">Phone:</label>
             <input type="tel" id="checkout-phone" name="phone" autocomplete="tel" class="delivery-address__phone"
-              data-checkout-phone>
-            <p class="form-error" data-error-for="phone" aria-live="assertive"></p>
+              data-checkout-phone aria-describedby="error-phone">
+            <p id="error-phone" class="form-error" data-error-for="phone" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
             <label for="checkout-address1">Street address:</label>
             <input type="text" id="checkout-address1" name="address1" autocomplete="address-line1"
-              class="deliver-address__street" data-checkout-address1>
-            <p class="form-error" data-error-for="address1" aria-live="assertive"></p>
+              class="deliver-address__street" data-checkout-address1 aria-describedby="error-address1">
+            <p id="error-address1" class="form-error" data-error-for="address1" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
@@ -91,16 +98,17 @@
           <div class="form-field">
             <label for="checkout-city">City:</label>
             <input type="text" name="city" id="checkout-city" autocomplete="address-level2"
-              class="delivery-address__city" data-checkout-city>
-            <p class="form-error" data-error-for="city" aria-live="assertive"></p>
+              class="delivery-address__city" data-checkout-city aria-describedby="error-city">
+            <p id="error-city" class="form-error" data-error-for="city" aria-live="assertive"></p>
           </div>
 
           <div class="form-field">
             <label for="checkout-country">Country:</label>
             <input type="text" id="checkout-country" name="country" autocomplete="country-name"
-              class="delivery-address__country" data-checkout-country>
-            <p class="form-error" data-error-for="country" aria-live="assertive"></p>
+              class="delivery-address__country" data-checkout-country aria-describedby="error-country">
+            <p id="error-country" class="form-error" data-error-for="country" aria-live="assertive"></p>
           </div>
+
           <div class="form-field">
             <label for="checkout-notes">Order notes (optional):</label>
             <textarea name="notes" id="checkout-notes" class="checkout-notes" rows="3"
@@ -108,10 +116,13 @@
           </div>
         </section>
 
+        <!-- Payment -->
         <section class="checkout-payment" aria-labelledby="payment__title">
           <h2 class="checkout-section__title" id="payment__title">Payment</h2>
 
-          <div class="payment-method">
+          <fieldset class="payment-method" aria-label="Payment method">
+            <legend class="visually-hidden">Payment method</legend>
+
             <div class="form-field form-field--inline">
               <input type="radio" id="visa-mastercard" name="paymentMethod" value="visa-mastercard" checked>
               <label for="visa-mastercard">Visa / Mastercard</label>
@@ -126,7 +137,7 @@
               <input type="radio" name="paymentMethod" id="gift-card" value="gift-card">
               <label for="gift-card">Gift card</label>
             </div>
-          </div>
+          </fieldset>
 
           <div class="payment-details">
             <div class="form-field">
@@ -136,12 +147,14 @@
 
             <div class="form-field">
               <label for="card-number">Card number:</label>
-              <input type="text" name="cardNumber" id="card-number" class="card-number" autocomplete="cc-number">
+              <input type="text" name="cardNumber" id="card-number" class="card-number" autocomplete="cc-number"
+                inputmode="numeric">
             </div>
 
             <div class="form-field">
               <label for="card-cvc">CVC:</label>
-              <input type="text" id="card-cvc" class="card-cvc" name="cardCvc" autocomplete="cc-csc">
+              <input type="text" id="card-cvc" class="card-cvc" name="cardCvc" autocomplete="cc-csc"
+                inputmode="numeric">
             </div>
 
             <div class="payment-details__row">
@@ -149,9 +162,9 @@
                 <label for="card-exp-month">Expiry date:</label>
                 <div class="card-exp">
                   <input type="text" id="card-exp-month" name="cardExpMonth" class="card-exp__month"
-                    autocomplete="cc-exp-month" placeholder="MM">
+                    autocomplete="cc-exp-month" placeholder="MM" inputmode="numeric">
                   <input type="text" id="card-exp-year" name="cardExpYear" class="card-exp__year"
-                    autocomplete="cc-exp-year" placeholder="YY">
+                    autocomplete="cc-exp-year" placeholder="YY" inputmode="numeric">
                 </div>
               </div>
             </div>
@@ -166,13 +179,18 @@
             </div>
 
             <div class="payment-billing__fields">
-              <input type="text" class="payment-billing__name" name="billingName" placeholder="Name">
-              <input type="text" name="billingStreet" class="payment-billing__street" placeholder="Street address">
-              <input type="text" name="billingPO" class="payment-billing__PO" placeholder="Postal code">
-              <input type="text" name="billingCountry" class="payment-billing__country" placeholder="Country">
+              <input type="text" class="payment-billing__name" name="billingName" placeholder="Name"
+                autocomplete="billing name">
+              <input type="text" name="billingStreet" class="payment-billing__street" placeholder="Street address"
+                autocomplete="billing street-address">
+              <input type="text" name="billingPO" class="payment-billing__PO" placeholder="Postal code"
+                autocomplete="billing postal-code">
+              <input type="text" name="billingCountry" class="payment-billing__country" placeholder="Country"
+                autocomplete="billing country-name">
             </div>
           </div>
         </section>
+
         <button type="submit" class="pay-btn">Place order</button>
       </form>
 
@@ -195,6 +213,7 @@
           </div>
         </dl>
       </aside>
+    </div>
   </main>
 </body>
 

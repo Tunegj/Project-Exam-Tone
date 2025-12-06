@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Your order has been successfully placed on MIRAE. Thank you for shopping with us!" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,13 +26,14 @@
   <!-- JS -->
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/success.js" defer></script>
-  <title>Order confirmed | MIRAE</title>
+
+  <title>Order confirmation | MIRAE</title>
 </head>
 
 <body>
   <div id="site-header"></div>
 
-  <main class="success-page" aria-labelledby="success-heading">
+  <main id="main" class="success-page" aria-labelledby="success-heading" tabindex="-1">
     <section class="success-card">
       <div class="success-card__icon" aria-hidden="true">
         <span class="material-symbols-outlined">check_circle</span>
@@ -39,10 +42,12 @@
       <h1 id="success-heading" class="success-card__title">
         Thank you, <span data-customer-name></span> ✨
       </h1>
-      <p class="success-card__status" data-success-status aria-live="polite">
+
+      <p class="success-card__status" data-success-status aria-live="polite" role="status">
         Your order is confirmed. A confirmation has been sent to
         <span data-customer-email></span>.
       </p>
+
       <section class="success-meta" aria-label="Order details">
         <dl class="success-meta__grid">
           <div class="success-meta__row">
@@ -66,6 +71,7 @@
 
       <section class="success-items" aria-label="Items in your order">
         <h2 class="success-items__title">Order summary</h2>
+
         <ul class="success-items__list" data-success-list></ul>
 
         <dl class="success-items__totals">

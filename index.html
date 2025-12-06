@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Welcome to MIRAE. Discover the latest products and best deals within everything from electronics to fashion." />
+
+  <title>Home | MIRAE</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,15 +29,16 @@
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/index.js" defer></script>
 
-  <title>Home</title>
+
 </head>
 
 <body>
   <div id="site-header"></div>
-  <script type="module" src="./components/header-nav.js" defer></script>
+
   <main id="main" class="home" tabindex="-1">
-    <section id="banner" aria-labelledby="banner-title">
+    <section id="banner" aria-labelledby="banner-title" aria-describedby="banner-desc">
       <h2 id="banner-title" class="visually-hidden">Latest products</h2>
+
       <div class="carousel" data-carousel>
         <div class="carousel-controls">
           <button class="carousel-btn previous" type="button" aria-label="Previous slide" data-prev>
@@ -44,8 +49,10 @@
           </button>
         </div>
       </div>
+
       <div class="carousel-pagination" role="tablist" aria-label="Carousel slides" data-dots></div>
     </section>
+
     <section id="feed" aria-labelledby="feed-title">
       <h2 id="feed-title">New Arrivals</h2>
       <div class="grid" data-grid></div>

@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="View detailed information about a product on MIRAE. Read reviews, check prices, and make informed purchasing decisions." />
+
+  <title>Product details | MIRAE</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,19 +25,21 @@
   <link rel="stylesheet" href="./css/product-card.css" />
   <link rel="stylesheet" href="./css/product.css" />
 
-  <!-- JS -->
+  <!--  -->
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/product.js" defer></script>
-  <title>Product</title>
 </head>
 
 <body>
   <div id="site-header"></div>
-  <script type="module" src="./components/header-nav.js" defer></script>
+
   <main id="main" class="product-page" tabindex="-1">
-    <p class="product-page__status" data-product-loading>Loading product...</p>
-    <p class="product-page__status product-page__status--error" data-product-error>Sorry, we could not load this
+
+    <p class="product-page__status" data-product-loading aria-live="polite" role="status">Loading product...</p>
+    <p class="product-page__status product-page__status--error" data-product-error aria-live="assertive" role="alert">
+      Sorry, we could not load this
       product. Please try again</p>
+
     <article data-product-content hidden>
       <section class="product-hero" aria-labelledby="product-title" data-product-root>
         <div class="product-hero__layout">
@@ -42,8 +48,10 @@
           </div>
 
           <div class="product-info">
-            <h2 id="product-title" class="product-title" data-product-title></h2>
+            <h1 id="product-title" class="product-title" data-product-title></h1>
+
             <p class="product-description" data-product-description></p>
+
             <div class="product-meta">
               <div class="product-prices">
                 <span class="product-price" data-product-price></span>
@@ -54,15 +62,17 @@
                 <span data-product-rating></span>
               </div>
             </div>
+
             <div class="product-tags" data-product-tags></div>
 
             <button class="product-add-btn" type="button" data-add-to-cart>
               Add to cart
             </button>
+
             <div class="product-share">
-              <button type="button" class="product-share__button" data-share-product><svg width="20" height="20"
-                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round" aria-hidden="true">
+              <button type="button" class="product-share__button" data-share-product>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <circle cx="18" cy="5" r="3"></circle>
                   <circle cx="6" cy="12" r="3"></circle>
                   <circle cx="18" cy="19" r="3"></circle>
@@ -81,11 +91,15 @@
           <h2 id="reviews-heading">Reviews</h2>
           <span class="product-reviews__count" data-reviews-count></span>
         </div>
+
         <p data-reviews-empty>
           No reviews yet. <a class="review-link" data-review-link href="#">Be the first to review this
-            product</a>
+            product
+          </a>
         </p>
-        <ul data-reviews-list class="product-reviews__list"></ul>
+
+        <ul data-reviews-list class="product-reviews__list">
+        </ul>
       </section>
 
       <section class="similar-products">
@@ -95,8 +109,8 @@
 
 
         <div data-similar-list class="similar-products__grid" id="similar-products">
-
         </div>
+
         <p class="similar-products__empty" data-similar-empty hidden>
           No similar products found.
         </p>

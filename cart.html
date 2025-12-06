@@ -4,6 +4,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="View the items in your cart on MIRAE. Review your selected products, update quantities, and proceed to checkout." />
+
+  <title>Cart | MIRAE</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,20 +28,19 @@
   <!-- JS -->
   <script type="module" src="./components/header-nav.js" defer></script>
   <script type="module" src="./js/cart.js" defer></script>
-  <title>Cart</title>
 </head>
 
 <body>
   <div id="site-header"></div>
-  <script type="module" src="./components/header-nav.js" defer></script>
-  <main class="cart-page">
+  <main id="main" class="cart-page" tabindex="-1" aria-labelledby="cart-heading">
     <section class="cart-page__content">
-      <h1 class="cart-page__title">Cart</h1>
+      <h1 id="cart-heading" class="cart-page__title">Cart</h1>
 
-      <p class="cart-page__message" data-cart-message aria-live="polite"></p>
-      <p data-cart-empty class="cart-empty">Your cart is empty</p>
+      <p class="cart-page__message" data-cart-message aria-live="polite" role="status"></p>
 
-      <section data-cart-list class="cart-list"></section>
+      <p data-cart-empty class="cart-empty" aria-live="polite">Your cart is empty</p>
+
+      <section data-cart-list class="cart-list" aria-label="Items in your cart"></section>
     </section>
 
     <aside class="cart-summary" aria-label="Cart summary">
@@ -49,10 +52,11 @@
       <button type="button" data-cart-clear class="cart-summary__clear">
         Clear cart
       </button>
-      <a href="/checkout.html" data-cart-checkout class="cart-summary__checkout">Procedd to checkout</a>
+
+      <a href="/checkout.html" data-cart-checkout class="cart-summary__checkout">Proceed to checkout</a>
     </aside>
 
-    <section class="cart-recommendations">
+    <section class="cart-recommendations" aria-label="Recommended products">
       <h2 class="cart-recommendations__title">Others also bought</h2>
       <div data-cart-recommendations class="cart-recommendations__list"></div>
     </section>

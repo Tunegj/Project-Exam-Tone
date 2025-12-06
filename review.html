@@ -4,8 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="Write a review for a product on MIRAE. Share your thoughts and rate the product to help others make informed decisions." />
 
-    <!-- Fonts -->
+    <title>Write a review | MIRAE</title>
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet"
@@ -14,21 +18,21 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
         rel="stylesheet" />
 
-    <!-- Global + component styles -->
+
     <link rel="stylesheet" href="./css/variables.css" />
     <link rel="stylesheet" href="./css/base.css" />
     <link rel="stylesheet" href="./css/header-nav.css" />
     <link rel="stylesheet" href="./css/product-card.css" />
     <link rel="stylesheet" href="./css/review.css" />
 
-    <!-- JS -->
+
     <script type="module" src="./components/header-nav.js" defer></script>
     <script type="module" src="./js/review.js" defer></script>
 </head>
 
 <body>
     <div id="site-header"></div>
-    <script type="module" src="./components/header-nav.js" defer></script>
+
     <main id="main" class="page-review" tabindex="-1">
         <section class="review-card" aria-labelledby="review-heading">
             <header class="review-card__header">
@@ -36,11 +40,13 @@
                 <p class="review-card__intro">Share your thoughts and rate the product</p>
             </header>
 
-            <div class="review-message" data-review-message></div>
+            <div class="review-message" data-review-message aria-live="polite" role="status"></div>
 
             <form class="review-form" data-review-form novalidate>
-                <fieldset class="review-rating" aria-label="Rating out of 5">
+                <fieldset class="review-rating" aria-label="Rating out of 5" aria-describedby="rating-error">
+
                     <legend>Rating</legend>
+
                     <div class="stars" data-stars>
                         <label class="star">
                             <input type="radio" name="rating" value="1">
@@ -68,24 +74,23 @@
                             <span class="sr-only">5 stars</span>
                         </label>
                     </div>
-                    <p class="field-error" data-error-rating></p>
+
+                    <p class="field-error" data-error-rating id="rating-error"></p>
                 </fieldset>
 
                 <div class="review-field">
                     <label for="review-text">Your review</label>
                     <textarea name="review" id="review-text" rows="4" maxlength="400"
-                        placeholder="Write a short review (max 400 characters)..."></textarea>
-                    <p class="field-help">Please keep it polite and constructive.</p>
-                    <p class="field-error" data-error-text></p>
+                        placeholder="Write a short review (max 400 characters)..."
+                        aria-describedby="review-help review-error"></textarea>
+                    <p class="field-help" id="review-help">Please keep it polite and constructive.</p>
+                    <p class="field-error" data-error-text id="review-error"></p>
                 </div>
 
                 <button type="submit" class="review-submit">Submit review</button>
             </form>
         </section>
     </main>
-
-    <body>
-
-    </body>
+</body>
 
 </html>

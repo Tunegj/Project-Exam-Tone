@@ -1,5 +1,8 @@
 import { money, finalPrice } from "../utils/price-helpers.js";
-import { logout } from "../utils/auth.js;";
+import { logout } from "../utils/auth.js";
+import { clearCart } from "../utils/cart-helper.js";
+import { clearUser } from "../utils/user-helpers.js";
+import { updateCartCount } from "../utils/cart-ui.js";
 /**
  * Local storage key where orders are saved.
  * @type {string}
@@ -29,6 +32,7 @@ const ORDERS_KEY = "mirae_orders";
  * @property {String} [title] - Product title.
  * @property {number} [price] - Base price of the product.
  * @property {number} [discountedPrice] - Discounted price, if any.
+ * @property {number} [quantity] - Quantity ordered.
  */
 
 /**
@@ -113,7 +117,8 @@ const dom = {
  */
 function getOrderIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("orderId");
+  const id = params.get("orderId");
+  return id ? id.trim() : null;
 }
 
 /**
@@ -141,6 +146,8 @@ function loadOrder(id) {
  * @param {string} message - The error message to display.
  */
 function renderError(message) {
+  document.title = "Order Not Found || MIRAE";
+
   if (dom.status) {
     dom.status.textContent = message;
   }
@@ -171,18 +178,15 @@ function renderError(message) {
  * Render the full order details into the success page:
  * customer info, order info, item list, and totals.
  * @param {Object} order - The order object loaded from storage.
- * @param {Object} order.customer - Customer information.
- * @param {Object} order.payment - Payment information.
- * @param {Object} order.totals - Order totals.
- * @param {Array<Object>} order.items - List of ordered items.
- * @param {string} order.createdAt - Order creation date.
- * @param {string} order.id - Order ID.
  */
 function renderOrder(order) {
   const { customer, payment, totals, items, createdAt, id } = order;
 
+  document.title = "Order Confirmed || MIRAE";
+
   if (dom.customerName) {
-    dom.customerName.textContent = customer?.firstName || "friend";
+    const first = customer?.firstName || "";
+    dom.customerName.textContent = first || "friend";
   }
 
   dom.customerEmail.forEach((el) => {
@@ -216,18 +220,19 @@ function renderOrder(order) {
     if (!items || items.length === 0) {
       dom.itemsList.innerHTML = `<li class ="success-item success-item--empty">No items found in this order.</li>`;
     } else {
-      let html = "";
-      items.forEach((item) => {
-        const product = item.product || item;
-        const quantity = item.quantity ?? 1;
-        const linePrice = finalPrice(product) * quantity;
+      const html = items
+        .map((item) => {
+          const product = item.product || item;
+          const quantity = item.quantity ?? 1;
+          const linePrice = finalPrice(product) * quantity;
 
-        html += `<li class="success-item">
+          return `<li class="success-item">
                 <span class="success-item__title">${product.title} </span>
                 <span class="success-item__quantity"> x${quantity}</span>
                 <span class="success-item__price">${money(linePrice)}</span>
                 </li>`;
-      });
+        })
+        .join("");
 
       dom.itemsList.innerHTML = html;
     }
@@ -240,8 +245,9 @@ function renderOrder(order) {
   }
 
   if (dom.status) {
-    dom.status.textContent =
-      "Your order is confirmed! A receipt has been sent to your email.";
+    dom.status.textContent = `Your order is confirmed! A receipt has been sent to ${
+      customer?.email || "your email"
+    }.`;
   }
 }
 
@@ -271,8 +277,10 @@ function setupLogout() {
   if (!dom.logOutBtn) return;
 
   dom.logOutBtn.addEventListener("click", () => {
-    logout();
-    localStorage.removeItem("mirae-user");
+    clearAuth();
+    clearUser();
+    clearCart();
+    updateCartCount();
     window.location.href = "account/login.html";
   });
 }

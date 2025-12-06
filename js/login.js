@@ -1,18 +1,30 @@
 import { loadUser } from "../utils/user-helpers.js";
 import { isEmail } from "../utils/validators.js";
 import { saveAuthToken } from "../utils/auth.js";
+import {
+  setupFieldAccessibility,
+  clearFieldErrors,
+  applyFieldErrors,
+} from "../utils/form-helpers.js";
+
+/**
+ * @typedef {Object} LoginDomMap
+ * @property {HTMLFormElement|null} form
+ * @property {HTMLInputElement|null} email
+ * @property {HTMLInputElement|null} password
+ * @property {HTMLElement|null} emailError
+ * @property {HTMLElement|null} passwordError
+ * @property {HTMLElement|null} message
+ */
 
 /**
  * DOM references used in the login page
- * @type {Object}
+ * @type {LoginDomMap}
  */
 const dom = {
   form: document.querySelector("[data-login-form]"),
   email: document.querySelector("[data-login-email]"),
   password: document.querySelector("[data-login-password]"),
-
-  emailError: document.querySelector('[data-login-error="email"]'),
-  passwordError: document.querySelector('[data-login-error="password"]'),
   message: document.querySelector("[data-login-message]"),
 };
 
@@ -29,54 +41,6 @@ function setMessage(text, type = "info") {
 }
 
 /**
- * Clear all inline filed errors and remove aria-invalid
- * from the email and password fields.
- */
-function clearFieldErrors() {
-  if (dom.emailError) {
-    dom.emailError.textContent = "";
-    dom.emailError.dataset.type = "";
-  }
-
-  if (dom.passwordError) {
-    dom.passwordError.textContent = "";
-    dom.passwordError.dataset.type = "";
-  }
-
-  if (dom.email) {
-    dom.email.removeAttribute("aria-invalid");
-  }
-
-  if (dom.password) {
-    dom.password.removeAttribute("aria-invalid");
-  }
-}
-
-/**
- * Show a validation error message for a specific field.
- * Also marks the input as aria-invalid for accessibility.
- *
- * @param {"email"|"password"} field - Which field to show the error for.
- * @param {string} message - The error message to display.
- */
-function showFieldError(field, message) {
-  if (field === "email" && dom.emailError) {
-    dom.emailError.textContent = message;
-    dom.emailError.dataset.type = "error";
-    if (dom.email) {
-      dom.email.setAttribute("aria-invalid", "true");
-    }
-  }
-  if (field === "password" && dom.passwordError) {
-    dom.passwordError.textContent = message;
-    dom.passwordError.dataset.type = "error";
-    if (dom.password) {
-      dom.password.setAttribute("aria-invalid", "true");
-    }
-  }
-}
-
-/**
  * Handle the login form submission.
  * Validates input, checks stored user data, and redirects on success.
  *
@@ -84,34 +48,37 @@ function showFieldError(field, message) {
  */
 function handleSubmit(event) {
   event.preventDefault();
-  clearFieldErrors();
+
+  clearFieldErrors(dom.form);
   setMessage("");
 
   const email = dom.email?.value.trim().toLowerCase() || "";
   const password = dom.password?.value || "";
 
-  let hasError = false;
+  /** @type {Record<string, string>} */
+  const errors = {};
 
   // Email validation
   if (!email) {
-    showFieldError("email", "Email is required.");
-    hasError = true;
+    errors.email = "Email is required.";
   } else if (!isEmail(email)) {
-    showFieldError("email", "Please enter a valid email address.");
-    hasError = true;
+    errors.email = "Please enter a valid email address.";
   } else if (!email.endsWith("@stud.noroff.no")) {
-    showFieldError("email", "Email must be a stud.noroff.no address.");
-    hasError = true;
+    errors.email = "Email must be a stud.noroff.no address.";
   }
 
   // Password validation
   if (!password) {
-    showFieldError("password", "Please enter your password.");
-    hasError = true;
+    errors.password = "Please enter your password.";
   }
 
-  if (hasError) {
+  if (Object.keys(errors).length > 0) {
+    const firstInvalid = applyFieldErrors(dom.form, errors);
     setMessage("Please fix the errors and try again.", "error");
+
+    if (firstInvalid && typeof firstInvalid.focus === "function") {
+      firstInvalid.focus();
+    }
     return;
   }
 
@@ -124,9 +91,17 @@ function handleSubmit(event) {
     user.email.toLowerCase() !== email ||
     user.password !== password
   ) {
-    showFieldError("email", "Email or password is incorrect.");
-    showFieldError("password", "Email or password is incorrect.");
-    setMessage("Log in failed, please try again", "error");
+    const authErrors = {
+      email: "Email or password is incorrect.",
+      password: "Email or password is incorrect.",
+    };
+
+    applyFieldErrors(dom.form, authErrors);
+    setMessage("Login failed, please try again.", "error");
+
+    if (dom.email) {
+      dom.email.focus();
+    }
     return;
   }
 
@@ -147,23 +122,18 @@ function handleSubmit(event) {
  * Attach input event listeners to clear errors/messages on user input.
  */
 function attachFieldListeners() {
-  if (dom.email) {
-    dom.email.addEventListener("input", () => {
-      clearFieldErrors();
-      if (dom.message && dom.message.dataset.type === "error") {
-        setMessage("");
-      }
-    });
-  }
+  if (!dom.form) return;
 
-  if (dom.password) {
-    dom.password.addEventListener("input", () => {
+  const inputs = dom.form.querySelectorAll("input");
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
       clearFieldErrors();
       if (dom.message && dom.message.dataset.type === "error") {
         setMessage("");
       }
     });
-  }
+  });
 }
 
 /**
@@ -176,7 +146,9 @@ function startLoginPage() {
     return;
   }
 
+  setupFieldAccessibility();
   attachFieldListeners();
   dom.form.addEventListener("submit", handleSubmit);
 }
+
 startLoginPage();

@@ -1,11 +1,32 @@
 import { loadUser, saveUser } from "../utils/user-helpers.js";
+import { validateUserProfile } from "../utils/validators.js";
 import {
-  validateUserProfile,
-  isEmail,
-  isPostalCode,
-  isPhone,
-} from "../utils/validators.js";
+  setupFieldAccessibility,
+  clearFormErrors,
+  applyFieldErrors,
+} from "../utils/form-helpers.js";
 
+/**
+ * @typedef {Object} RegisterDomMap
+ * @property {HTMLFormElement|null} form
+ * @property {HTMLInputElement|null} firstName
+ * @property {HTMLInputElement|null} lastName
+ * @property {HTMLInputElement|null} email
+ * @property {HTMLInputElement|null} phone
+ * @property {HTMLInputElement|null} address1
+ * @property {HTMLInputElement|null} address2
+ * @property {HTMLInputElement|null} postalCode
+ * @property {HTMLInputElement|null} city
+ * @property {HTMLInputElement|null} country
+ * @property {HTMLInputElement|null} password
+ * @property {HTMLInputElement|null} confirmPassword
+ * @property {HTMLElement|null} message
+ */
+
+/**
+ * DOM references for inputs and gloval message element.
+ * @type {RegisterDomMap}
+ */
 const dom = {
   form: document.querySelector("[data-register-form]"),
   firstName: document.querySelector("[data-register-first-name]"),
@@ -21,58 +42,6 @@ const dom = {
   confirmPassword: document.querySelector("[data-register-confirm-password]"),
   message: document.querySelector("[data-register-message]"),
 };
-
-const errorEls = {
-  firstName: document.querySelector('[data-register-error="firstName"]'),
-  lastName: document.querySelector('[data-register-error="lastName"]'),
-  email: document.querySelector('[data-register-error="email"]'),
-  phone: document.querySelector('[data-register-error="phone"]'),
-  address1: document.querySelector('[data-register-error="address1"]'),
-  postalCode: document.querySelector('[data-register-error="zip"]'),
-  city: document.querySelector('[data-register-error="city"]'),
-  country: document.querySelector('[data-register-error="country"]'),
-  password: document.querySelector('[data-register-error="password"]'),
-  confirmPassword: document.querySelector(
-    '[data-register-error="confirmPassword"]'
-  ),
-};
-
-/**
- * Clear all inline field error messages and reset their state.
- */
-function clearFieldErrors() {
-  Object.values(errorEls).forEach((el) => {
-    if (!el) return;
-    el.textContent = "";
-    el.dataset.type = "";
-  });
-}
-
-/**
- * Display validation messages for one or more fields.
- * Focuses the first invalid field for accessibility.
- * @param {Record<string, string>} error - Map of field name --> error message.
- */
-function showFieldErrors(error) {
-  clearFieldErrors();
-
-  const entries = Object.entries(error);
-  if (entries.length === 0) return;
-
-  const [firstField] = entries;
-  const [firstFieldName] = firstField;
-  const firstInput = dom[firstFieldName];
-  if (firstInput && typeof firstInput.focus === "function") {
-    firstInput.focus();
-  }
-
-  entries.forEach(([fieldName, message]) => {
-    const el = errorEls[fieldName];
-    if (!el) return;
-    el.textContent = message;
-    el.dataset.type = "error";
-  });
-}
 
 /**
  * Show a global status message above/below the form.
@@ -128,25 +97,29 @@ function prefillIfUserExists() {
  */
 function handleSubmit(event) {
   event.preventDefault();
+  if (!dom.form) return;
+
+  clearFormErrors(dom.form);
 
   const profile = buildProfileFromForm();
 
-  const error = validateUserProfile(profile);
+  /** @type {Record<string, string>} */
+  const errors = validateUserProfile(profile);
 
   const password = dom.password?.value || "";
   const confirmPassword = dom.confirmPassword?.value || "";
 
   // Password validation
   if (!password) {
-    error.password = "Password is required";
+    errors.password = "Password is required";
   } else if (password.length < 8) {
-    error.password = "Password must be at least 8 characters long";
+    errors.password = "Password must be at least 8 characters";
   }
 
   if (!confirmPassword) {
-    error.confirmPassword = "Please confirm your password";
-  } else if (confirmPassword !== password) {
-    error.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "Please confirm your password";
+  } else if (password !== confirmPassword) {
+    errors.confirmPassword = "Passwords do not match";
   }
 
   // Email domain validation
@@ -154,16 +127,17 @@ function handleSubmit(event) {
     profile.email &&
     !profile.email.toLowerCase().endsWith("@stud.noroff.no")
   ) {
-    error.email = "Email must be a valid stud.noroff.no address";
+    errors.email = "Email must be a valid stud.noroff.no address";
   }
 
-  if (Object.keys(error).length > 0) {
-    showFieldErrors(error);
+  if (Object.keys(errors).length > 0) {
+    const firstInvalid = applyFieldErrors(dom.form, errors);
     showMessage("Please fix the errors and try again", "error");
+    if (firstInvalid && typeof firstInvalid.focus === "function") {
+      firstInvalid.focus();
+    }
     return;
   }
-
-  clearFieldErrors();
 
   const userToSave = {
     ...profile,
@@ -172,9 +146,25 @@ function handleSubmit(event) {
 
   saveUser(userToSave);
   showMessage("Account created! Redirecting to login...", "success");
+
   setTimeout(() => {
     window.location.href = "../account/login.html";
   }, 2000);
+}
+
+function attachFieldListeners() {
+  if (!dom.form) return;
+
+  const inputs = dom.form.querySelectorAll("input, select, textarea");
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      clearFormErrors(dom.form);
+      if (dom.message && dom.message.dataset.type === "error") {
+        showMessage("");
+      }
+    });
+  });
 }
 
 /**
@@ -188,6 +178,8 @@ function startRegisterPage() {
   }
 
   prefillIfUserExists();
+  setupFieldAccessibility(dom.form);
+  attachFieldListeners();
   dom.form.addEventListener("submit", handleSubmit);
 }
 

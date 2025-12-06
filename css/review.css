@@ -1,10 +1,17 @@
+/*--------------------------------------------------------------
+  Review Page Layout
+  ----------------------------------------------------------*/
 .page-review {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-md) var(--space-2xl);
+  max-width: var(--layout-content-width-narrow);
+  margin-inline: auto;
+  padding: var(--space-xl) var(--layout-page-padding-x-mobile) var(--space-2xl);
   display: flex;
   justify-content: center;
 }
+
+/*--------------------------------------------------------------
+  Review Card
+  ----------------------------------------------------------*/
 
 .review-card {
   width: 100%;
@@ -34,8 +41,12 @@
 }
 
 .review-message[data-type="success"] {
-  color: var(--color-primary-500);
+  color: var(--color-primary);
 }
+
+/*--------------------------------------------------------------
+  Review Form
+  ----------------------------------------------------------*/
 
 .review-form {
   display: flex;
@@ -43,8 +54,12 @@
   gap: var(--space-lg);
 }
 
+/* Rating group */
+
 .review-rating {
   border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .review-rating legend {
@@ -52,9 +67,11 @@
   margin-bottom: var(--space-xs);
 }
 
+/* Rating stars */
+
 .stars {
   display: inline-flex;
-  gap: 0.25rem;
+  gap: var(--space-2xs);
 }
 
 .star {
@@ -71,20 +88,22 @@
   pointer-events: none;
 }
 
+/* Active / hover state - "filled" star color */
 .star--active span[aria-hidden="true"],
-.star:hover span[aria-hidden="true"] {
-  color: #f5b400;
+.star:hover span[aria-hidden="true"],
+.star:focus-within span[aria-hidden="true"] {
+  color: rgb(245 180 0);
 }
 
-.star:focus-within {
-  color: #f5b400;
-}
+/* Field level error */
 
 .field-error {
   min-height: 1.2rem;
   font-size: var(--font-size-caption);
-  color: var(--color-error-500);
+  color: var(--color-error-text);
 }
+
+/* Textarea field */
 
 .review-field {
   display: flex;
@@ -101,16 +120,17 @@
   min-height: 120px;
   padding: var(--space-sm);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--color-border-soft);
   font-family: var(--font-family-body);
   font-size: var(--font-size-body-sm-mobile);
   background-color: var(--color-neutral-0);
   color: var(--color-text-main);
 }
 
-.review-field textarea:focus {
-  outline: none;
-  border-color: var(--color-primary-500);
+.review-field textarea:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--color-primary);
   box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
 }
 
@@ -119,9 +139,13 @@
   color: var(--color-text-muted);
 }
 
+/*--------------------------------------------------------------
+  Submit Button
+  ----------------------------------------------------------*/
+
 .review-submit {
   align-self: flex-start;
-  padding: var(--space-xs) var(--space-lg);
+  padding: var(--space-sm) var(--space-lg);
   border-radius: var(--radius-pill);
   border: none;
   background-color: var(--color-button-primary-bg);
@@ -135,7 +159,7 @@
 
 .review-submit:hover,
 .review-submit:focus-visible {
-  background-color: var(--color-primary-500);
+  background-color: var(--color-button-primary-bg-hover);
   color: var(--color-text-on-primary);
   transform: translateY(-1px);
   box-shadow: var(--shadow-soft-hover);
@@ -146,17 +170,46 @@
   outline-offset: var(--focus-ring-offset);
 }
 
+/* Disabled state */
 .review-form[aria-disabled="true"] {
   opacity: 0.6;
   pointer-events: none;
 }
 
-@media (min-width: 768px) {
+/* ------------------------------------------------------------
+   Breakpoints – Pad / Tablet (>= 768px)
+------------------------------------------------------------ */
+
+@media (width >= 768px) {
+  .page-review {
+    padding-inline: var(--layout-page-padding-x);
+  }
+
   .review-card__header h1 {
     font-size: var(--font-size-h2);
   }
 
   .review-card__intro {
     font-size: var(--font-size-body-sm);
+  }
+
+  .review-field textarea {
+    font-size: var(--font-size-body-sm);
+  }
+}
+
+/* ------------------------------------------------------------
+   Motion Preferences
+------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .star,
+  .review-submit {
+    transition: none;
+  }
+
+  .review-submit:hover {
+    transform: none;
+    box-shadow: var(--shadow-soft);
   }
 }

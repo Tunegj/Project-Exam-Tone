@@ -1,5 +1,6 @@
-/* *Utilities
--------------------------------- */
+/* ------------------------------------------------------------
+   Utilities
+------------------------------------------------------------ */
 
 .visually-hidden {
   position: absolute !important;
@@ -13,22 +14,14 @@
   margin: -1px;
 }
 
-/* BASE
--------------------------------- */
-
-body {
-  font-family: var(--font-family-body);
-  background-color: var(--color-bg-body);
-  color: var(--color-text-main);
-}
-
-/* PAGE WRAPPER
--------------------------------- */
+/* ------------------------------------------------------------
+   Page wrapper
+------------------------------------------------------------ */
 
 .home {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  max-width: var(--layout-max-width);
+  margin: auto;
+  padding: var(--space-lg) var(--layout-page-padding-x-mobile) var(--space-2xl);
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -41,9 +34,9 @@ body {
   color: var(--color-primary);
 }
 
-/* BANNER / CAROUSEL
--------------------------------- */
-
+/* ------------------------------------------------------------
+   Banner / Carousel
+------------------------------------------------------------ */
 #banner {
   display: flex;
   flex-direction: column;
@@ -80,13 +73,14 @@ body {
   justify-content: center;
 }
 
+/* Image block inside slide */
 .slide__image-wrap {
   width: 100%;
   max-width: 260px;
   aspect-ratio: 4 / 3;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background-color: rgba(245, 228, 215, 0.18);
+  background-color: rgb(245, 228, 215, 18%);
   box-shadow: var(--shadow-soft-hover);
   display: flex;
   align-items: center;
@@ -99,6 +93,7 @@ body {
   object-fit: cover;
 }
 
+/* Text content inside slide */
 .slide__content {
   width: 100%;
   max-width: 22rem;
@@ -139,8 +134,9 @@ body {
   justify-content: center;
 }
 
-/* BUTTONS IN CAROUSEL
---------------------------------- */
+/*------------------------------------------------------------
+   Carousel Buttons (Primary and Secondary)
+------------------------------------------------------------ */
 
 .slide__add-button {
   display: inline-flex;
@@ -154,6 +150,7 @@ body {
   color: var(--color-button-primary-text);
   font-size: var(--font-size-body-sm-mobile);
   cursor: pointer;
+  box-shadow: var(--shadow-soft);
   transition: background-color var(--transition-fast),
     transform var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -163,6 +160,8 @@ body {
   background-color: var(--color-bg-surface);
   color: var(--color-text-main);
   border: 1px solid var(--color-primary);
+  box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-1px);
 }
 
 .slide__add-button:focus-visible {
@@ -170,6 +169,7 @@ body {
   outline-offset: var(--focus-ring-offset);
 }
 
+/* View product style button */
 .product-button {
   display: inline-flex;
   align-items: center;
@@ -201,8 +201,9 @@ body {
   outline-offset: var(--focus-ring-offset);
 }
 
-/* CAROUSEL CONTROLS AND PAGINATION
------------------------------------------- */
+/* ------------------------------------------------------------
+   Carousel Controls & Pagination
+------------------------------------------------------------ */
 
 .carousel-controls {
   position: absolute;
@@ -211,7 +212,7 @@ body {
   align-items: center;
   justify-content: space-between;
   pointer-events: none;
-  padding: 0 var(--space-2xs);
+  padding: var(--space-2xs);
 }
 
 .carousel-btn {
@@ -223,7 +224,7 @@ body {
   height: 2.75rem;
   border-radius: var(--radius-pill);
   border: none;
-  background-color: rgba(0, 0, 0, 0.26);
+  background-color: rgb(0, 0, 0 / 26%);
   color: var(--color-neutral-0);
   font-size: 1.6rem;
   line-height: 1;
@@ -234,7 +235,7 @@ body {
 
 .carousel-btn:hover,
 .carousel-btn:focus-visible {
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgb(0, 0, 0 / 45%);
   transform: translateY(-1px);
   box-shadow: var(--shadow-soft-hover);
 }
@@ -256,7 +257,7 @@ body {
   height: 0.55rem;
   border-radius: var(--radius-pill);
   border: none;
-  background-color: rgba(0, 0, 0, 0.18);
+  background-color: rgb(0, 0, 0 / 18%);
   cursor: pointer;
   padding: 0;
   transition: width var(--transition-fast),
@@ -274,8 +275,9 @@ body {
   outline-offset: var(--focus-ring-offset);
 }
 
-/* PRODUCT FEED
--------------------------------- */
+/* ------------------------------------------------------------
+   Product Feed / Grid
+------------------------------------------------------------ */
 
 #feed {
   display: flex;
@@ -295,82 +297,18 @@ body {
   padding: var(--space-xs);
 }
 
-/* PRODUCT CARD
------------------------------------ */
+/* ------------------------------------------------------------
+   Breakpoints - Tablet (>= 768px)
+------------------------------------------------------------ */
 
-.product-card {
-  background-color: var(--color-bg-surface);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
-  transition: transform var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.product-card:hover,
-.product-card:focus-within {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-soft-hover);
-}
-
-.card-link {
-  display: flex;
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-}
-
-.card__img {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  background-color: var(--color-bg-section);
-}
-
-.card__body {
-  padding: 0.85rem 0.9rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.card__title {
-  font-size: var(--font-size-body-sm-mobile);
-  font-weight: var(--font-weight-medium);
-}
-
-.card__prices {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-xs);
-}
-
-.card__price {
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
-}
-
-.card__price--old {
-  font-size: var(--font-size-caption);
-  text-decoration: line-through;
-  color: var(--color-text-muted);
-}
-
-.card__rating {
-  font-size: var(--font-size-caption);
-  color: var(--color-text-muted);
-}
-
-/* MEDIA QUERIES
--------------------------------- */
-
-@media (min-width: 600px) {
+@media (width >= 768px) {
   .home {
-    padding-inline: var(--space-xl);
+    padding-inline: var(--layout-page-padding-x);
+    gap: var(--space-xl);
   }
 
   .carousel-controls {
-    padding: 0 var(--space-md);
+    padding-inline: var(--space-md);
   }
 
   .carousel-btn {
@@ -390,15 +328,11 @@ body {
   }
 }
 
-@media (min-width: 900px) {
-  .home {
-    gap: var(--space-xl);
-  }
-}
+/* ------------------------------------------------------------
+   Breakpoints - Desktop (>= 1200px)
+------------------------------------------------------------ */
 
-/* Desktop */
-
-@media (min-width: 1200px) {
+@media (width >= 1024px) {
   .home {
     padding-inline: 0;
   }
@@ -408,7 +342,7 @@ body {
   }
 
   .carousel-controls {
-    padding: 0 var(--space-xl);
+    padding-inline: var(--space-xl);
   }
 
   .carousel-btn {
@@ -416,7 +350,7 @@ body {
     height: 3rem;
     font-size: 1.75rem;
     margin-inline: var(--space-md);
-    box-shadow: 0 8px 22px rgb(0, 0, 0, 0.2);
+    box-shadow: 0 8px 22px rgb(0, 0, 0 / 20%);
   }
 
   .slide__image-wrap {
@@ -472,13 +406,5 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: var(--space-lg);
     padding-inline: 0;
-  }
-
-  .card__title {
-    font-size: var(--font-size-body-sm);
-  }
-
-  .card__price {
-    font-size: var(--font-size-body-sm);
   }
 }

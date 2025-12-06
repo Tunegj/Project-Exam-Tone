@@ -28,10 +28,10 @@
 }
 
 .card__body {
-  padding: 0.85rem 0.9rem 1rem;
+  padding: var(--space-sm) var(--space-sm) var(--space-md);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: var(--space-xs);
 }
 
 .card__title {
@@ -43,7 +43,7 @@
 .card__prices {
   display: flex;
   align-items: baseline;
-  gap: 0.35rem;
+  gap: var(--space-xs);
 }
 
 .card__price {
@@ -60,4 +60,26 @@
 .card__rating {
   font-size: var(--font-size-caption);
   color: var(--color-text-muted);
+}
+
+@media (width >= 768px) {
+  .card__title {
+    font-size: var(--font-size-body-sm);
+  }
+
+  .card__price {
+    font-size: var(--font-size-body-sm);
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .product-card {
+    transition: none;
+  }
+
+  .product-card:hover,
+  .product-card:focus-within {
+    transform: none;
+  }
 }

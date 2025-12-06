@@ -1,9 +1,15 @@
+/* ------------------------------------------------------------
+   Register Page Layout
+------------------------------------------------------------ */
 .register-page {
-  max-width: 1100px;
+  max-width: var(--layout-content-width-narrow);
   margin-inline: auto;
-  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  padding: var(--space-xl) var(--layout-page-padding-x-mobile) var(--space-2xl);
 }
 
+/* ------------------------------------------------------------
+   Register Card
+------------------------------------------------------------ */
 .register {
   background-color: var(--color-bg-surface);
   padding: var(--space-xl) var(--space-lg);
@@ -19,6 +25,9 @@
   font-size: var(--font-size-h2-mobile);
 }
 
+/* ------------------------------------------------------------
+   Form Layout & Fields
+------------------------------------------------------------ */
 .register form {
   display: flex;
   flex-direction: column;
@@ -47,16 +56,19 @@
   outline-offset: var(--focus-ring-offset);
 }
 
+/* ------------------------------------------------------------
+   Form & Field Error Messages
+------------------------------------------------------------ */
 .form-error {
   min-height: 1.1em;
   font-size: var(--font-size-caption);
-  color: var(--color-error-text, var(--color-error));
+  color: var(--color-error-text);
 }
 
 .register form input[aria-invalid="true"] {
-  border-color: var(--color-error);
-  background-color: rgba(228, 158, 158, 0.06);
-  box-shadow: 0 0 0 1px rgba(228, 158, 158, 0.06);
+  border-color: var(--color-error-border);
+  background-color: var(--color-error-bg);
+  box-shadow: 0 0 0 1px var(--color-error-border);
 }
 
 .register-message {
@@ -65,25 +77,33 @@
 }
 
 .register-message[data-type="error"] {
-  color: var(--color-error);
+  color: var(--color-error-text);
 }
 
 .register-message[data-type="success"] {
   color: var(--color-primary);
 }
 
-.register button {
-  padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-pill);
-  border: none;
-  cursor: pointer;
-
+/* ------------------------------------------------------------
+   Primary & Secondary Buttons
+------------------------------------------------------------ */
+/* Base button style for all buttons */
+.register button,
+.guest-btn {
   font-family: var(--font-family-body);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-size: var(--font-size-body-sm-mobile);
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+}
 
+/* Primary action – submit registration */
+.register button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
   background-color: var(--color-button-primary-bg);
   color: var(--color-button-primary-text);
   box-shadow: var(--shadow-soft);
@@ -91,29 +111,46 @@
     box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
-.register button:hover {
+.register button[type="submit"]:hover {
   box-shadow: var(--shadow-soft-hover);
   transform: translateY(-1px);
 }
 
-.register button:active {
+.register button[type="submit"]:active:not(:disabled) {
   transform: translateY(0);
   box-shadow: none;
 }
 
-.register button[type="button"] {
+.register button[type="submit"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+/* Secondary action – cancel registration */
+.guest-btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  text-align: center;
+  margin-top: var(--space-xs);
   background-color: transparent;
   border: 1px solid var(--color-border-soft);
   color: var(--color-text-muted);
+  box-shadow: none;
+  transition: border-color var(--transition-fast), color var(--transition-fast),
+    box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
-.register button[type="button"]:hover {
+.guest-btn:hover,
+.guest-btn:focus-visible {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  box-shadow: none;
-  transform: none;
 }
 
+/* ------------------------------------------------------------
+   Alternate Actions ("Already have an account?" / "Go to login")
+------------------------------------------------------------ */
 .login-alt,
 .register-alt {
   margin-top: var(--space-sm);
@@ -131,6 +168,37 @@
 }
 
 .login-alt__link:hover,
-.register-alt__link:hover {
+.register-alt__link:hover,
+.login-alt__link:focus-visible,
+.register-alt__link:focus-visible {
   color: var(--color-primary-500);
+}
+
+/* ------------------------------------------------------------
+   Breakpoints
+------------------------------------------------------------ */
+@media (width >= 768px) {
+  .register-page {
+    padding-inline: var(--layout-page-padding-x);
+  }
+
+  .register h1 {
+    font-size: var(--font-size-h2);
+  }
+
+  .register form label,
+  .register form input,
+  .register-message {
+    font-size: var(--font-size-body-sm);
+  }
+}
+
+@media (width >= 1024px) {
+  .register-page {
+    padding-block: var(--space-2xl);
+  }
+
+  .register {
+    padding: var(--space-2xl);
+  }
 }

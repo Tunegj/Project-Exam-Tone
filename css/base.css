@@ -1,18 +1,28 @@
-* {
+/* Reset default margin and padding for all elements */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html,
+/* Root & document */
+html {
+  min-height: 100%;
+  scroll-behavior: smooth;
+}
+
 body {
+  min-height: 100vh;
   background-color: var(--color-bg-body);
-}
-
-body {
+  color: var(--color-text-main);
   font-family: var(--font-family-body);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-regular);
 }
 
+/* Typography */
 h1,
 h2,
 h3,
@@ -20,4 +30,83 @@ h4,
 h5,
 h6 {
   font-family: var(--font-family-heading);
+  color: var(--color-text-main);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Mobile first typography */
+h1 {
+  font-size: var(--font-size-h1-mobile);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-md);
+}
+
+h2 {
+  font-size: var(--font-size-h2-mobile);
+  line-height: var(--line-height-snug);
+  margin-bottom: var(--space-sm);
+}
+
+h3 {
+  font-size: var(--font-size-h3-mobile);
+  line-height: var(--line-height-snug);
+  margin-bottom: var(--space-xs);
+}
+
+p {
+  margin-bottom: var(--space-sm);
+}
+
+@media (width >= 768px) {
+  h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  h2 {
+    font-size: var(--font-size-h2);
+  }
+
+  h3 {
+    font-size: var(--font-size-h3);
+  }
+}
+
+/* Media elements */
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color var(--transition-fast);
+}
+
+a:hover {
+  text-decoration-color: var(--color-primary);
+}
+
+/* Form elements */
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Focus outlines – design token based */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }

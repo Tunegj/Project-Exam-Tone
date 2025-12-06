@@ -1,8 +1,16 @@
+/* ------------------------------------------------------------
+   Success Page Layout
+------------------------------------------------------------ */
+
 .success-page {
-  max-width: 1100px;
+  max-width: var(--layout-content-width-narrow);
   margin-inline: auto;
-  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  padding: var(--space-xl) var(--layout-page-padding-x-mobile) var(--space-2xl);
 }
+
+/* ------------------------------------------------------------
+   Success Card
+------------------------------------------------------------ */
 
 .success-card {
   background-color: var(--color-bg-surface);
@@ -14,6 +22,7 @@
   gap: var(--space-lg);
 }
 
+/* Icon circle */
 .success-card__icon {
   width: 3rem;
   height: 3rem;
@@ -40,6 +49,10 @@
   color: var(--color-text-muted);
 }
 
+/* ------------------------------------------------------------
+   Order Meta
+------------------------------------------------------------ */
+
 .success-meta__grid {
   display: grid;
   gap: var(--space-xs);
@@ -54,6 +67,10 @@
 .success-meta__row dt {
   color: var(--color-text-muted);
 }
+
+/* ------------------------------------------------------------
+   Items List
+------------------------------------------------------------ */
 
 .success-items__title {
   font-family: var(--font-family-heading);
@@ -91,6 +108,7 @@
   font-style: italic;
 }
 
+/* Summary rows (subtotal, shipping, total */
 .success-items__row {
   display: flex;
   justify-content: space-between;
@@ -101,6 +119,10 @@
   font-weight: var(--font-weight-semibold);
   margin-top: var(--space-xs);
 }
+
+/* ------------------------------------------------------------
+   Action Buttons
+------------------------------------------------------------ */
 
 .success-actions {
   display: flex;
@@ -129,29 +151,60 @@
     border-color var(--transition-fast);
 }
 
+/* Continue shopping */
 .btn-secondary {
   background-color: transparent;
   color: var(--color-primary);
   border-color: var(--color-border-soft);
 }
 
-.btn-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.02);
+.btn-secondary:hover,
+.btn-secondary:focus-visible {
+  background-color: rgb(0, 0, 0 / 2%);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
 }
 
+/* Logout */
 .btn-logout {
-  background-color: rgba(228, 158, 158, 0.08);
-  color: var(--color-error-text, var(--color-error));
-  border-color: rgba(228, 158, 158, 0.5);
+  background-color: rgb(211 156 156 / 8%);
+  color: var(--color-error-text);
+  border-color: rgb(211 156 156 / 50%);
 }
 
-.btn-logout:hover {
-  background-color: rgba(228, 158, 158, 0.16);
+.btn-logout:hover,
+.btn-logout:focus-visible {
+  background-color: rgb(211 156 156 / 16%);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-soft-hover);
 }
 
-@media (min-width: 900px) {
+.btn-secondary:focus-visible,
+.btn-logout:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ------------------------------------------------------------
+   Breakpoints – Pad / Tablet (>= 768px)
+------------------------------------------------------------ */
+
+@media (width >= 768px) {
+  .success-page {
+    padding-inline: var(--layout-page-padding-x);
+  }
+}
+
+/* ------------------------------------------------------------
+   Breakpoints – Desktop (>= 1200px)
+------------------------------------------------------------ */
+
+@media (width >= 1024px) {
+  .success-page {
+    max-width: var(--layout-max-width);
+    padding-inline: 0;
+  }
+
   .success-card {
     padding-inline: var(--space-xl);
   }
@@ -161,9 +214,19 @@
   }
 }
 
-@media (min-width: 1200px) {
-  .success-page {
-    max-width: 1200px;
-    padding-inline: 0;
+/* ------------------------------------------------------------
+   Motion Preferences
+------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-secondary,
+  .btn-logout {
+    transition: none;
+  }
+
+  .btn-secondary:hover,
+  .btn-logout:hover {
+    transform: none;
+    box-shadow: none;
   }
 }

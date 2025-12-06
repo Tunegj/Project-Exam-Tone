@@ -2,7 +2,7 @@ import { loadUser, saveUser } from "../utils/user-helpers.js";
 import { validateUserProfile } from "../utils/validators.js";
 import {
   setupFieldAccessibility,
-  clearFormErrors,
+  clearFieldErrors,
   applyFieldErrors,
 } from "../utils/form-helpers.js";
 
@@ -99,7 +99,7 @@ function handleSubmit(event) {
   event.preventDefault();
   if (!dom.form) return;
 
-  clearFormErrors(dom.form);
+  clearFieldErrors(dom.form);
 
   const profile = buildProfileFromForm();
 
@@ -159,7 +159,7 @@ function attachFieldListeners() {
 
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
-      clearFormErrors(dom.form);
+      clearFieldErrors(dom.form);
       if (dom.message && dom.message.dataset.type === "error") {
         showMessage("");
       }

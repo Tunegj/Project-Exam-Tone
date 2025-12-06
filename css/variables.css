@@ -8,7 +8,7 @@
   --color-section-500: #e9dbce;
 
   /* Neutral/ text */
-  --color-neutral-0: #ffffff;
+  --color-neutral-0: #fff;
   --color-neutral-900: #2b2b2b;
 
   /* Status colors */
@@ -26,16 +26,20 @@
   --color-text-on-accent: var(--color-neutral-900);
 
   /* borders */
-  --color-border-soft: rgba(0, 0, 0, 0.06);
-  --color-border-strong: rgba(0, 0, 0, 0.12);
+  --color-border-soft: rgb(0, 0, 0, 0.06);
+  --color-border-strong: rgb(0, 0, 0, 0.12);
 
   /* buttons */
   --color-button-primary-bg: var(--color-primary-500);
   --color-button-primary-text: var(--color-neutral-0);
+  --color-button-primary-bg-hover: #5a6b62;
+  --color-button-primary-bg-disabled: #a7b4ad;
 
   --color-button-secondary-bg: var(--color-card-500);
   --color-button-secondary-text: var(--color-primary-500);
   --color-button-secondary-border: var(--color-primary-500);
+  --color-button-secondary-bg-hover: #efe3d8;
+  --color-button-secondary-text-disabled: #a0a0a0;
 
   /* tags */
   --color-tag-bg: var(--color-accent-500);
@@ -43,7 +47,8 @@
 
   /* error */
   --color-error-bg: #fdecec;
-  --color-error-text: var(--color-error-500);
+  --color-error-text: #b24c4c;
+  --color-error-border: var(--color-error-500);
 
   /* fonts */
   --font-family-heading: "playfair display", serif;
@@ -91,12 +96,12 @@
   --radius-pill: 999px;
 
   /* shadows */
-  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --shadow-soft-hover: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-card: 0 18px 45px rgba(0, 0, 0, 0.06);
+  --shadow-soft: 0 2px 8px rgb(0, 0, 0, 0.15);
+  --shadow-soft-hover: 0 4px 16px rgb(0, 0, 0, 0.2);
+  --shadow-card: 0 18px 45px rgb(0, 0, 0, 0.06);
 
   /* focus outlines */
-  --focus-ring-color: rgba(104, 122, 111, 0.6);
+  --focus-ring-color: rgb(104, 122, 111, 0.6);
   --focus-ring-width: 2px;
   --focus-ring-offset: 2px;
 
@@ -110,4 +115,19 @@
   --color-secondary: var(--color-secondary-500);
   --color-accent: var(--color-accent-500);
   --color-error: var(--color-error-500);
+
+  /* layout */
+  --layout-max-width: 1200px;
+  --layout-content-width-narrow: 720px;
+  --layout-page-padding-x: var(--space-xl);
+  --layout-page-padding-x-mobile: var(--space-md);
+
+  /* breakpoints */
+  --bp-pad: 768px; /* tablets, small laptops */
+  --bp-desktop: 1024px; /* full desktop layout */
+
+  /* z-index */
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
 }

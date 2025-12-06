@@ -1,13 +1,14 @@
-body {
-  background-color: var(--color-bg-body);
-}
+/* ------------------------------------------------------------
+   Checkout Page Layout
+------------------------------------------------------------ */
 
 .checkout-page {
-  max-width: 1100px;
+  max-width: var(--layout-max-width);
   margin-inline: auto;
-  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  padding: var(--space-xl) var(--layout-page-padding-x-mobile) var(--space-2xl);
 }
 
+/* Page title + helper text */
 .checkout-page__title {
   font-family: var(--font-family-heading);
   font-size: var(--font-size-h2-mobile);
@@ -21,6 +22,7 @@ body {
   margin-bottom: var(--space-xs);
 }
 
+/* Global status */
 .checkout-page__status {
   min-height: 1.4em;
   font-size: var(--font-size-body-sm-mobile);
@@ -28,17 +30,22 @@ body {
 }
 
 .checkout-page__status[data-tone="error"] {
-  color: var(--color-error-text, var(--color-error));
+  color: var(--color-error-text);
 }
 
 .checkout-page__status[data-tone="success"] {
   color: var(--color-primary);
 }
 
+/* Page layout - form + summary */
 .checkout-page__layout {
   display: grid;
   gap: var(--space-xl);
 }
+
+/* ------------------------------------------------------------
+   Checkout Form
+------------------------------------------------------------ */
 
 .checkout-form {
   background-color: var(--color-bg-surface);
@@ -50,12 +57,14 @@ body {
   gap: var(--space-lg);
 }
 
+/* Section headings inside form */
 .checkout-section__title {
   font-family: var(--font-family-heading);
   font-size: var(--font-size-h3-mobile);
   margin-bottom: var(--space-sm);
 }
 
+/* Form fields */
 .form-field {
   display: flex;
   flex-direction: column;
@@ -67,9 +76,10 @@ body {
   font-size: var(--font-size-body-sm-mobile);
   font-weight: var(--font-weight-medium);
 }
-
+/* Shared field input styles */
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.payment-billing__fields input {
   font-family: var(--font-family-body);
   font-size: var(--font-size-body-sm-mobile);
   padding: 0.55rem 0.75rem;
@@ -78,6 +88,7 @@ body {
   background-color: var(--color-bg-body);
 }
 
+/* Focus styles */
 .form-field input:focus-visible,
 .form-field textarea:focus-visible,
 .payment-billing__fields input:focus-visible {
@@ -94,8 +105,12 @@ body {
 .form-error {
   min-height: 1.1em;
   font-size: var(--font-size-caption);
-  color: var(--color-error-text, var(--color-error));
+  color: var(--color-error-text);
 }
+
+/* ------------------------------------------------------------
+   Payment Details
+------------------------------------------------------------ */
 
 .payment-method {
   display: flex;
@@ -120,6 +135,10 @@ body {
   width: 3.5rem;
 }
 
+/*------------------------------------------------------------
+   Billing Section
+------------------------------------------------------------ */
+
 .payment-billing {
   margin-top: var(--space-md);
 }
@@ -134,13 +153,11 @@ body {
   display: grid;
   gap: var(--space-xs);
   margin-top: var(--space-xs);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-body-sm-mobile);
-  padding: 0.55rem 0.75rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-soft);
-  background-color: var(--color-bg-body);
 }
+
+/* ------------------------------------------------------------
+   Pay Button & Summary
+------------------------------------------------------------ */
 
 .pay-btn {
   align-self: center;
@@ -168,10 +185,24 @@ body {
   transform: translateY(-1px);
 }
 
-.pay-btn:active {
+.pay-btn:active:not(:disabled) {
   box-shadow: none;
   transform: translateY(0);
 }
+
+.pay-btn:disabled {
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.pay-btn:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* ------------------------------------------------------------
+   Checkout Summary
+------------------------------------------------------------ */
 
 .checkout-summary {
   background-color: var(--color-bg-surface);
@@ -179,7 +210,7 @@ body {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   align-self: flex-start;
-  min-width: 300px;
+  min-width: 280px;
 }
 
 .checkout-summary__title {
@@ -188,6 +219,7 @@ body {
   margin-bottom: var(--space-sm);
 }
 
+/* Items list */
 .checkout-summary__list {
   list-style: none;
   display: flex;
@@ -198,7 +230,7 @@ body {
 
 .checkout-item {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: var(--space-xs);
   font-size: var(--font-size-body-sm-mobile);
 }
@@ -212,6 +244,7 @@ body {
   text-align: right;
 }
 
+/* Totals section */
 .checkout-summary__totals {
   display: flex;
   flex-direction: column;
@@ -229,9 +262,42 @@ body {
   margin-top: var(--space-xs);
 }
 
-@media (min-width: 900px) {
+/* ------------------------------------------------------------
+   Breakpoints – Pad / Tablet (>= 768px)
+------------------------------------------------------------ */
+
+@media (width >= 768px) {
+  .checkout-page {
+    padding-inline: var(--layout-page-padding-x);
+  }
+
+  .checkout-page__title {
+    font-size: var(--font-size-h2);
+  }
+
+  .checkout-page__help,
+  .checkout-page__status,
+  .form-field label,
+  .form-field input,
+  .form-field textarea,
+  .payment-billing__fields input,
+  .checkout-summary__row,
+  .checkout-item {
+    font-size: var(--font-size-body-sm);
+  }
+}
+
+/* ------------------------------------------------------------
+   Breakpoints – Desktop (>= 1024px)
+------------------------------------------------------------ */
+
+@media (width >= 1024px) {
+  .checkout-page {
+    padding-inline: 0;
+  }
+
   .checkout-page__layout {
-    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1.1fr);
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1.1fr);
     align-items: flex-start;
     gap: var(--space-xl);
   }
@@ -240,5 +306,20 @@ body {
     position: sticky;
     top: var(--space-xl);
     max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------
+   Motion Preferences
+------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .pay-btn {
+    transition: none;
+  }
+
+  .pay-btn:hover {
+    transform: none;
+    box-shadow: var(--shadow-soft);
   }
 }

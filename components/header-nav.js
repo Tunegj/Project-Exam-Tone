@@ -31,7 +31,7 @@ function handleLogout() {
 
   updateCartCount();
 
-  window.location.href = "./account/login.html";
+  window.location.href = "../account/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -63,7 +63,7 @@ function wireAuthLink(root) {
       });
     } else {
       cleanLink.textContent = "Log in / Register";
-      cleanLink.href = "./account/login.html";
+      cleanLink.href = "../account/login.html";
     }
   });
 }
@@ -160,7 +160,7 @@ function buildCategoryListHtml(groups, itemClass) {
   return Object.keys(groups)
     .map(
       (group) => `<li class="${itemClass}">
-          <a href="./products-page.html?group=${encodeURIComponent(
+          <a href="../products-page.html?group=${encodeURIComponent(
             group.toLowerCase()
           )}">
             ${group}

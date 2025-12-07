@@ -5,6 +5,22 @@ const USER_KEY = "mirae-user";
  * @returns {Object||null} The user profile or null if not foud/invalid.
  */
 
+export function testAdminLogin() {
+  const existing = loadUser();
+  if (existing) return;
+
+  const adminUser = {
+    firstName: "Admin",
+    lastName: "User",
+    email: "admin@stud.noroff.no",
+    password: "admin1234",
+  };
+
+  saveUser(adminUser);
+}
+
+testAdminLogin();
+
 export function loadUser() {
   try {
     const raw = localStorage.getItem(USER_KEY);

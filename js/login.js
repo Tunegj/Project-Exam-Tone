@@ -1,4 +1,4 @@
-import { loadUser } from "../utils/user-helpers.js";
+import { loadUser, saveUser, testAdminLogin } from "../utils/user-helpers.js";
 import { isEmail } from "../utils/validators.js";
 import { saveAuthToken } from "../utils/auth.js";
 import {
@@ -207,3 +207,4 @@ function startLoginPage() {
 }
 
 startLoginPage();
+testAdminLogin();

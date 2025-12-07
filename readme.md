@@ -3,8 +3,6 @@
 MIRAE is a responsive e-commerce web application built for the Noroff Project Exam. It allows users to browse products, view details, add items to a cart, and complete a mock checkout flow using data from the Noroff Online Shop API.
 
 📸 Screenshot
-Add a screenshot of your project here (you can drag an image into GitHub or link it).
-
 Project Screenshot
 ![MIRAE Screenshot](./assets/Skjermbilde%202025-12-07%20210741.png)
 
@@ -18,7 +16,7 @@ Project Screenshot
 - **Figma** – high-fidelity desktop and mobile prototypes
 - **GitHub Pages** – deployment
 
-## ✨ Features
+## Features
 
 - Product listing page with cards, tags, and pricing
 - Product detail pages with full information and “Add to cart”

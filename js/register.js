@@ -3,7 +3,6 @@ import { validateUserProfile } from "../utils/validators.js";
 import {
   setupFieldAccessibility,
   clearFieldErrors,
-  applyFieldErrors,
 } from "../utils/form-helpers.js";
 
 /**
@@ -41,6 +40,21 @@ const dom = {
   password: document.querySelector("[data-register-password]"),
   confirmPassword: document.querySelector("[data-register-confirm-password]"),
   message: document.querySelector("[data-register-message]"),
+};
+
+const domErrors = {
+  firstName: document.querySelector('[data-register-error="firstName"]'),
+  lastName: document.querySelector('[data-register-error="lastName"]'),
+  email: document.querySelector('[data-register-error="email"]'),
+  phone: document.querySelector('[data-register-error="phone"]'),
+  address1: document.querySelector('[data-register-error="address1"]'),
+  postalCode: document.querySelector('[data-register-error="zip"]'),
+  city: document.querySelector('[data-register-error="city"]'),
+  country: document.querySelector('[data-register-error="country"]'),
+  password: document.querySelector('[data-register-error="password"]'),
+  confirmPassword: document.querySelector(
+    '[data-register-error="confirmPassword"]'
+  ),
 };
 
 /**
@@ -91,6 +105,114 @@ function prefillIfUserExists() {
 }
 
 /**
+ * Clears all inline error messages and aria-invalid flags.
+ */
+function clearInlineErrors() {
+  Object.values(domErrors).forEach((el) => {
+    if (!el) return;
+    el.textContent = "";
+    el.dataset.type = "";
+  });
+
+  const inputs = [
+    dom.firstName,
+    dom.lastName,
+    dom.email,
+    dom.phone,
+    dom.address1,
+    dom.postalCode,
+    dom.city,
+    dom.country,
+    dom.password,
+    dom.confirmPassword,
+  ];
+
+  inputs.forEach((input) => {
+    if (!input) return;
+    input.removeAttribute("aria-invalid");
+  });
+}
+
+/**
+ * Returns the input element for a given field key.
+ * @param {string} key
+ * @returns {HTMLInputElement|null}
+ */
+function getInputForField(key) {
+  switch (key) {
+    case "firstName":
+      return dom.firstName;
+    case "lastName":
+      return dom.lastName;
+    case "email":
+      return dom.email;
+    case "phone":
+      return dom.phone;
+    case "address1":
+      return dom.address1;
+    case "postalCode":
+      return dom.postalCode;
+    case "city":
+      return dom.city;
+    case "country":
+      return dom.country;
+    case "password":
+      return dom.password;
+    case "confirmPassword":
+      return dom.confirmPassword;
+    default:
+      return null;
+  }
+}
+
+/**
+ * Applies inline error messages under inputs.
+ * Uses the keys from the `errors` object and returns the first invalid input.
+ *
+ * @param {Record<string,string>} errors
+ * @returns {HTMLInputElement|null}
+ */
+function applyInlineErrors(errors) {
+  /** @type {HTMLInputElement|null} */
+  let firstInvalid = null;
+
+  const fieldOrder = [
+    "firstName",
+    "lastName",
+    "email",
+    "phone",
+    "address1",
+    "postalCode",
+    "city",
+    "country",
+    "password",
+    "confirmPassword",
+  ];
+
+  fieldOrder.forEach((key) => {
+    const message = errors[key];
+    if (!message) return;
+
+    const errorEl = domErrors[key];
+    const input = getInputForField(key);
+
+    if (errorEl) {
+      errorEl.textContent = message;
+      errorEl.dataset.type = "error";
+    }
+
+    if (input) {
+      input.setAttribute("aria-invalid", "true");
+      if (!firstInvalid) {
+        firstInvalid = input;
+      }
+    }
+  });
+
+  return firstInvalid;
+}
+
+/**
  * Handle the register form submission:
  * validates profile + password, shows errors, and saves the user on success.
  * @param {SubmitEvent} event - The form submit event.
@@ -100,6 +222,8 @@ function handleSubmit(event) {
   if (!dom.form) return;
 
   clearFieldErrors(dom.form);
+  clearInlineErrors();
+  showMessage("");
 
   const profile = buildProfileFromForm();
 
@@ -131,7 +255,7 @@ function handleSubmit(event) {
   }
 
   if (Object.keys(errors).length > 0) {
-    const firstInvalid = applyFieldErrors(dom.form, errors);
+    const firstInvalid = applyInlineErrors(errors);
     showMessage("Please fix the errors and try again", "error");
     if (firstInvalid && typeof firstInvalid.focus === "function") {
       firstInvalid.focus();
@@ -160,6 +284,8 @@ function attachFieldListeners() {
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
       clearFieldErrors(dom.form);
+      clearInlineErrors();
+
       if (dom.message && dom.message.dataset.type === "error") {
         showMessage("");
       }

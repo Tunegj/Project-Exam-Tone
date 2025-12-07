@@ -148,7 +148,7 @@ function handleSubmit(event) {
   showMessage("Account created! Redirecting to login...", "success");
 
   setTimeout(() => {
-    window.location.href = "../account/login.html";
+    window.location.href = "./account/login.html";
   }, 2000);
 }
 

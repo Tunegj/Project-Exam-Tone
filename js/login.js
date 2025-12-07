@@ -114,7 +114,7 @@ function handleSubmit(event) {
   setMessage("Login successful! Redirecting...", "success");
 
   setTimeout(() => {
-    window.location.href = "../index.html";
+    window.location.href = "./index.html";
   }, 800);
 }
 

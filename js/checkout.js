@@ -55,7 +55,7 @@ let lastTotals = {
  * This check runs immediately when the script loads.
  */
 if (!isLoggedIn()) {
-  window.location.href = "../account/login.html";
+  window.location.href = "./account/login.html";
 } else {
   startCheckout();
 }
@@ -312,7 +312,7 @@ function attachFormHandler(cart) {
     updateCartCount();
     setStatus("Order placed successfully!", "success");
 
-    window.location.href = `success.html?orderId=${encodeURIComponent(
+    window.location.href = `./success.html?orderId=${encodeURIComponent(
       order.id
     )}`;
   });

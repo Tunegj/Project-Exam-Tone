@@ -245,7 +245,7 @@ function initCarouselAddToCart() {
     if (!button) return;
 
     if (!isLoggedIn()) {
-      window.location.href = "../account/login.html";
+      window.location.href = "./account/login.html";
       return;
     }
 

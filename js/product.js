@@ -145,7 +145,7 @@ function renderReviews(product) {
   const productId = product?.id;
 
   if (reviewLink && productId) {
-    reviewLink.href = `/review.html?id=${encodeURIComponent(productId)}`;
+    reviewLink.href = `./review.html?id=${encodeURIComponent(productId)}`;
   }
 
   if (countEl) {
@@ -287,7 +287,7 @@ function renderProduct(product) {
   }
 
   if (dom.reviewLink && product?.id) {
-    dom.reviewLink.href = `/review.html?id=${encodeURIComponent(product.id)}`;
+    dom.reviewLink.href = `./review.html?id=${encodeURIComponent(product.id)}`;
   }
 
   renderTags(product);
@@ -384,7 +384,7 @@ function setupAddToCart(product) {
 
   dom.addToCartBtn.addEventListener("click", () => {
     if (!isLoggedIn()) {
-      window.location.href = "../account/login.html";
+      window.location.href = "./account/login.html";
       return;
     }
 

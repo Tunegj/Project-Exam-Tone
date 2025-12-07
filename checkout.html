@@ -143,18 +143,21 @@
             <div class="form-field">
               <label for="card-name">Name of cardholder:</label>
               <input type="text" id="card-name" name="cardName" class="card-name" autocomplete="cc-name">
+              <p class="form-error" data-error-for="cardName" aria-live="assertive"></p>
             </div>
 
             <div class="form-field">
               <label for="card-number">Card number:</label>
               <input type="text" name="cardNumber" id="card-number" class="card-number" autocomplete="cc-number"
                 inputmode="numeric">
+              <p class="form-error" data-error-for="cardNumber" aria-live="assertive"></p>
             </div>
 
             <div class="form-field">
               <label for="card-cvc">CVC:</label>
-              <input type="text" id="card-cvc" class="card-cvc" name="cardCvc" autocomplete="cc-csc"
+              <input type="text" id="card-cvc" class="card-cvc" name="cardCVC" autocomplete="cc-csc"
                 inputmode="numeric">
+              <p class="form-error" data-error-for="cardCVC" aria-live="assertive"></p>
             </div>
 
             <div class="payment-details__row">
@@ -166,6 +169,7 @@
                   <input type="text" id="card-exp-year" name="cardExpYear" class="card-exp__year"
                     autocomplete="cc-exp-year" placeholder="YY" inputmode="numeric">
                 </div>
+                <p class="form-error" data-error-for="cardExpMonth" aria-live="assertive"></p>
               </div>
             </div>
           </div>
@@ -215,6 +219,9 @@
       </aside>
     </div>
   </main>
+  <footer class="site-footer">
+    <p>© 2025 MIRAE</p>
+  </footer>
 </body>
 
 </html>

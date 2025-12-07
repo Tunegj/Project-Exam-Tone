@@ -23,6 +23,12 @@ const dom = {
   city: document.querySelector("[data-checkout-city]"),
   country: document.querySelector("[data-checkout-country]"),
 
+  cardName: document.querySelector("[name=cardName]"),
+  cardNumber: document.querySelector("[name=cardNumber]"),
+  cardExpMonth: document.querySelector("[name=cardExpMonth]"),
+  cardExpYear: document.querySelector("[name=cardExpYear]"),
+  cardCVC: document.querySelector("[name=cardCVC]"),
+
   billingSameAsDelivery: document.querySelector("#billing-same-as-delivery"),
   billingName: document.querySelector("[name=billingName]"),
   billingStreet: document.querySelector("[name=billingStreet]"),
@@ -274,7 +280,18 @@ function attachFormHandler(cart) {
       country: dom.country?.value.trim() || "",
     };
 
+    const payment = {
+      cardName: dom.cardName?.value.trim() || "",
+      cardNumber: dom.cardNumber?.value.trim() || "",
+      cardExpMonth: dom.cardExpMonth?.value.trim() || "",
+      cardExpYear: dom.cardExpYear?.value.trim() || "",
+      cardCVC: dom.cardCVC?.value.trim() || "",
+    };
+
     const errors = validateUserProfile(profile);
+
+    const paymentErrors = validatePaymentDetails(payment);
+    Object.assign(errors, paymentErrors);
 
     clearFieldErrors();
 
@@ -316,6 +333,38 @@ function attachFormHandler(cart) {
       order.id
     )}`;
   });
+}
+
+function validatePaymentDetails(payment) {
+  const errors = {};
+
+  if (!payment.cardName.trim()) {
+    errors.cardName = "Cardholder name is required.";
+  }
+
+  const rawNumber = payment.cardNumber.replace(/\s+/g, "");
+  if (!rawNumber) {
+    errors.cardNumber = "Card number is required.";
+  } else if (!/^\d{12,19}$/.test(rawNumber)) {
+    errors.cardNumber = "Please enter a valid card number.";
+  }
+
+  if (!payment.cardCVC.trim()) {
+    errors.cardCVC = "CVC is required.";
+  } else if (!/^\d{3,4}$/.test(payment.cardCVC)) {
+    errors.cardCVC = "Please enter a valid CVC.";
+  }
+
+  const month = payment.cardExpMonth.trim();
+  const year = payment.cardExpYear.trim();
+  if (!month || !/^(0?[1-9]|1[0-2])$/.test(month)) {
+    errors.cardExpMonth = "Please enter a valid expiration month.";
+  }
+  if (!year || !/^\d{2}$/.test(year)) {
+    errors.cardExpYear = "Please enter a valid expiration year.";
+  }
+
+  return errors;
 }
 
 /**

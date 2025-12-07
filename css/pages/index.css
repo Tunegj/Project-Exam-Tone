@@ -97,7 +97,7 @@
 .slide__content {
   width: 100%;
   max-width: 22rem;
-  color: var(--color-text-on-primary);
+  color: var(--color-text-on-accent);
   text-align: center;
 }
 
@@ -257,7 +257,7 @@
   height: 0.55rem;
   border-radius: var(--radius-pill);
   border: none;
-  background-color: rgb(0, 0, 0 / 18%);
+  background-color: var(--color-primary);
   cursor: pointer;
   padding: 0;
   transition: width var(--transition-fast),

@@ -281,6 +281,6 @@ function setupLogout() {
     clearUser();
     clearCart();
     updateCartCount();
-    window.location.href = "./account/login.html";
+    window.location.href = "/Project-Exam-Tone/account/login.html";
   });
 }

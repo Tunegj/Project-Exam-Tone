@@ -214,6 +214,9 @@ function setupFormSubmit() {
     setMessage("Thank you for your review!", "success");
 
     dom.form.reset();
+    setTimeout(() => {
+      window.location.href = "/Project-Exam-Tone/index.html";
+    }, 2000);
 
     if (dom.starsWrapper) {
       const activeStars = dom.starsWrapper?.querySelectorAll(".star--active");

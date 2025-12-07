@@ -36,7 +36,7 @@ function handleLogout() {
 
   updateCartCount();
 
-  window.location.href = "../account/login.html";
+  window.location.href = "/Project-Exam-Tone/account/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
  * @param {HTMLElement} root - The header root element (mount).
  */
 function wireAuthLink(root = document) {
-  const links = root.querySelector("[data-auth-link]");
+  const links = root.querySelectorAll("[data-auth-link]");
   if (!links.length) return;
 
   const loggedIn = isLoggedIn();

@@ -82,7 +82,7 @@ async function initHeader() {
   if (!mount) return;
 
   // 1) Inject the partial first
-  const res = await fetch("./partials/header.html");
+  const res = await fetch("./partials/header-nav.html");
   if (!res.ok) throw new Error("Failed to load header partial");
 
   mount.innerHTML = await res.text();

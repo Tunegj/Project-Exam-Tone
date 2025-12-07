@@ -4,7 +4,6 @@ import { saveAuthToken } from "../utils/auth.js";
 import {
   setupFieldAccessibility,
   clearFieldErrors,
-  applyFieldErrors,
 } from "../utils/form-helpers.js";
 
 /**
@@ -28,6 +27,11 @@ const dom = {
   message: document.querySelector("[data-login-message]"),
 };
 
+const domErrors = {
+  email: document.querySelector('[data-login-error="email"]'),
+  password: document.querySelector('[data-login-error="password"]'),
+};
+
 /**
  * Set the global login message shown above/below the form.
  * Used for success, error and neutral info messages.
@@ -41,6 +45,53 @@ function setMessage(text, type = "info") {
 }
 
 /**
+ * Clear all inline field error messages and states.
+ */
+function clearInlineErrors() {
+  Object.values(domErrors).forEach((el) => {
+    if (!el) return;
+    el.textContent = "";
+    el.dataset.type = "";
+  });
+
+  if (dom.email) {
+    dom.email.removeAttribute("aria-invalid");
+  }
+
+  if (dom.password) {
+    dom.password.removeAttribute("aria-invalid");
+  }
+}
+
+/**
+ * Apply inline error messages to the respective fields.
+ *
+ * @param {Record<string, string>} errors
+ * @returns {HTMLInputElement||null} - The first invalid input element, or null if none.
+ */
+function applyInlineErrors(errors) {
+  let firstInvalid = null;
+
+  if (errors.email && domErrors.email && dom.email) {
+    domErrors.email.textContent = errors.email;
+    domErrors.email.dataset.type = "error";
+    dom.email.setAttribute("aria-invalid", "true");
+    firstInvalid = dom.email;
+  }
+
+  if (errors.password && domErrors.password && dom.password) {
+    domErrors.password.textContent = errors.password;
+    domErrors.password.dataset.type = "error";
+    dom.password.setAttribute("aria-invalid", "true");
+    if (!firstInvalid) {
+      firstInvalid = dom.password;
+    }
+  }
+
+  return firstInvalid;
+}
+
+/**
  * Handle the login form submission.
  * Validates input, checks stored user data, and redirects on success.
  *
@@ -49,7 +100,10 @@ function setMessage(text, type = "info") {
 function handleSubmit(event) {
   event.preventDefault();
 
+  if (!dom.form) return;
+
   clearFieldErrors(dom.form);
+  clearInlineErrors();
   setMessage("");
 
   const email = dom.email?.value.trim().toLowerCase() || "";
@@ -73,7 +127,7 @@ function handleSubmit(event) {
   }
 
   if (Object.keys(errors).length > 0) {
-    const firstInvalid = applyFieldErrors(dom.form, errors);
+    const firstInvalid = applyInlineErrors(errors);
     setMessage("Please fix the errors and try again.", "error");
 
     if (firstInvalid && typeof firstInvalid.focus === "function") {
@@ -96,11 +150,11 @@ function handleSubmit(event) {
       password: "Email or password is incorrect.",
     };
 
-    applyFieldErrors(dom.form, authErrors);
+    const firstInvalid = applyInlineErrors(authErrors);
     setMessage("Login failed, please try again.", "error");
 
-    if (dom.email) {
-      dom.email.focus();
+    if (firstInvalid && typeof firstInvalid.focus === "function") {
+      firstInvalid.focus();
     }
     return;
   }
@@ -114,7 +168,7 @@ function handleSubmit(event) {
   setMessage("Login successful! Redirecting...", "success");
 
   setTimeout(() => {
-    window.location.href = "./index.html";
+    window.location.href = "/Project-Exam-Tone/index.html";
   }, 800);
 }
 
@@ -128,7 +182,8 @@ function attachFieldListeners() {
 
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
-      clearFieldErrors();
+      clearFieldErrors(dom.form);
+      clearInlineErrors();
       if (dom.message && dom.message.dataset.type === "error") {
         setMessage("");
       }

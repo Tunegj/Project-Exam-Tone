@@ -168,7 +168,7 @@ function buildCategoryListHtml(groups, itemClass) {
   return Object.keys(groups)
     .map(
       (group) => `<li class="${itemClass}">
-          <a href="./products-page.html?group=${encodeURIComponent(
+          <a href="/Project-Exam-Tone/products-page.html?group=${encodeURIComponent(
             group.toLowerCase()
           )}">
             ${group}

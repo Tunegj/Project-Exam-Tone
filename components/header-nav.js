@@ -16,6 +16,11 @@ const CATEGORY_GROUPS = {
   Fashion: ["clothing", "shoes", "apparel", "footwear"],
 };
 
+const HEADER_PARTIAL_URL = new URL(
+  "../partials/header-nav.html",
+  import.meta.url
+).toString();
+
 /**
  * Handle full logout flow:
  * - Clear auth token
@@ -82,8 +87,11 @@ async function initHeader() {
   if (!mount) return;
 
   // 1) Inject the partial first
-  const res = await fetch("./partials/header-nav.html");
-  if (!res.ok) throw new Error("Failed to load header partial");
+  const res = await fetch(HEADER_PARTIAL_URL);
+  if (!res.ok)
+    throw new Error(
+      `Failed to load header partial: ${res.status} ${res.statusText}`
+    );
 
   mount.innerHTML = await res.text();
 

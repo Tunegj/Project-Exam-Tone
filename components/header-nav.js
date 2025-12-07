@@ -2,7 +2,7 @@ import { isLoggedIn, logout as clearAuth } from "../utils/auth.js";
 import { clearUser } from "../utils/user-helpers.js";
 import { clearCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
-import { initSearch } from "./search.js";
+import { initSearch } from "../search.js";
 import { getProducts } from "../api/products.js";
 
 /**

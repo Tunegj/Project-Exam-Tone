@@ -1,5 +1,5 @@
 import { isLoggedIn, logout as clearAuth } from "../utils/auth.js";
-import { clearUser } from "../utils/user-helpers.js";
+import { clearUser, loadUser } from "../utils/user-helpers.js";
 import { clearCart } from "../utils/cart-helper.js";
 import { updateCartCount } from "../utils/cart-ui.js";
 import { initSearch } from "./search.js";
@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
  * Wire the auth link (login / logout) based on current auth state.
  * @param {HTMLElement} root - The header root element (mount).
  */
-function wireAuthLink(root) {
-  const links = root.querySelector("[data-auth-link]");
+function wireAuthLink(root = document) {
+  const links = root.querySelectorAll("[data-auth-link]");
   if (!links.length) return;
 
   const loggedIn = isLoggedIn();

@@ -19,8 +19,6 @@ export function testAdminLogin() {
   saveUser(adminUser);
 }
 
-testAdminLogin();
-
 export function loadUser() {
   try {
     const raw = localStorage.getItem(USER_KEY);

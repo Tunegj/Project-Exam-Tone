@@ -25,7 +25,7 @@ export function esc(text) {
  * @returns {string} URL string.
  */
 export function productLink(p) {
-  return `../js/product.html?id=${encodeURIComponent(p?.id ?? "")}`;
+  return `../product.html?id=${encodeURIComponent(p?.id ?? "")}`;
 }
 
 /**
